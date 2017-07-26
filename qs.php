@@ -13,22 +13,21 @@
 $xmlDoc=new DOMDocument();
 
 	//get parameters from URL
+	$query=$_SERVER['QUERY_STRING'];
 	$q=$_GET["q"];
 	$date=$_GET["date"];
 		if (!$date) {$date = date("Y-m-d");}
-	$groupone=$_GET["groupone"];
-	$grouptwo=$_GET["grouptwo"];
-	$groupthree=$_GET["groupthree"];
-	$groupfour=$_GET["groupfour"];
-	
+	$groups=$_GET["groups"];
+
 	$currentq=$_GET["quest"];
 	$m=$_GET["m"];
 		if(!$m) {$m = 8;}
-	$house = "Commons";	
+	$house = "Commons";
+	$photos=$_GET["photos"];
 
 	$xml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id=".$m."/FullBiog") or die("No MP with this id");
 
-	$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&AnswerDate=2017-07-18&_pageSize=500');
+	$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&AnswerDate='.$date.'&_pageSize=500');
 	$x=$xmlDoc->getElementsByTagName('item');
 	$questionscount = $x->length;
 		
@@ -97,39 +96,38 @@ $xmlDoc=new DOMDocument();
 			}
 		}
 		
-		usort($qarray, function($a, $b) {
-				return $a['number'] - $b['number'];
-			});
-
 		function comp($a, $b) {
 			if ($a['type'] == $b['type']) {
 				return $a['number'] - $b['number'];
 			}
 			return strcmp($a['type'], $b['type']);
 		}
-
-		usort($qarray, 'comp');
 		$length = count($qarray);
-		for($i=0; $i < $length; $i++) {
-				if ($qarray[$i]["number"] == $q){
-					$isselected = ' active';
-				}
-				else {
-					$isselected = "";
-				}
-				if ($hint=="") {
-					$hint='<a class="list-group-item'.$isselected.'" href="">
-					   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
-					   <h4 class="list-group-item-heading"> <span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' - '.$qarray[$i]["type"].' ('.$qarray[$i]["member"].') '.$qarray[$i]["constituency"].'</span></h4>
-					   <p class="list-group-item-text">'.$qarray[$i]["text"].'</p></a>';
-				} else {
-					$hint=$hint .'<a class="list-group-item'.$isselected.'"  href="">
-					   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
-					   <h4 class="list-group-item-heading"><span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' - '.$qarray[$i]["type"].' ('. $qarray[$i]["member"].') '.$qarray[$i]["constituency"].'</span></h4>
-					   <p class="list-group-item-text">'.$qarray[$i]["text"].'</p></a>';
-				}
+		if ($length !== 0) {
+			usort($qarray, 'comp');
+			
+			
+			
+			for($i=0; $i < $length; $i++) {
+					if ($qarray[$i]["number"] == $q){
+						$isselected = ' active';
+					}
+					else {
+						$isselected = "";
+					}
+					if ($hint=="") {
+						$hint='<a class="list-group-item'.$isselected.'" href="?date='.$date.'&q='.$qarray[$i]["number"].'">
+						   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
+						   <h4 class="list-group-item-heading"> <span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' - '.$qarray[$i]["type"].' ('.$qarray[$i]["member"].') '.$qarray[$i]["constituency"].'</span></h4>
+						   <p class="list-group-item-text">'.$qarray[$i]["text"].'</p></a>';
+					} else {
+						$hint=$hint .'<a class="list-group-item'.$isselected.'"  href="?date='.$date.'&q='.$qarray[$i]["number"].'">
+						   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
+						   <h4 class="list-group-item-heading"><span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' - '.$qarray[$i]["type"].' ('. $qarray[$i]["member"].') '.$qarray[$i]["constituency"].'</span></h4>
+						   <p class="list-group-item-text">'.$qarray[$i]["text"].'</p></a>';
+					}
+			}
 		}
-
 	}	  
 
 // Set output if no questions were found or to the correct values
@@ -141,7 +139,6 @@ if ($hint=="") {
   $response=$hint;
 }
 		?>
-	
 	
 </head>
 
@@ -163,6 +160,7 @@ if ($hint=="") {
 				<label for="date-input" class="col-2 col-form-label">Select Questions Date</label>
 				 <div class="col-10">
 				<input id="date-input" type="date" value="<?php echo $date ?>" name="date" form="mpsearch">
+				<input id="choosephotos" class="pull-right" <?php if ($photos == "stock") {echo "checked";} ?> type="checkbox" value="stock" name="photos" form="mpsearch" data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="Stock" data-off="ScreenShot">
 				<button type="submit" form="mpsearch" class="btn btn-primary pull-right">Search</button>
 				</div>
 				</div>
@@ -193,7 +191,7 @@ if ($hint=="") {
 
             <div class="panel panel-default">
               <div class="panel-heading clearfix">
-                <h3 class="panel-title pull-left">Question Details</h3>
+                <h3 class="panel-title pull-left">Question <?php echo $q ?> Details</h3>
                 <div class="btn-group pull-right visible-xs">
                   <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#editModal">
                     <i class="fa fa-pencil"></i><span>Edit</span>
@@ -204,28 +202,35 @@ if ($hint=="") {
                 </a>
               </div>
               <div class="list-group">
-                <div class="list-group-item">
-				<?php if ($house === "Commons") {
-					
-					echo '<img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$m.'" class="img-rounded pull-right main-member-image">';
-							}
-					  else { $DodsId=$xml->Member[0]->attributes()->Dods_Id; 
-							 echo '<img src="https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg" class="img-rounded pull-right main-member-image">';
-						}
-				  
-				  ?>
-				  <label>Name</label>
-                  <h4 class="list-group-item-heading"><?php echo $xml->Member[0]->DisplayAs ?></h4>
-                </div>
-
-                <div class="list-group-item">
-                  <label>Party</label>
-                  <h4 class="list-group-item-heading" style="color:                  
+ 				<div class="list-group-item">  
+                  <h4 class="list-group-item-heading">
+				  <?php echo $xml->Member[0]->DisplayAs ?>
+				  <span style="color:                  
                   <?php  $PartyID = $xml->Member[0]->Party[0]->attributes()->Id;              	          	     
 	  					 echo $colors[intval($PartyID)];
-					?>"><?php echo $xml->Member[0]->Party ?></h4>
+					?>">
+				  <?php echo $xml->Member[0]->Party ?></span>
+				  </h4>
                 </div>
-
+				<div class="list-group-item">
+				<img src="
+					<?php 
+						$DodsId=$xml->Member[0]->attributes()->Dods_Id; 
+						if ($photos == "stock") {
+							
+							if ($house === "Commons") {
+									echo 'http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$m;
+							}
+							else { 
+									 echo '<img src="https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg" class="img-rounded pull-right main-member-image">';
+							}
+						}
+						else {
+							echo 'http://leedhammedia.com/parliament/test/images/'.$DodsId.'.jpg';
+						}								
+						
+					?>" class="img-rounded main-question-image">
+				</div>	
                 <div class="list-group-item">
                   <label>Constituency</label>
                   <h4 class="list-group-item-heading"><?php echo $xml->Member[0]->MemberFrom ?></h4>
@@ -269,20 +274,45 @@ if ($hint=="") {
 			?>
                 </div>
                 
-                <div class="list-group-item">
-                  <label>Constituency</label>
-                  <h4 class="list-group-item-heading"><?php echo $xml->Member[0]->MemberFrom ?></h4>
+                 <div class="panel-footer">
+                  <small>Data from UK Parliament - <a href="http://data.parliament.uk/membersdataplatform/">Members' Names Data Platform</a></small>
                 </div>
-               
-		<? // if the MP has twitter, show their latest tweets
-		for($i = 0; $i < count($xml->Member[0]->Addresses[0]); $i ++) {
-			if ($xml->Member[0]->Addresses->Address[$i]->Type == "Twitter") {
-				$twitter = $xml->Member[0]->Addresses->Address[$i]->Address1[0]; 
-				echo '<div class="list-group-item">
-				<a class="twitter-timeline" href="'.$twitter.'" data-chrome="nofooter noheader noborders"  data-tweet-limit="2">Tweets</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></div> ';
-			}
-		} ?>
-                 
+              </div>
+              </div>
+
+            </div><!--contact card-->
+
+          <!--contact details -->
+          <div id="contactCard">
+
+            <div class="panel panel-default">
+              <div class="panel-heading clearfix">
+                <h3 class="panel-title pull-left">Group Details</h3>
+              </div>
+              <div class="list-group">
+                <div class="list-group-item">
+				<form id="groups">
+					<div class="search-form">
+						<div class="form-group">	
+						<label for="date-input" class="col-2 col-form-label">Enter groups on seperate lines with questions space delimited</label>
+							<div class="col-10">
+								 <textarea class="form-control" rows="5" id="groups" form="groups"></textarea>								
+								 <button type="submit" form="groups" class="btn btn-primary pull-right">Set groups</button>
+							</div>
+						</div>
+					</div>
+				</form>	
+                  <h4 class="list-group-item-heading"><?php echo $xml->Member[0]->DisplayAs ?></h4>
+                </div>
+
+                <div class="list-group-item">
+                  <label>Party</label>
+                  <h4 class="list-group-item-heading" style="color:                  
+                  <?php  $PartyID = $xml->Member[0]->Party[0]->attributes()->Id;              	          	     
+	  					 echo $colors[intval($PartyID)];
+					?>"><?php echo $xml->Member[0]->Party ?></h4>
+                </div>
+              
                  <div class="panel-footer">
                   <small>Data from UK Parliament - <a href="http://data.parliament.uk/membersdataplatform/">Members' Names Data Platform</a></small>
                 </div>

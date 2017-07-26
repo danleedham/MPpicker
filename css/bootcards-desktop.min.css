@@ -19,6 +19,14 @@
   margin-right: 0px !important;
 }
 
+.main-question-image {
+  height:80% !important;
+  width:80% !important;
+  z-index: 3;
+  position: relative;
+  margin-right: auto!important;
+}
+
 .mini-member-image {
 	object-fit: cover;
 }

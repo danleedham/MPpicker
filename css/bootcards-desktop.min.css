@@ -20,8 +20,8 @@
 }
 
 .main-question-image {
-  height:80% !important;
-  width:80% !important;
+  height:100% !important;
+  width:100% !important;
   z-index: 3;
   position: relative;
   margin-right: auto!important;

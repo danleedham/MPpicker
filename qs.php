@@ -13,19 +13,15 @@
 $xmlDoc=new DOMDocument();
 
 	//get parameters from URL
-	$query=$_SERVER['QUERY_STRING'];
 	$q=$_GET["q"];
+		if(!$q) {$q = 1;}
 	$date=$_GET["date"];
 		if (!$date) {$date = date("Y-m-d");}
 	$groups=$_GET["groups"];
 
-	$currentq=$_GET["quest"];
 	$m=$_GET["m"];
-		if(!$m) {$m = 8;}
 	$house = "Commons";
 	$photos=$_GET["photos"];
-
-	$xml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id=".$m."/FullBiog") or die("No MP with this id");
 
 	$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&AnswerDate='.$date.'&_pageSize=500');
 	$x=$xmlDoc->getElementsByTagName('item');
@@ -33,6 +29,9 @@ $xmlDoc=new DOMDocument();
 		
 	$qxml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/House=Commons%7CIsEligible=true/") or die("Can't load MPs");
 	$memberscount =  count($qxml);
+	
+	$betaimages =simplexml_load_file("http://leedhammedia.com/parliament/test/betaimages.xml") or die("Can't load Beta Images");
+	$imagescount =  count($betaimages);
 
 	// Arry with party ID and party color (from BBC Elections coverage)	
 	$colors = array (
@@ -88,6 +87,7 @@ $xmlDoc=new DOMDocument();
 								  'text'=>$QText[0]->textContent,
 								  'type'=>$QuestionType[0]->textContent,
 								  'member'=>$CurrentQuestioner,
+								  'DisplayAs'=>$DisplayAs,
 								  'DodsId'=>$DodsId,
 								  'MemberId'=>$MemberId,
 								  'constituency'=>$Constituency,
@@ -103,12 +103,13 @@ $xmlDoc=new DOMDocument();
 			return strcmp($a['type'], $b['type']);
 		}
 		$length = count($qarray);
+		
 		if ($length !== 0) {
 			usort($qarray, 'comp');
 			
-			
-			
 			for($i=0; $i < $length; $i++) {
+					
+					
 					if ($qarray[$i]["number"] == $q){
 						$isselected = ' active';
 					}
@@ -118,13 +119,13 @@ $xmlDoc=new DOMDocument();
 					if ($hint=="") {
 						$hint='<a class="list-group-item'.$isselected.'" href="?date='.$date.'&q='.$qarray[$i]["number"].'">
 						   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
-						   <h4 class="list-group-item-heading"> <span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' - '.$qarray[$i]["type"].' ('.$qarray[$i]["member"].') '.$qarray[$i]["constituency"].'</span></h4>
-						   <p class="list-group-item-text">'.$qarray[$i]["text"].'</p></a>';
+						   <h4 class="list-group-item-heading"> <span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' '.$qarray[$i]["DisplayAs"].'</h4>
+						   <p class="list-group-item-text">'.$qarray[$i]["constituency"].'</p></a>';
 					} else {
 						$hint=$hint .'<a class="list-group-item'.$isselected.'"  href="?date='.$date.'&q='.$qarray[$i]["number"].'">
 						   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
-						   <h4 class="list-group-item-heading"><span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' - '.$qarray[$i]["type"].' ('. $qarray[$i]["member"].') '.$qarray[$i]["constituency"].'</span></h4>
-						   <p class="list-group-item-text">'.$qarray[$i]["text"].'</p></a>';
+						   <h4 class="list-group-item-heading"><span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' '. $qarray[$i]["DisplayAs"].'</span></h4>
+						   <p class="list-group-item-text">'.$qarray[$i]["constituency"].'</p></a>';
 					}
 			}
 		}
@@ -138,7 +139,19 @@ if ($hint=="") {
 // Otherwise respond with the information required 	
   $response=$hint;
 }
-		?>
+
+//Let's catch some information for below
+	if(!$m) { 
+		if ($hint !== "") {
+			$m = $qarray[$q - 1]["MemberId"];
+		}
+		else {
+			$m = 4516;
+		}
+	}
+	
+	$xml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id=".$m."/FullBiog") or die("No MP with this id");
+?>
 	
 </head>
 
@@ -158,11 +171,12 @@ if ($hint=="") {
             <div class="search-form">
 				<div class="form-group">	
 				<label for="date-input" class="col-2 col-form-label">Select Questions Date</label>
-				 <div class="col-10">
-				<input id="date-input" type="date" value="<?php echo $date ?>" name="date" form="mpsearch">
-				<input id="choosephotos" class="pull-right" <?php if ($photos == "stock") {echo "checked";} ?> type="checkbox" value="stock" name="photos" form="mpsearch" data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="Stock" data-off="ScreenShot">
-				<button type="submit" form="mpsearch" class="btn btn-primary pull-right">Search</button>
-				</div>
+					<div class="col-2">
+					<input id="date-input" type="date" value="<?php echo $date ?>" name="date" form="mpsearch">
+					<input id="choosephotos" class="pull-right" <?php if ($photos == "screenshot") {echo "checked";} ?> type="checkbox" value="screenshot" name="photos" form="mpsearch" data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-off="Stock">
+					<input id="q" type="hidden" value="<?php echo $q ?>" name="q" form="mpsearch">
+					<button type="submit" form="mpsearch" class="btn btn-primary pull-right">Search</button>
+					</div>
 				</div>
             </div>
 			</form>	
@@ -192,13 +206,11 @@ if ($hint=="") {
             <div class="panel panel-default">
               <div class="panel-heading clearfix">
                 <h3 class="panel-title pull-left">Question <?php echo $q ?> Details</h3>
-                <div class="btn-group pull-right visible-xs">
-                  <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#editModal">
-                    <i class="fa fa-pencil"></i><span>Edit</span>
-                  </a>
-                </div>  
-                <a class="btn btn-primary pull-right hidden-xs" href="#" data-toggle="modal" data-target="#editModal">
-                  <i class="fa fa-pencil"></i><span>Edit</span>
+                <a class="btn btn-primary pull-right" onclick="location.href='?date=<?php echo $date;?>&q=<?php echo intval($q + 1);?>';" data-toggle="modal" data-target="#editModal">
+                  <i class="fa fa-arrow-right"></i><span href="?date=<?php echo $date;?>&q=<?php echo intval($q - 1);?>">Next</span>
+                </a>
+				 <a class="btn btn-primary pull-right" onclick="location.href='?date=<?php echo $date;?>&q=<?php echo intval($q - 1);?>';" data-toggle="modal" data-target="#editModal">
+                  <i class="fa fa-arrow-left"></i><span>Previous</span>
                 </a>
               </div>
               <div class="list-group">
@@ -215,14 +227,19 @@ if ($hint=="") {
 				<div class="list-group-item">
 				<img src="
 					<?php 
-						$DodsId=$xml->Member[0]->attributes()->Dods_Id; 
-						if ($photos == "stock") {
+						$DodsId=$xml->Member[0]->attributes()->Dods_Id;
+						if ($photos !== "screenshot") {
 							
 							if ($house === "Commons") {
-									echo 'http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$m;
+									for($ii=0; $ii < $imagescount; $ii++) {
+										if (trim($betaimages->member[$ii]->KnownAs) == trim($xml->Member[0]->DisplayAs)){
+											$BetaId = $betaimages->member[$ii]->imageid;
+										}
+									}
+									echo 'https://api20170418155059.azure-api.net/photo/'.$BetaId.'.jpeg?crop=MCU_3:2&width=1000&quality=80';
 							}
 							else { 
-									 echo '<img src="https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg" class="img-rounded pull-right main-member-image">';
+									echo 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg';
 							}
 						}
 						else {
@@ -237,8 +254,8 @@ if ($hint=="") {
                 </div>
 
                 <div class="list-group-item">
-                  <label>Start Date in the House</label>
-                  <h4 class="list-group-item-heading"><?php echo date('d-m-Y', strtotime($xml->Member[0]->HouseStartDate)) ?></h4>
+                  <label>Question</label>
+                  <h4 class="list-group-item-heading"><?php echo $qarray[$q - 1]["text"]; ?></h4>
                 </div>
 
                 <div class="list-group-item">
@@ -291,30 +308,22 @@ if ($hint=="") {
               </div>
               <div class="list-group">
                 <div class="list-group-item">
-				<form id="groups">
-					<div class="search-form">
-						<div class="form-group">	
-						<label for="date-input" class="col-2 col-form-label">Enter groups on seperate lines with questions space delimited</label>
-							<div class="col-10">
-								 <textarea class="form-control" rows="5" id="groups" form="groups"></textarea>								
-								 <button type="submit" form="groups" class="btn btn-primary pull-right">Set groups</button>
+					<form id="groups">
+						<div class="search-form">
+							<div class="form-group">	
+							<label for="date-input" class="col-2 col-form-label">Enter groups on seperate lines with questions space delimited</label>
+								<div class="col-10">
+									 <textarea class="form-control" rows="5" id="groups" form="groups"></textarea>
+									 <button type="submit" form="groups" class="btn btn-primary pull-left">Set groups</button>
+									 <br />
+								</div>
 							</div>
 						</div>
-					</div>
-				</form>	
-                  <h4 class="list-group-item-heading"><?php echo $xml->Member[0]->DisplayAs ?></h4>
-                </div>
-
-                <div class="list-group-item">
-                  <label>Party</label>
-                  <h4 class="list-group-item-heading" style="color:                  
-                  <?php  $PartyID = $xml->Member[0]->Party[0]->attributes()->Id;              	          	     
-	  					 echo $colors[intval($PartyID)];
-					?>"><?php echo $xml->Member[0]->Party ?></h4>
+					</form>	
                 </div>
               
                  <div class="panel-footer">
-                  <small>Data from UK Parliament - <a href="http://data.parliament.uk/membersdataplatform/">Members' Names Data Platform</a></small>
+                  <small>Please enter the question groups on seperate lines using commas to split each question in the group</small>
                 </div>
               </div>
               </div>

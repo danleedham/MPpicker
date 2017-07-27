@@ -15,6 +15,9 @@ $xmlDoc=new DOMDocument();
 	//get parameters from URL
 	$q=$_GET["q"];
 		if(!$q) {$q = 1;}
+	$qtype=$_GET["type"];
+	$qdept=$_GET["dept"];
+		
 	$date=$_GET["date"];
 		if (!$date) {$date = date("Y-m-d");}
 	$groups=$_GET["groups"];
@@ -30,7 +33,7 @@ $xmlDoc=new DOMDocument();
 	$qxml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/House=Commons%7CIsEligible=true/") or die("Can't load MPs");
 	$memberscount =  count($qxml);
 	
-	$betaimages =simplexml_load_file("http://leedhammedia.com/parliament/test/betaimages.xml") or die("Can't load Beta Images");
+	$betaimages =simplexml_load_file("data/betaimages.xml") or die("Can't load Beta Images");
 	$imagescount =  count($betaimages);
 
 	// Arry with party ID and party color (from BBC Elections coverage)	
@@ -69,7 +72,8 @@ $xmlDoc=new DOMDocument();
 				$QuestionType=$x->item($i)->getElementsByTagName('QuestionType');
 				$DateDue=$x->item($i)->getElementsByTagName('AnswerDate');
 				$BallotNo=$x->item($i)->getElementsByTagName('ballotNumber');
-				$Department=$x->item($i)->getElementsByTagName('AnsweringBody');
+				$Dept=$x->item($i)->getElementsByTagName('AnsweringBody');
+					$Department=trim($Dept->item(0)->textContent);
 
 				for ($y = 0; $y < $memberscount; $y++){
 					$CurrentMP = trim($qxml->Member[$y]->ListAs);
@@ -84,6 +88,7 @@ $xmlDoc=new DOMDocument();
 				}
 				
 				$qarray[] = array('number'=>$BallotNo[0]->textContent,
+								  'dept'=>$Department,
 								  'text'=>$QText[0]->textContent,
 								  'type'=>$QuestionType[0]->textContent,
 								  'member'=>$CurrentQuestioner,
@@ -93,9 +98,15 @@ $xmlDoc=new DOMDocument();
 								  'constituency'=>$Constituency,
 								  'party'=>$party,
 								  'color'=>$color);
+								  
+				$deptarray[] = array('dept' => $Department);
+	  			
 			}
 		}
-		
+		if (count($deptarray) !== 0) {
+			$deptarray = array_map("unserialize", array_unique(array_map("serialize", $deptarray)));
+		}
+		$deptscount = count($deptarray);
 		function comp($a, $b) {
 			if ($a['type'] == $b['type']) {
 				return $a['number'] - $b['number'];
@@ -107,22 +118,38 @@ $xmlDoc=new DOMDocument();
 		if ($length !== 0) {
 			usort($qarray, 'comp');
 			
+			
 			for($i=0; $i < $length; $i++) {
 					
 					
 					if ($qarray[$i]["number"] == $q){
-						$isselected = ' active';
+						if(!$qtype) { $qtype = "Substantive"; }
+						if( $qtype ==  $qarray[$i]["type"]) {
+							$isselected = ' active';
+							$currenti = $i;
+						}
+						else {
+						$isselected = "";
+						}
 					}
 					else {
 						$isselected = "";
 					}
+					
+					if ($qarray[$i]["type"] == "Topical") {
+						$istopical = '&type=Topical';
+					}
+					else {
+						$istopical = "";
+					}
+					
 					if ($hint=="") {
-						$hint='<a class="list-group-item'.$isselected.'" href="?date='.$date.'&q='.$qarray[$i]["number"].'">
+						$hint='<a class="list-group-item'.$isselected.'" href="?date='.$date.'&q='.$qarray[$i]["number"].$istopical.'">
 						   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
 						   <h4 class="list-group-item-heading"> <span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' '.$qarray[$i]["DisplayAs"].'</h4>
 						   <p class="list-group-item-text">'.$qarray[$i]["constituency"].'</p></a>';
 					} else {
-						$hint=$hint .'<a class="list-group-item'.$isselected.'"  href="?date='.$date.'&q='.$qarray[$i]["number"].'">
+						$hint=$hint .'<a class="list-group-item'.$isselected.'"  href="?date='.$date.'&q='.$qarray[$i]["number"].$istopical.'">
 						   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
 						   <h4 class="list-group-item-heading"><span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' '. $qarray[$i]["DisplayAs"].'</span></h4>
 						   <p class="list-group-item-text">'.$qarray[$i]["constituency"].'</p></a>';
@@ -143,7 +170,7 @@ if ($hint=="") {
 //Let's catch some information for below
 	if(!$m) { 
 		if ($hint !== "") {
-			$m = $qarray[$q - 1]["MemberId"];
+			$m = $qarray[$currenti]["MemberId"];
 		}
 		else {
 			$m = 4516;
@@ -157,8 +184,6 @@ if ($hint=="") {
 
 <body>
 
-<?php include 'template/navbar.php'; ?>
-
    <div class="container-fluid bootcards-container push-right">
 
     <div class="row">
@@ -169,21 +194,30 @@ if ($hint=="") {
           <div class="panel-body">
 			<form id="mpsearch">
             <div class="search-form">
-				<div class="form-group">	
-				<label for="date-input" class="col-2 col-form-label">Select Questions Date</label>
-					<div class="col-2">
-					<input id="date-input" type="date" value="<?php echo $date ?>" name="date" form="mpsearch">
-					<input id="choosephotos" class="pull-right" <?php if ($photos == "screenshot") {echo "checked";} ?> type="checkbox" value="screenshot" name="photos" form="mpsearch" data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-off="Stock">
+				<div class="form-inline">
+					<input id="date-input" type="date" class="input-sm form-control" value="<?php echo $date ?>" name="date" form="mpsearch">
+					<input id="choosephotos" style="float:right !important;" class="pull-right" <?php if ($photos == "screenshot") {echo "checked";} ?> type="checkbox" value="screenshot" name="photos" form="mpsearch" data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-off="Stock">
 					<input id="q" type="hidden" value="<?php echo $q ?>" name="q" form="mpsearch">
-					<button type="submit" form="mpsearch" class="btn btn-primary pull-right">Search</button>
-					</div>
+					<button type="submit" form="mpsearch" class="btn btn-primary pull-right">Load</button>
 				</div>
+				<?php if(intval($deptscount) > 1) : ?>
+				<div class="form-inline" style="padding-top:6px !important;">
+				<select id="dept" name="dept" class="form-control" form="mpsearch">
+						<?php 
+							for($z=0; $z < $deptscount; $z++) {
+								if ($qdept == $deptarray[$z]["dept"]) { $isdept = ' selected="selected" ';}
+								else { $isdept = "";}
+							   echo '<option'.$isdept.' value="'. $deptarray[$z]["dept"].'">'. $deptarray[$z]["dept"] .'</option>';
+							}
+						?>
+				</select>
+				</div>
+				<?php endif; ?>
             </div>
 			</form>	
           </div><!--panel body-->
-
           <div class="list-group" id="livesearch"><!-- this was a live search originally -->
-		
+          
 		<?php echo $response;   ?>
   		  
           </div><!--list-group-->
@@ -205,11 +239,11 @@ if ($hint=="") {
 
             <div class="panel panel-default">
               <div class="panel-heading clearfix">
-                <h3 class="panel-title pull-left">Question <?php echo $q ?> Details</h3>
+                <h3 class="panel-title pull-left"><?php echo $qarray[$currenti]["type"] ?> Question <?php echo $qarray[$currenti]["number"] ?> Details</h3>
                 <a class="btn btn-primary pull-right" onclick="location.href='?date=<?php echo $date;?>&q=<?php echo intval($q + 1);?>';" data-toggle="modal" data-target="#editModal">
                   <i class="fa fa-arrow-right"></i><span href="?date=<?php echo $date;?>&q=<?php echo intval($q - 1);?>">Next</span>
                 </a>
-				 <a class="btn btn-primary pull-right" onclick="location.href='?date=<?php echo $date;?>&q=<?php echo intval($q - 1);?>';" data-toggle="modal" data-target="#editModal">
+				 <a class="btn btn-primary pull-right" onclick="location.href='?date=<?php echo $date;?>&q=<?php echo intval($q - 1); if($qtype=="Topical") {echo '&type=Topical';} ?>';" data-toggle="modal" data-target="#editModal">
                   <i class="fa fa-arrow-left"></i><span>Previous</span>
                 </a>
               </div>
@@ -243,7 +277,7 @@ if ($hint=="") {
 							}
 						}
 						else {
-							echo 'http://leedhammedia.com/parliament/test/images/'.$DodsId.'.jpg';
+							echo 'images/'.$DodsId.'.jpg';
 						}								
 						
 					?>" class="img-rounded main-question-image">
@@ -255,11 +289,10 @@ if ($hint=="") {
 
                 <div class="list-group-item">
                   <label>Question</label>
-                  <h4 class="list-group-item-heading"><?php echo $qarray[$q - 1]["text"]; ?></h4>
+                  <h4 class="list-group-item-heading"><?php echo $qarray[$currenti]["text"]; ?></h4>
                 </div>
 
                 <div class="list-group-item">
-                  <label>Current Notable Positions</label>
 			<?php for($i = 0; $i < count($xml->Member[0]->GovernmentPosts[0]); $i ++) {
 			if (!strtotime($xml->Member[0]->GovernmentPosts->GovernmentPost[$i]->EndDate[0]) >= time()) {
 				$Government = $xml->Member[0]->GovernmentPosts->GovernmentPost[$i]->HansardName[0]; 

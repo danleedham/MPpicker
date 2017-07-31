@@ -103,46 +103,68 @@ $xmlDoc=new DOMDocument();
 	  			
 			}
 		}
+		// This gives us a unique list of departments
 		if (count($deptarray) !== 0) {
 			$deptarray = array_map("unserialize", array_unique(array_map("serialize", $deptarray)));
 		}
+		// Count how many departments there are
 		$deptscount = count($deptarray);
+		
+		// Function to sort questions by type then by number
 		function comp($a, $b) {
 			if ($a['type'] == $b['type']) {
 				return $a['number'] - $b['number'];
 			}
 			return strcmp($a['type'], $b['type']);
 		}
+		// Count how many questions there are
 		$length = count($qarray);
 		
+		// Sort the questions 
 		if ($length !== 0) {
 			usort($qarray, 'comp');
 			
-			
-			for($i=0; $i < $length; $i++) {
+		// Generate the list of questions 	
+		for($i=0; $i < $length; $i++) {
 					
 					
-					if ($qarray[$i]["number"] == $q){
+			if ($qarray[$i]["number"] == $q){
 						if(!$qtype) { $qtype = "Substantive"; }
+						
 						if( $qtype ==  $qarray[$i]["type"]) {
 							$isselected = ' active';
 							$currenti = $i;
 						}
 						else {
-						$isselected = "";
+							$isselected = "";
 						}
-					}
-					else {
-						$isselected = "";
-					}
+			}
+			else {
+					$isselected = "";
+			}
 					
-					if ($qarray[$i]["type"] == "Topical") {
+			if ($qarray[$i]["type"] == "Topical") {
 						$istopical = '&type=Topical';
-					}
-					else {
+			}
+			else {
 						$istopical = "";
+			}
+			
+			//Lets see if the set deptarment is in the list of departments
+			foreach ($deptarray as $key => $value) {
+					if ($qdept == $value["dept"]) {
+						$found = true;
 					}
+				}
+			if ($found == true) {}
+			else {$qdept == null;}
+				
+			// If no department is set, let's use the first one		
+			if (!$qdept) { $qdept = $deptarray[0]["dept"]; }
 					
+			if ($qarray[$i]["dept"] !== $qdept && intval($deptscount) > 1) {
+			}
+			else {					
 					if ($hint=="") {
 						$hint='<a class="list-group-item'.$isselected.'" href="?date='.$date.'&q='.$qarray[$i]["number"].$istopical.'">
 						   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
@@ -154,6 +176,7 @@ $xmlDoc=new DOMDocument();
 						   <h4 class="list-group-item-heading"><span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' '. $qarray[$i]["DisplayAs"].'</span></h4>
 						   <p class="list-group-item-text">'.$qarray[$i]["constituency"].'</p></a>';
 					}
+				}
 			}
 		}
 	}	  
@@ -161,7 +184,7 @@ $xmlDoc=new DOMDocument();
 // Set output if no questions were found or to the correct values
 if ($hint=="") {
   $response='<a class="list-group-item">
-			 <h4 class ="list-group-item-heading">No questions tabled for '.$date.'</h4></a>';
+			 <h4 class ="list-group-item-heading">No questions for '.$date.' to '.$qdept.'</h4></a>';
 } else {
 // Otherwise respond with the information required 	
   $response=$hint;
@@ -176,14 +199,13 @@ if ($hint=="") {
 			$m = 4516;
 		}
 	}
-	
+// Now load the data for the currently selected member. This shall be replaced by AJAX on selection futher down	
 	$xml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id=".$m."/FullBiog") or die("No MP with this id");
 ?>
 	
 </head>
 
-<body>
-
+<body>			
    <div class="container-fluid bootcards-container push-right">
 
     <div class="row">
@@ -200,14 +222,16 @@ if ($hint=="") {
 					<input id="q" type="hidden" value="<?php echo $q ?>" name="q" form="mpsearch">
 					<button type="submit" form="mpsearch" class="btn btn-primary pull-right">Load</button>
 				</div>
-				<?php if(intval($deptscount) > 1) : ?>
+				<?php //If there are multiple departments let the user select which one to pull questions from
+					if(intval($deptscount) > 1) : 
+				?>
 				<div class="form-inline" style="padding-top:6px !important;">
 				<select id="dept" name="dept" class="form-control" form="mpsearch">
 						<?php 
-							for($z=0; $z < $deptscount; $z++) {
-								if ($qdept == $deptarray[$z]["dept"]) { $isdept = ' selected="selected" ';}
+							foreach ($deptarray as $key => $value) {
+								if ($qdept == $value["dept"]) { $isdept = ' selected="selected" ';}
 								else { $isdept = "";}
-							   echo '<option'.$isdept.' value="'. $deptarray[$z]["dept"].'">'. $deptarray[$z]["dept"] .'</option>';
+							   echo '<option'.$isdept.' value="'. $value["dept"].'">'. $value["dept"].'</option>';
 							}
 						?>
 				</select>
@@ -216,7 +240,7 @@ if ($hint=="") {
             </div>
 			</form>	
           </div><!--panel body-->
-          <div class="list-group" id="livesearch"><!-- this was a live search originally -->
+          <div class="list-group" id="livesearch">
           
 		<?php echo $response;   ?>
   		  
@@ -240,8 +264,8 @@ if ($hint=="") {
             <div class="panel panel-default">
               <div class="panel-heading clearfix">
                 <h3 class="panel-title pull-left"><?php echo $qarray[$currenti]["type"] ?> Question <?php echo $qarray[$currenti]["number"] ?> Details</h3>
-                <a class="btn btn-primary pull-right" onclick="location.href='?date=<?php echo $date;?>&q=<?php echo intval($q + 1);?>';" data-toggle="modal" data-target="#editModal">
-                  <i class="fa fa-arrow-right"></i><span href="?date=<?php echo $date;?>&q=<?php echo intval($q - 1);?>">Next</span>
+                <a class="btn btn-primary pull-right" onclick="location.href='?date=<?php echo $date;?>&q=<?php echo intval($q + 1);?>&dept=<?php echo urlencode($qdept) ?>';" data-toggle="modal" data-target="#editModal">
+                  <i class="fa fa-arrow-right"></i><span href="?date=<?php echo $date;?>&q=<?php echo intval($q - 1);?>&dept=<?php echo urlencode($qdept) ?>">Next</span>
                 </a>
 				 <a class="btn btn-primary pull-right" onclick="location.href='?date=<?php echo $date;?>&q=<?php echo intval($q - 1); if($qtype=="Topical") {echo '&type=Topical';} ?>';" data-toggle="modal" data-target="#editModal">
                   <i class="fa fa-arrow-left"></i><span>Previous</span>

@@ -14,7 +14,7 @@ $xmlDoc=new DOMDocument();
 
 	//get parameters from URL
 	$q=$_GET["q"];
-		if(!$q) {$q = 1;}
+		if(!$q) {$q = 0;}
 	$qtype=$_GET["type"];
 		if(!$qtype) { $qtype = "Substantive"; }
 	$qdept=$_GET["dept"]; 
@@ -129,23 +129,13 @@ $xmlDoc=new DOMDocument();
 	// If there are questions, sort the questions & generate list
 	if ($length !== 0) {
 			usort($qarray, 'comp');
-				
-		// Stop trying to load a question that doesn't exist	
-		foreach ($qarray as $key => $value) {
-				if ($value["number"] == $q && $value["type"] == $qtype) {
-					$qisvalid = true;
-				}
-		}
-		// If q is bonkers (ie not valid) set to the first valid question
-		if  ($qisvalid !== true) {	$q = $qarray[0]["number"];
-		} 
 			
 		// Generate the list of questions 	
 		for($i=0; $i < $length; $i++) {
 			
 			// Stop trying to load a question we can't
 			
-			if($qarray[$i]["number"] == $q){
+			if($i == $q){
 				
 				if($qtype ==  $qarray[$i]["type"]) {
 					$isselected = ' active';
@@ -167,21 +157,21 @@ $xmlDoc=new DOMDocument();
 						$istopical = "";
 			}
 							
-			// If no department is set, let's use the first one		
-			if (!$qdept || count($qdept) == 1) { $qdept = $deptarray[0]["dept"]; }
+			// If no department is set, let's use the one from q		
+			if (!$qdept or count($deptarray) === 1) { $qdept = $qarray[0]["dept"]; }
 					
 			if ($qarray[$i]["dept"] !== $qdept && intval($deptscount) > 1) {
 			}
 			else {	
 				if ($qarray[$i]["type"] == $qtype) {		
 					if ($hint=="") {
-						$hint='<a class="list-group-item'.$isselected.'" href="?date='.$date.'&q='.$qarray[$i]["number"].$istopical.'">
+						$hint='<a class="list-group-item'.$isselected.'" href="?date='.$date.'&q='.$i.$istopical.'">
 						   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
 						   <h4 class="list-group-item-heading"> <span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' '.$qarray[$i]["DisplayAs"].'</h4>
 						   <p class="list-group-item-text">'.$qarray[$i]["constituency"].'</p></a>';
 					} 
 					else {
-						$hint=$hint .'<a class="list-group-item'.$isselected.'"  href="?date='.$date.'&q='.$qarray[$i]["number"].$istopical.'">
+						$hint=$hint .'<a class="list-group-item'.$isselected.'"  href="?date='.$date.'&q='.$i.$istopical.'">
 						   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
 						   <h4 class="list-group-item-heading"><span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' '. $qarray[$i]["DisplayAs"].'</span></h4>
 						   <p class="list-group-item-text">'.$qarray[$i]["constituency"].'</p></a>';
@@ -205,7 +195,7 @@ if ($hint=="") {
   if(!$qdept){$ifdept = '';}
   else {$ifdept = ' to '.$qdept;}
   $response='<a class="list-group-item">
-			 <h4 class ="list-group-item-heading">No'.$iftype.' questions on '.$date.$qdept.'</h4></a>';
+			 <h4 class ="list-group-item-heading">No'.$iftype.' questions on '.$date.$ifdept.'</h4></a>';
 } else {
 // Otherwise respond with the information required 	
   $response=$hint;
@@ -226,7 +216,7 @@ if ($hint=="") {
 	
 </head>
 
-<body>			
+<body>		
    <div class="container-fluid bootcards-container push-right">
 
     <div class="row">
@@ -240,7 +230,6 @@ if ($hint=="") {
 				<div class="form-inline">
 					<input id="date-input" type="date" class="input-sm form-control" value="<?php echo $date ?>" name="date" form="mpsearch">
 					<input id="choosephotos" style="float:right !important;" class="pull-right" <?php if ($photos == "screenshot") {echo "checked";} ?> type="checkbox" value="screenshot" name="photos" form="mpsearch" data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-off="Stock">
-					<input id="q" type="hidden" value="<?php echo $q ?>" name="q" form="mpsearch">
 					<button type="submit" form="mpsearch" class="btn btn-primary pull-right">Load</button>
 				</div>
 				<?php //If there are multiple departments let the user select which one to pull questions from

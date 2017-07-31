@@ -9,14 +9,15 @@
   <title>Questions Picker</title>
 
   <?php include 'template/headinc.php';
-  
+
 $xmlDoc=new DOMDocument();
 
 	//get parameters from URL
 	$q=$_GET["q"];
 		if(!$q) {$q = 1;}
 	$qtype=$_GET["type"];
-	$qdept=$_GET["dept"];
+		if(!$qtype) { $qtype = "Substantive"; }
+	$qdept=$_GET["dept"]; 
 		
 	$date=$_GET["date"];
 		if (!$date) {$date = date("Y-m-d");}
@@ -100,15 +101,20 @@ $xmlDoc=new DOMDocument();
 								  'color'=>$color);
 								  
 				$deptarray[] = array('dept' => $Department);
+				$typearray[] = array('type' => $QuestionType[0]->textContent);
 	  			
 			}
 		}
-		// This gives us a unique list of departments
+		// This gives us a unique list of departments & question types
 		if (count($deptarray) !== 0) {
 			$deptarray = array_map("unserialize", array_unique(array_map("serialize", $deptarray)));
 		}
-		// Count how many departments there are
+		if (count($typearray) !== 0) {
+			$typearray = array_map("unserialize", array_unique(array_map("serialize", $typearray)));
+		}
+		// Count how many unique departments/types there are
 		$deptscount = count($deptarray);
+		$typecount = count($typearray);
 		
 		// Function to sort questions by type then by number
 		function comp($a, $b) {
@@ -120,25 +126,36 @@ $xmlDoc=new DOMDocument();
 		// Count how many questions there are
 		$length = count($qarray);
 		
-		// Sort the questions 
-		if ($length !== 0) {
+	// If there are questions, sort the questions & generate list
+	if ($length !== 0) {
 			usort($qarray, 'comp');
+				
+		// Stop trying to load a question that doesn't exist	
+		foreach ($qarray as $key => $value) {
+				if ($value["number"] == $q && $value["type"] == $qtype) {
+					$qisvalid = true;
+				}
+				else {
+					$q = $qarray[0]["number"]; // If q is bonkers set to the first valid question
+				}
+		}
 			
 		// Generate the list of questions 	
 		for($i=0; $i < $length; $i++) {
-					
-					
-			if ($qarray[$i]["number"] == $q){
-						if(!$qtype) { $qtype = "Substantive"; }
-						
-						if( $qtype ==  $qarray[$i]["type"]) {
-							$isselected = ' active';
-							$currenti = $i;
-						}
-						else {
-							$isselected = "";
-						}
+			
+			// Stop trying to load a question we can't
+			
+			if($qarray[$i]["number"] == $q){
+				
+				if($qtype ==  $qarray[$i]["type"]) {
+					$isselected = ' active';
+					$currenti = $i;
+				}
+				else {
+					$isselected = "";
+				}
 			}
+			
 			else {
 					$isselected = "";
 			}
@@ -149,42 +166,46 @@ $xmlDoc=new DOMDocument();
 			else {
 						$istopical = "";
 			}
-			
-			//Lets see if the set deptarment is in the list of departments
-			foreach ($deptarray as $key => $value) {
-					if ($qdept == $value["dept"]) {
-						$found = true;
-					}
-				}
-			if ($found == true) {}
-			else {$qdept == null;}
-				
+							
 			// If no department is set, let's use the first one		
-			if (!$qdept) { $qdept = $deptarray[0]["dept"]; }
+			if (!$qdept || count($qdept) == 1) { $qdept = $deptarray[0]["dept"]; }
 					
 			if ($qarray[$i]["dept"] !== $qdept && intval($deptscount) > 1) {
 			}
-			else {					
+			else {	
+				if ($qarray[$i]["type"] == $qtype) {		
 					if ($hint=="") {
 						$hint='<a class="list-group-item'.$isselected.'" href="?date='.$date.'&q='.$qarray[$i]["number"].$istopical.'">
 						   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
 						   <h4 class="list-group-item-heading"> <span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' '.$qarray[$i]["DisplayAs"].'</h4>
 						   <p class="list-group-item-text">'.$qarray[$i]["constituency"].'</p></a>';
-					} else {
+					} 
+					else {
 						$hint=$hint .'<a class="list-group-item'.$isselected.'"  href="?date='.$date.'&q='.$qarray[$i]["number"].$istopical.'">
 						   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
 						   <h4 class="list-group-item-heading"><span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' '. $qarray[$i]["DisplayAs"].'</span></h4>
 						   <p class="list-group-item-text">'.$qarray[$i]["constituency"].'</p></a>';
 					}
 				}
+			  }
 			}
 		}
 	}	  
 
 // Set output if no questions were found or to the correct values
 if ($hint=="") {
+  
+  if(!$_GET["type"]){ 
+  		$iftype = '';
+  }
+  else {
+  		$iftype = ' '.$qtype;
+  }
+  
+  if(!$qdept){$ifdept = '';}
+  else {$ifdept = ' to '.$qdept;}
   $response='<a class="list-group-item">
-			 <h4 class ="list-group-item-heading">No questions for '.$date.' to '.$qdept.'</h4></a>';
+			 <h4 class ="list-group-item-heading">No'.$iftype.' questions on '.$date.$qdept.'</h4></a>';
 } else {
 // Otherwise respond with the information required 	
   $response=$hint;
@@ -206,6 +227,7 @@ if ($hint=="") {
 </head>
 
 <body>			
+ <?php print_r($isvalid); ?>
    <div class="container-fluid bootcards-container push-right">
 
     <div class="row">
@@ -236,7 +258,23 @@ if ($hint=="") {
 						?>
 				</select>
 				</div>
+				<?php endif;
+				 //If there are multiple departments let the user select which one to pull questions from
+					if(intval($typecount) > 1) : 
+				?>
+				<div class="form-inline" style="padding-top:6px !important;">
+				<select id="type" name="type" class="form-control" form="mpsearch">
+						<?php 
+							foreach ($typearray as $key => $value) {
+								if ($qtype == $value["type"]) { $istype = ' selected="selected" ';}
+								else { $istype = "";}
+							   echo '<option'.$istype.' value="'. $value["type"].'">'. $value["type"].'</option>';
+							}
+						?>
+				</select>
+				</div>
 				<?php endif; ?>
+				
             </div>
 			</form>	
           </div><!--panel body-->

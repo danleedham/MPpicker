@@ -135,10 +135,10 @@ $xmlDoc=new DOMDocument();
 				if ($value["number"] == $q && $value["type"] == $qtype) {
 					$qisvalid = true;
 				}
-				else {
-					$q = $qarray[0]["number"]; // If q is bonkers set to the first valid question
-				}
 		}
+		// If q is bonkers (ie not valid) set to the first valid question
+		if  ($qisvalid !== true) {	$q = $qarray[0]["number"];
+		} 
 			
 		// Generate the list of questions 	
 		for($i=0; $i < $length; $i++) {
@@ -227,7 +227,6 @@ if ($hint=="") {
 </head>
 
 <body>			
- <?php print_r($isvalid); ?>
    <div class="container-fluid bootcards-container push-right">
 
     <div class="row">

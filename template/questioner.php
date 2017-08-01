@@ -2,10 +2,14 @@
 $xmlDoc=new DOMDocument();
 
 	//get parameters from URL
-	$uin=$_GET["uin"];
+	if(!$uin) {$uin=$_GET["uin"];}
+	$next=$_GET["next"];
+	$prev=$_GET["prev"];
+	
+	if(!$date) {$date=$_GET["date"];}
 
 	$house = "Commons";
-	$photos=$_GET["photos"];
+	if(!$photos){$photos=$_GET["photos"];}
 
 	$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&uin='.$uin);
 	$x=$xmlDoc->getElementsByTagName('item');
@@ -14,7 +18,7 @@ $xmlDoc=new DOMDocument();
 	$qxml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/House=Commons%7CIsEligible=true/") or die("Can't load MPs");
 	$memberscount =  count($qxml);
 	
-	$betaimages =simplexml_load_file("../data/betaimages.xml") or die("Can't load Beta Images");
+	$betaimages =simplexml_load_file("http://leedhammedia.com/parliament/betaimages.xml") or die("Can't load Beta Images");
 	$imagescount =  count($betaimages);
 
 	// Arry with party ID and party color (from BBC Elections coverage)	
@@ -45,6 +49,7 @@ $xmlDoc=new DOMDocument();
 			}
 			else {
 				$QuestionID=$x->item($i)->getElementsByTagName('ID');
+				$AnswerDate=$x->item($i)->getElementsByTagName('AnswerDate');
 				$MemberId=$x->item($i)->getElementsByTagName('tablingMemberPrinted');
 					$CurrentQuestioner = trim($MemberId->item(0)->textContent);
 				$Const=$x->item($i)->getElementsByTagName('constituency');
@@ -69,6 +74,7 @@ $xmlDoc=new DOMDocument();
 				}
 				
 				$qarray[] = array('number'=>$BallotNo[0]->textContent,
+								  'date'=>$AnswerDate[0]->textContent,
 								  'dept'=>$Department,
 								  'text'=>$QText[0]->textContent,
 								  'type'=>$QuestionType[0]->textContent,
@@ -81,45 +87,45 @@ $xmlDoc=new DOMDocument();
 								  'color'=>$color);		
 			}
 		}
-		// Function to sort questions by type then by number
-		function comp($a, $b) {
-			if ($a['type'] == $b['type']) {
-				return $a['number'] - $b['number'];
-			}
-			return strcmp($a['type'], $b['type']);
-		}
-		// Count how many questions there are
-		$length = count($qarray);
+	// Function to sort questions by date
+	function compsort( $a, $b ) {
+		return strtotime($b["date"]) - strtotime($a["date"]);
+	}
+	// Count how many questions there are
+	$length = count($qarray);
 		
-	// If there are questions, sort the questions & generate list
+	// If there are questions, sort the questions
 	if ($length !== 0) {
-			usort($qarray, 'comp');
+			usort($qarray, 'compsort');
 		}
 	}	  
 
-	$m = $qarray[0]["MemberId"];
+	// If date is set, use it to ensure we get the correct question
+	for ($i = 0; $i < count($qarray); $i++){
+			if($qarray[$i]["date"] == $date){
+				$q = $i;
+			}
+		}
+	// If date isn't set, let's presume they want the most recent question	
+	if(!$q) { $q = 0; }			
+	$m = intval($qarray[$q]["MemberId"]);
 
-// Now load the data for the currently selected member. This shall be replaced by AJAX on selection futher down	
+	// Now load the data for the currently selected member. This shall be replaced by AJAX on selection futher down	
 	$xml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id=".$m."/FullBiog") or die("No MP with this id");
 ?>
 
-        <!--list details column-->
-        <div class="col-sm-8 bootcards-cards">
-
-          <!--contact details -->
-          <div id="contactCard">
            <div class="panel panel-default">
               <div class="panel-heading clearfix">
                 <h3 class="panel-title pull-left">
               	<?php //If there are multiple departments let the user select which one to pull questions from
 					if($uin) : 
 				?>
-           <?php echo $qarray[0]["type"] ?> Question <?php echo $qarray[0]["number"] ?> Details</h3>
-                <a class="btn btn-primary pull-right" onclick="location.href='?date=<?php echo $date;?>&q=<?php echo intval($q + 1);?>&dept=<?php echo urlencode($qdept) ?>';" data-toggle="modal" data-target="#editModal">
-                  <i class="fa fa-arrow-right"></i><span href="?date=<?php echo $date;?>&q=<?php echo intval($q - 1);?>&dept=<?php echo urlencode($qdept) ?>">Next</span>
+           <?php echo $qarray[$q]["type"] ?> Question <?php echo $qarray[$q]["number"] ?> Details</h3>
+                <a class="btn btn-primary pull-right" onclick="location.href='?uin=<?php echo $next; ?>';" data-toggle="modal" data-target="#editModal">
+                  <i class="fa fa-arrow-right"></i><span href="?uin=<?php echo $next; ?>">Next</span>
                 </a>
-				 <a class="btn btn-primary pull-right" onclick="location.href='?date=<?php echo $date;?>&q=<?php echo intval($q - 1); if($qtype=="Topical") {echo '&type=Topical';} ?>';" data-toggle="modal" data-target="#editModal">
-                  <i class="fa fa-arrow-left"></i><span>Previous</span>
+				 <a class="btn btn-primary pull-right" onclick="location.href='?uin=<?php echo $prev; ?>';" data-toggle="modal" data-target="#editModal">
+                  <i class="fa fa-arrow-left"></i><span href="?uin=<?php echo $prev; ?>">Previous</span>
                 </a>
               </div>
               <div class="list-group">
@@ -164,7 +170,7 @@ $xmlDoc=new DOMDocument();
 
                 <div class="list-group-item">
                   <label>Question</label>
-                  <h4 class="list-group-item-heading"><?php echo $qarray[$currenti]["text"]; ?></h4>
+                  <h4 class="list-group-item-heading"><?php echo $qarray[$q]["text"]; ?></h4>
                 </div>
 
                 <div class="list-group-item">
@@ -197,19 +203,18 @@ $xmlDoc=new DOMDocument();
 			} 
 			
 			?>
+			</div>
 	<?php 
 		else: 
 		echo 'Please use the search tools </h3> 
 		 </div>';
 			
 		endif; ?>
-                </div>
+            
                 
                  <div class="panel-footer">
                   <small>Data from UK Parliament - <a href="http://data.parliament.uk/membersdataplatform/">Members' Names Data Platform</a></small>
                 </div>
               </div>
-              </div>
 
-            </div><!--contact card-->
 

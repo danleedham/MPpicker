@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<script
+  src="http://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,16 +30,14 @@ $xmlDoc=new DOMDocument();
 	$m=$_GET["m"];
 	$house = "Commons";
 	$photos=$_GET["photos"];
-
+		if(!$photos) { $photos = "stock"; }
+		
 	$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&AnswerDate='.$date.'&_pageSize=500');
 	$x=$xmlDoc->getElementsByTagName('item');
 	$questionscount = $x->length;
 		
 	$qxml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/House=Commons%7CIsEligible=true/") or die("Can't load MPs");
 	$memberscount =  count($qxml);
-	
-	$betaimages =simplexml_load_file("data/betaimages.xml") or die("Can't load Beta Images");
-	$imagescount =  count($betaimages);
 
 	// Arry with party ID and party color (from BBC Elections coverage)	
 	$colors = array (
@@ -65,6 +67,7 @@ $xmlDoc=new DOMDocument();
 			}
 			else {
 				$QuestionID=$x->item($i)->getElementsByTagName('ID');
+				$uin=$x->item($i)->getElementsByTagName('uin');
 				$MemberId=$x->item($i)->getElementsByTagName('tablingMemberPrinted');
 					$CurrentQuestioner = trim($MemberId->item(0)->textContent);
 				$Const=$x->item($i)->getElementsByTagName('constituency');
@@ -89,6 +92,7 @@ $xmlDoc=new DOMDocument();
 				}
 				
 				$qarray[] = array('number'=>$BallotNo[0]->textContent,
+								  'uin'=>$uin[0]->textContent,
 								  'dept'=>$Department,
 								  'text'=>$QText[0]->textContent,
 								  'type'=>$QuestionType[0]->textContent,
@@ -133,45 +137,25 @@ $xmlDoc=new DOMDocument();
 		// Generate the list of questions 	
 		for($i=0; $i < $length; $i++) {
 			
-			// Stop trying to load a question we can't
-			
-			if($i == $q){
-				
-				if($qtype ==  $qarray[$i]["type"]) {
-					$isselected = ' active';
-					$currenti = $i;
-				}
-				else {
-					$isselected = "";
-				}
-			}
-			
-			else {
-					$isselected = "";
-			}
-					
-			if ($qarray[$i]["type"] == "Topical") {
-						$istopical = '&type=Topical';
-			}
-			else {
-						$istopical = "";
-			}
-							
-			// If no department is set, let's use the one from q		
+			// If no department is set or just has one, let's use the first one		
 			if (!$qdept or count($deptarray) === 1) { $qdept = $qarray[0]["dept"]; }
-					
+	
 			if ($qarray[$i]["dept"] !== $qdept && intval($deptscount) > 1) {
 			}
 			else {	
 				if ($qarray[$i]["type"] == $qtype) {		
 					if ($hint=="") {
-						$hint='<a class="list-group-item'.$isselected.'" href="?date='.$date.'&q='.$i.$istopical.'">
+						$isselected = ' active';
+						$currenti = $i;
+						$hint='<a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$isselected.'" onclick="load('.$qarray[$i]["uin"].','.$date.',\''.$photos.'\');return false;" href="#">
 						   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
 						   <h4 class="list-group-item-heading"> <span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' '.$qarray[$i]["DisplayAs"].'</h4>
 						   <p class="list-group-item-text">'.$qarray[$i]["constituency"].'</p></a>';
 					} 
 					else {
-						$hint=$hint .'<a class="list-group-item'.$isselected.'"  href="?date='.$date.'&q='.$i.$istopical.'">
+						$isselected = '';
+						$currenti = $currenti;
+						$hint=$hint .'<a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$isselected.'" onclick="load('.$qarray[$i]["uin"].','.$date.',\''.$photos.'\');return false;"  href="#">
 						   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
 						   <h4 class="list-group-item-heading"><span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' '. $qarray[$i]["DisplayAs"].'</span></h4>
 						   <p class="list-group-item-text">'.$qarray[$i]["constituency"].'</p></a>';
@@ -213,7 +197,15 @@ if ($hint=="") {
 // Now load the data for the currently selected member. This shall be replaced by AJAX on selection futher down	
 	$xml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id=".$m."/FullBiog") or die("No MP with this id");
 ?>
-	
+
+<script>
+function load(num,date,photos){
+   $("#contactCard").load('template/questioner.php?uin='+num+'&date='+date+'&photos='+photos);
+   $('.active').removeClass('active');
+   $('#q'+num).addClass("active");
+}
+</script>
+
 </head>
 
 <body>		
@@ -286,104 +278,13 @@ if ($hint=="") {
 
           <!--contact details -->
           <div id="contactCard">
-
-            <div class="panel panel-default">
-              <div class="panel-heading clearfix">
-                <h3 class="panel-title pull-left"><?php echo $qarray[$currenti]["type"] ?> Question <?php echo $qarray[$currenti]["number"] ?> Details</h3>
-                <a class="btn btn-primary pull-right" onclick="location.href='?date=<?php echo $date;?>&q=<?php echo intval($q + 1);?>&dept=<?php echo urlencode($qdept) ?>';" data-toggle="modal" data-target="#editModal">
-                  <i class="fa fa-arrow-right"></i><span href="?date=<?php echo $date;?>&q=<?php echo intval($q - 1);?>&dept=<?php echo urlencode($qdept) ?>">Next</span>
-                </a>
-				 <a class="btn btn-primary pull-right" onclick="location.href='?date=<?php echo $date;?>&q=<?php echo intval($q - 1); if($qtype=="Topical") {echo '&type=Topical';} ?>';" data-toggle="modal" data-target="#editModal">
-                  <i class="fa fa-arrow-left"></i><span>Previous</span>
-                </a>
-              </div>
-              <div class="list-group">
- 				<div class="list-group-item">  
-                  <h4 class="list-group-item-heading">
-				  <?php echo $xml->Member[0]->DisplayAs ?>
-				  <span style="color:                  
-                  <?php  $PartyID = $xml->Member[0]->Party[0]->attributes()->Id;              	          	     
-	  					 echo $colors[intval($PartyID)];
-					?>">
-				  <?php echo $xml->Member[0]->Party ?></span>
-				  </h4>
-                </div>
-				<div class="list-group-item">
-				<img src="
-					<?php 
-						$DodsId=$xml->Member[0]->attributes()->Dods_Id;
-						if ($photos !== "screenshot") {
-							
-							if ($house === "Commons") {
-									for($ii=0; $ii < $imagescount; $ii++) {
-										if (trim($betaimages->member[$ii]->KnownAs) == trim($xml->Member[0]->DisplayAs)){
-											$BetaId = $betaimages->member[$ii]->imageid;
-										}
-									}
-									echo 'https://api20170418155059.azure-api.net/photo/'.$BetaId.'.jpeg?crop=MCU_3:2&width=1000&quality=80';
-							}
-							else { 
-									echo 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg';
-							}
-						}
-						else {
-							echo 'images/'.$DodsId.'.jpg';
-						}								
-						
-					?>" class="img-rounded main-question-image">
-				</div>	
-                <div class="list-group-item">
-                  <label>Constituency</label>
-                  <h4 class="list-group-item-heading"><?php echo $xml->Member[0]->MemberFrom ?></h4>
-                </div>
-
-                <div class="list-group-item">
-                  <label>Question</label>
-                  <h4 class="list-group-item-heading"><?php echo $qarray[$currenti]["text"]; ?></h4>
-                </div>
-
-                <div class="list-group-item">
-			<?php for($i = 0; $i < count($xml->Member[0]->GovernmentPosts[0]); $i ++) {
-			if (!strtotime($xml->Member[0]->GovernmentPosts->GovernmentPost[$i]->EndDate[0]) >= time()) {
-				$Government = $xml->Member[0]->GovernmentPosts->GovernmentPost[$i]->HansardName[0]; 
-				echo '<h4 class="list-group-item-heading">'. $Government . "</h4>";
-				}
-			} 			
-			// let's see if they're currently a member of the opposition
-			for($i = 0; $i < count($xml->Member[0]->OppositionPosts[0]); $i ++) {
-				if (!strtotime($xml->Member[0]->OppositionPosts->OppositionPost[$i]->EndDate[0]) >= time()) {
-					$Opposition = $xml->Member[0]->OppositionPosts->OppositionPost[$i]->HansardName[0]; 
-					echo '<h4 class="list-group-item-heading">'. $Opposition . "</h4>";
-				}
-			}
-			// let's see if they've got a parliamentary post
-			for($i = 0; $i < count($xml->Member[0]->ParliamentaryPosts[0]); $i ++) {
-				if (!strtotime($xml->Member[0]->ParliamentaryPosts->ParliamentaryPost[$i]->EndDate[0]) >= time()) {
-					$Parliamentary = $xml->Member[0]->ParliamentaryPosts->ParliamentaryPost[$i]->Name[0]; 
-					 echo '<h4 class="list-group-item-heading">'. $Parliamentary . "</h4>";
-				}
-			}
-			// let's see if they're currently on any committees
-			for($i = 0; $i < count($xml->Member[0]->Committees[0]); $i ++) {
-				if (!strtotime($xml->Member[0]->Committees->Committee[$i]->EndDate[0]) >= time()) {
-					$Committee = $xml->Member[0]->Committees->Committee[$i]->Name[0]; 
-					echo '<h4 class="list-group-item-heading">'.$Committee . "</h4>";
-				}
-			} 
-			
-			?>
-                </div>
-                
-                 <div class="panel-footer">
-                  <small>Data from UK Parliament - <a href="http://data.parliament.uk/membersdataplatform/">Members' Names Data Platform</a></small>
-                </div>
-              </div>
-              </div>
-
-            </div><!--contact card-->
+            <?php 
+            	$uin = $qarray[$currenti]["uin"];
+             	include 'template/questioner.php' ?>
+         </div><!--contact card-->
 
           <!--contact details -->
-          <div id="contactCard">
+          <div id="groupCard">
 
             <div class="panel panel-default">
               <div class="panel-heading clearfix">

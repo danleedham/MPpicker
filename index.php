@@ -59,7 +59,7 @@
 
 <body>
 
-   <div class="container bootcards-container push-right">
+   <div class="container-fluid bootcards-container push-right">
 
     <div class="row">
 
@@ -96,7 +96,7 @@
             }
             else {
 				$mselected = '&mselected='.$m;
-				echo file_get_contents("http://leedhammedia.com/parliament/test/template/livesearch.php?q=".$q."&house=".$house."&searchby=".$searchby.$mselected.'"'); 
+				echo file_get_contents("http://leedhammedia.com/parliament/template/livesearch.php?q=".$q."&house=".$house."&searchby=".$searchby.$mselected.'"'); 
 			} 
 			
           ?>

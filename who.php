@@ -112,9 +112,7 @@
 
 <body>
 
-<?php include 'template/navbar.php'; ?> 
-
-   <div class="container bootcards-container push-right">
+   <div class="container-fluid bootcards-container push-right">
 
     <div class="row">
 	 <!-- Search panel -->

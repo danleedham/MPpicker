@@ -1,20 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<script
-  src="http://code.jquery.com/jquery-3.2.1.min.js"
-  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-  crossorigin="anonymous"></script>
+  <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="  crossorigin="anonymous"></script>
+  <script src="https://www.w3schools.com/lib/w3.js"></script>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google" value="notranslate">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootcards CSS files for desktop, iOS and Android -->
+  <link href="../css/bootcards-desktop.min.css" rel="stylesheet">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+  
+  <!-- bootstrap toggle includes -->
+  <link href="../css/bootstrap-toggle.min.css" rel="stylesheet">
+  <script src="../js/bootstrap-toggle.min.js"></script>
+  
   <title>Questions Picker</title>
 
-  <?php include 'template/headinc.php';
+<?php 
 
-$xmlDoc=new DOMDocument();
+ $xmlDoc=new DOMDocument();
 
 	//get parameters from URL
 	$q=$_GET["q"];
@@ -147,7 +155,7 @@ $xmlDoc=new DOMDocument();
 					if ($hint=="") {
 						$isselected = ' active';
 						$currenti = $i;
-						$hint='<a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$isselected.'" onclick="load('.$qarray[$i]["uin"].','.$date.',document.getElementById(\'photos-input\').value);return false;" href="#">
+						$hint='<a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$isselected.'" onclick="load('.$qarray[$i]["uin"].','.$date.',\''.$photos.'\');return false;" href="#">
 						   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
 						   <h4 class="list-group-item-heading"> <span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' '.$qarray[$i]["DisplayAs"].'</h4>
 						   <p class="list-group-item-text">'.$qarray[$i]["constituency"].'</p></a>';
@@ -155,7 +163,7 @@ $xmlDoc=new DOMDocument();
 					else {
 						$isselected = '';
 						$currenti = $currenti;
-						$hint=$hint .'<a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$isselected.'" onclick="load('.$qarray[$i]["uin"].','.$date.',document.getElementById(\'photos-input\').value);return false;"  href="#">
+						$hint=$hint .'<a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$isselected.'" onclick="load('.$qarray[$i]["uin"].','.$date.',\''.$photos.'\');return false;"  href="#">
 						   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
 						   <h4 class="list-group-item-heading"><span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' '. $qarray[$i]["DisplayAs"].'</span></h4>
 						   <p class="list-group-item-text">'.$qarray[$i]["constituency"].'</p></a>';
@@ -200,15 +208,9 @@ if ($hint=="") {
 
 <script>
 function load(num,date,photos){
-	if (!document.getElementById("photos-input").checked){
-	 var photos = 'Stock';
-	}
-   $("#contactCard").load('template/questioner.php?uin='+num+'&date='+date+'&photos='+photos);
+   $("#contactCard").load('../template/questioner.php?uin='+num+'&date='+date+'&photos='+photos);
    $('.active').removeClass('active');
    $('#q'+num).addClass("active");
-}
-function loadquestions(date,dept,type){
-   $("#livesearch").load('template/listquestions.php?date='+date+'&dept='+dept+'&type='+type);
 }
 </script>
 
@@ -227,14 +229,14 @@ function loadquestions(date,dept,type){
             <div class="search-form">
 				<div class="form-inline">
 					<input id="date-input" type="date" class="input-sm form-control" value="<?php echo $date ?>" name="date" form="mpsearch">
-					<input id="photos-input" style="float:right !important;" class="pull-right" <?php if ($photos == "screenshot") {echo "checked";} ?> type="checkbox" value="screenshot" name="photos" form="mpsearch" data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-off="Stock">
+					<input id="choosephotos" style="float:right !important;" class="pull-right" <?php if ($photos == "screenshot") {echo "checked";} ?> type="checkbox" value="screenshot" name="photos" form="mpsearch" data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-off="Stock">
 					<button type="submit" form="mpsearch" class="btn btn-primary pull-right">Load</button>
 				</div>
 				<?php //If there are multiple departments let the user select which one to pull questions from
 					if(intval($deptscount) > 1) : 
 				?>
 				<div class="form-inline" style="padding-top:6px !important;">
-				<select id="dept-input" name="dept" class="form-control" form="mpsearch">
+				<select id="dept" name="dept" class="form-control" form="mpsearch">
 						<?php 
 							foreach ($deptarray as $key => $value) {
 								if ($qdept == $value["dept"]) { $isdept = ' selected="selected" ';}
@@ -246,10 +248,10 @@ function loadquestions(date,dept,type){
 				</div>
 				<?php endif;
 				 //If there are multiple departments let the user select which one to pull questions from
-					if(intval($typecount) > 0) : 
+					if(intval($typecount) > 1) : 
 				?>
 				<div class="form-inline" style="padding-top:6px !important;">
-				<select id="type-input" name="type" class="form-control" form="mpsearch">
+				<select id="type" name="type" class="form-control" form="mpsearch">
 						<?php 
 							foreach ($typearray as $key => $value) {
 								if ($qtype == $value["type"]) { $istype = ' selected="selected" ';}
@@ -262,9 +264,7 @@ function loadquestions(date,dept,type){
 				<?php endif; ?>
 				
             </div>
-			</form>
-			<br />
-			<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-info" role="button">Dynamic Load</a>
+			</form>	
           </div><!--panel body-->
           <div class="list-group" id="livesearch">
           
@@ -288,7 +288,7 @@ function loadquestions(date,dept,type){
           <div id="contactCard">
             <?php 
             	$uin = $qarray[$currenti]["uin"];
-             	include 'template/questioner.php' ?>
+             	include '../template/questioner.php' ?>
          </div><!--contact card-->
 
           <!--contact details -->
@@ -329,10 +329,11 @@ function loadquestions(date,dept,type){
 
   </div><!--container-->
 
-	<?php include 'template/footer.php'; ?>
-
-  
-   <?php include 'template/core.php'; ?>
+	<div w3-include-html="template/footer.html"></div>
+	<div w3-include-html="template/core.html""></div>
+  	<script>
+w3.includeHTML();
+</script>
    
   </body>
 </html>

@@ -129,7 +129,7 @@
 			 <div class="list-group">
 				<!-- start search form -->
 				<form id="mpsearch" action="who.php" method="GET">	
-					<!-- sex -->
+					<!-- house -->
 					 <div class="list-group-item">
 					 <select name="house" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="house">
 					 <option value="">House</option>
@@ -152,24 +152,9 @@
 					<!-- party -->		
 					<div class="list-group-item">
 					<select name="party" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="party">
+						<?php if(!$party) {echo '<option value="">Select Party</option>'; } ?>
 						<option <?php if ($party === 'all') { echo 'selected="selected"'; } ?> value="all">All</option>
-					<?php 
-							if (!$party) { echo '<option value="" selected="selected">Party</option>'; }
-							
-							for($i = 0; $i < count($partieslords); $i ++) {
-							$partyid = $partieslords->Party[$i]->attributes()->Id;
-							$partyname = $partieslords->Party[$i]->Name;
-							$partycount = $partieslords->Party[$i]->TotalCount;
-							$partymale = $partieslords->Party[$i]->MaleCount;
-							$partyfemale = $partieslords->Party[$i]->FemaleCount;
-							$isselected = '';
-						if ($party == $partyname)
-							{ $isselected = 'selected="selected"'; 
-							}
-						echo '<option '.$isselected.' value="'.$partyname.'">'.$partyname.' - '.$partycount.'</option>';
-				
-						} 
-					?>	 
+						<?php echo file_get_contents("http://leedhammedia.com/parliament/template/whoparty.php?sex=".$sex); ?>
 					</select>
 					</div>
 					
@@ -177,7 +162,7 @@
 					<!-- positions -->
 					 <div class="list-group-item">
 					 <select name="positions" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="positions">
-					 <?php if(!$positions) {echo '<option value="">Current position</option>'; } ?>
+					 <?php if(!$positions) {echo '<option value="">Select Current position</option>'; } ?>
 					 <option value="all" <?php if ($positions === 'all') { echo 'selected="selected"'; } ?>> All </option>
 					 <option value="cabinet" <?php if ($positions === 'cabinet') { echo 'selected="selected"'; } ?>> Cabinet </option>
 					 <option value="shadow" <?php if ($positions === 'shadow') { echo 'selected="selected"'; } ?>> Shadow Cabinet </option>
@@ -190,38 +175,18 @@
 					<!-- committees -->
 					<div class="list-group-item">
 					<select name="committee" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="committee">
+						<?php if(!$committee) {echo '<option value="">Select Committee</option>'; } ?>
 						<option <?php if ($committee === 'all') { echo 'selected="selected"'; } ?> value="all">All</option>
-					<?php 
-					if ($committee == "") { echo '<option value="" selected="selected">Member of Committee</option>'; }
-								
-					foreach($Committees as $committeename) { 
-					$isselectedcom = "";
-					if ($committeename == $committee) { $isselectedcom = 'selected="selected"'; }
-					?>
-						
-						<option value="<?= $committeename[0] ?>" <?php echo $isselectedcom ?>><?= $committeename[0] ?></option>
-					<?php
-					} ?>						
- 
+						<?php echo file_get_contents("http://leedhammedia.com/parliament/template/whocommittee.php?house=".$house); ?>
 					</select>
 					</div>
 					
 						<!-- departments -->
 					<div class="list-group-item">
 					<select name="department" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="department">
+						<?php if(!$department) {echo '<option value="">Select Department</option>'; } ?>
 						<option <?php if ($department === 'all') { echo 'selected="selected"'; } ?> value="all">All</option>
-					<?php 
-					if ($department == "") { echo '<option value="" selected="selected">Department</option>'; }
-								
-					foreach($Departments as $departmentname) { 
-					$isselecteddept = "";
-					if ($departmentname[0] == $department) { $isselecteddept = 'selected="selected"'; }
-					?>
-						
-					<option value="<?= $departmentname[0] ?>" <?php echo $isselecteddept ?>><?= $departmentname[0] ?></option>
-					<?php
-					} ?>						
- 
+						<?php echo file_get_contents("http://leedhammedia.com/parliament/template/whodepartment.php"); ?>
 					</select>
 					</div>
 					

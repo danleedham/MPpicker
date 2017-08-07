@@ -14,10 +14,8 @@
 		//get the q parameter from URL
 		$m=$_GET["m"];
 		$q=$_GET["q"];
-		if (!$q){ $SearchContactsMessage="Start typing..."; 
-				}
-			else { $SearchContactsMessage=$q; 
-				}
+		if (!$q){$SearchContactsMessage="Start typing...";}
+			else {$SearchContactsMessage=$q;}
 		$searchby=$_GET["searchby"];
 			if(!$searchby) {$searchby="name";}
 		$house=$_GET["house"];
@@ -27,7 +25,8 @@
 		  }	
 		if (!$m){ $m="8";}	
 		$xml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id=".$m."/FullBiog") or die("No MP with this id");
-		
+		$betaimages =simplexml_load_file("http://leedhammedia.com/parliament/betaimages.xml") or die("Can't load Beta Images");
+	    $imagescount =  count($betaimages);
 		?>
 
 <!-- Here's the script that *should* get the relevant members from the search. Note search string must be greater than 2 -->		
@@ -67,7 +66,6 @@
 			}
 			</script>
 						
-	
 </head>
 
 <body>
@@ -137,15 +135,34 @@
               </div>
               <div class="list-group">
                 <div class="list-group-item">
-				<?php if ($house === "Commons") {
-					
-					echo '<img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$m.'" class="img-rounded pull-right main-member-image">';
+                <?php 
+						$DodsId=$xml->Member[0]->attributes()->Dods_Id;
+						if ($photos !== "screenshot") {
+							
+							if ($house === "Commons") {
+									for($ii=0; $ii < $imagescount; $ii++) {
+										if (trim($betaimages->member[$ii]->KnownAs) == trim($xml->Member[0]->DisplayAs)){
+											$BetaId = $betaimages->member[$ii]->imageid;
+										}
+									}
+									$imageurl = 'https://api20170418155059.azure-api.net/photo/'.$BetaId.'.jpeg?crop=CU_1:1&width=500&quality=70';
+									if (@getimagesize($imageurl)){}
+									else {$imageurl = 'http://leedhammedia.com/parliament/images/'.$DodsId.'.jpg';}
+									
+									if (@getimagesize($imageurl)){}
+									else {$imageurl = 'http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$m;}
 							}
-					  else { $DodsId=$xml->Member[0]->attributes()->Dods_Id; 
-							 echo '<img src="https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg" class="img-rounded pull-right main-member-image">';
+							else { 
+									$imageurl = 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg';
+							}
 						}
-				  
-				  ?>
+						else {
+							$imageurl = 'images/'.$DodsId.'.jpg';
+						}											
+					?>
+				
+				<img src="<?php echo $imageurl; ?>" class="img-rounded pull-right main-member-image"">
+
 				  <label>Name</label>
                   <h4 class="list-group-item-heading"><?php echo $xml->Member[0]->DisplayAs ?></h4>
                 </div>

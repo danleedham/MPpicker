@@ -23,20 +23,7 @@ $xmlDoc=new DOMDocument();
 
 	// Arry with party ID and party color (from BBC Elections coverage)	
 	$colors = array (
-				"0"	  =>   "#000000",
-				"4"	  =>   "#0087DC",
-				"7"   =>   "#D46A4C",
-				"8"   =>   "#DDDDDD",
-				"15"  =>   "#DC241f",
-				"17"  =>   "#FDBB30",
-				"22"  =>   "#008142",
-				"29"  =>   "#FFFF00",
-				"30"  =>   "#008800",
-				"31"  =>   "#99FF66",
-				"35"  =>   "#70147A",
-				"38"  =>   "#9999FF",
-				"44"  =>   "#6AB023",
-				"47"  =>   "#FFFFFF");
+	"0"=>"#000000","4"=>"#0087DC","7"=>"#D46A4C","8"=>"#DDDDDD","15"=>"#DC241f","17"=>"#FDBB30","22"=>"#008142","29"=>"#FFFF00","30"=>"#008800","31"=>"#99FF66","35"=>"#70147A","38"=>"#9999FF","44"=>"#6AB023","47"=>"#FFFFFF");
 	
 	if ($questionscount == 1) {
 			$m = 4516;
@@ -71,8 +58,7 @@ $xmlDoc=new DOMDocument();
 							$PartyID =$qxml->Member[$y]->Party[0]->attributes()->Id;              	          	          	     
 							$color = $colors[intval($PartyID)];
 						}
-				}
-				
+				}				
 				$qarray[] = array('number'=>$BallotNo[0]->textContent,
 								  'date'=>$AnswerDate[0]->textContent,
 								  'dept'=>$Department,
@@ -151,6 +137,8 @@ $xmlDoc=new DOMDocument();
 										}
 									}
 									$imageurl = 'https://api20170418155059.azure-api.net/photo/'.$BetaId.'.jpeg?crop=MCU_3:2&width=1000&quality=80';
+									if (@getimagesize($imageurl)){}
+									else {$imageurl = 'http://leedhammedia.com/parliament/images/'.$DodsId.'.jpg';}
 							}
 							else { 
 									$imageurl = 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg';
@@ -210,8 +198,7 @@ $xmlDoc=new DOMDocument();
 		 </div>';
 			
 		endif; ?>
-            
-                
+              
                  <div class="panel-footer">
                   <small>Data from UK Parliament - <a href="http://data.parliament.uk/membersdataplatform/">Members' Names Data Platform</a></small>
                 </div>

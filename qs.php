@@ -2,14 +2,12 @@
 <html lang="en">
 <head>
 	<script
-  src="http://code.jquery.com/jquery-3.2.1.min.js"
-  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-  crossorigin="anonymous"></script>
+  src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google" value="notranslate">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <title>Questions Picker</title>
 
   <?php include 'template/headinc.php';
@@ -17,44 +15,17 @@
 $xmlDoc=new DOMDocument();
 
 	//get parameters from URL
-	$q=$_GET["q"];
-		if(!$q) {$q = 0;}
 	$qtype=$_GET["type"];
-		if(!$qtype) { $qtype = "Substantive"; }
-	$qdept=$_GET["dept"]; 
-		
 	$date=$_GET["date"];
 		if (!$date) {$date = date("Y-m-d");}
 	$groups=$_GET["groups"];
-
 	$m=$_GET["m"];
 	$house = "Commons";
 	$photos=$_GET["photos"];
 		if(!$photos) { $photos = "stock"; }
-		
 	$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&AnswerDate='.$date.'&_pageSize=500');
 	$x=$xmlDoc->getElementsByTagName('item');
 	$questionscount = $x->length;
-		
-	$qxml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/House=Commons%7CIsEligible=true/") or die("Can't load MPs");
-	$memberscount =  count($qxml);
-
-	// Arry with party ID and party color (from BBC Elections coverage)	
-	$colors = array (
-				"0"	  =>   "#000000",
-				"4"	  =>   "#0087DC",
-				"7"   =>   "#D46A4C",
-				"8"   =>   "#DDDDDD",
-				"15"  =>   "#DC241f",
-				"17"  =>   "#FDBB30",
-				"22"  =>   "#008142",
-				"29"  =>   "#FFFF00",
-				"30"  =>   "#008800",
-				"31"  =>   "#99FF66",
-				"35"  =>   "#70147A",
-				"38"  =>   "#9999FF",
-				"44"  =>   "#6AB023",
-				"47"  =>   "#FFFFFF");
 	
 	if ($questionscount == 1) {
 			$hint = "";
@@ -66,136 +37,32 @@ $xmlDoc=new DOMDocument();
 			if ($QText[0]->textContent=="") {
 			}
 			else {
-				$QuestionID=$x->item($i)->getElementsByTagName('ID');
 				$uin=$x->item($i)->getElementsByTagName('uin');
-				$MemberId=$x->item($i)->getElementsByTagName('tablingMemberPrinted');
-					$CurrentQuestioner = trim($MemberId->item(0)->textContent);
-				$Const=$x->item($i)->getElementsByTagName('constituency');
-					$Constituency = trim($Const['prefLabel']->textContent);
-				$TabledDate=$x->item($i)->getElementsByTagName('TabledDate');
 				$QuestionType=$x->item($i)->getElementsByTagName('QuestionType');
-				$DateDue=$x->item($i)->getElementsByTagName('AnswerDate');
-				$BallotNo=$x->item($i)->getElementsByTagName('ballotNumber');
 				$Dept=$x->item($i)->getElementsByTagName('AnsweringBody');
 					$Department=trim($Dept->item(0)->textContent);
-
-				for ($y = 0; $y < $memberscount; $y++){
-					$CurrentMP = trim($qxml->Member[$y]->ListAs);
-						if($CurrentQuestioner === $CurrentMP) { 
-							$DodsId=$qxml->Member[$y]->attributes()->Dods_Id;
-							$MemberId=$qxml->Member[$y]->attributes()->Member_Id;
-							$DisplayAs=$qxml->Member[$y]->DisplayAs;
-							$party=$qxml->Member[$y]->Party;
-							$PartyID =$qxml->Member[$y]->Party[0]->attributes()->Id;              	          	          	     
-							$color = $colors[intval($PartyID)];
-						}
 				}
-				
-				$qarray[] = array('number'=>$BallotNo[0]->textContent,
-								  'uin'=>$uin[0]->textContent,
+				$qarray[] = array('uin'=>$uin[0]->textContent,
 								  'dept'=>$Department,
-								  'text'=>$QText[0]->textContent,
-								  'type'=>$QuestionType[0]->textContent,
-								  'member'=>$CurrentQuestioner,
-								  'DisplayAs'=>$DisplayAs,
-								  'DodsId'=>$DodsId,
-								  'MemberId'=>$MemberId,
-								  'constituency'=>$Constituency,
-								  'party'=>$party,
-								  'color'=>$color);
-								  
+								  'type'=>$QuestionType[0]->textContent
+								  );
 				$deptarray[] = array('dept' => $Department);
-				$typearray[] = array('type' => $QuestionType[0]->textContent);
-	  			
+				$typearray[] = array('type' => $QuestionType[0]->textContent);			
 			}
 		}
-		// This gives us a unique list of departments & question types
+		
+				// This gives us a unique list of departments & question types
 		if (count($deptarray) !== 0) {
 			$deptarray = array_map("unserialize", array_unique(array_map("serialize", $deptarray)));
 		}
+		if ($deptarray[0]["dept"] == '') {array_shift($deptarray);}
 		if (count($typearray) !== 0) {
 			$typearray = array_map("unserialize", array_unique(array_map("serialize", $typearray)));
 		}
+		if ($deptarray[0]["dept"] == '') {array_shift($deptarray);}
 		// Count how many unique departments/types there are
 		$deptscount = count($deptarray);
 		$typecount = count($typearray);
-		
-		// Function to sort questions by type then by number
-		function comp($a, $b) {
-			if ($a['type'] == $b['type']) {
-				return $a['number'] - $b['number'];
-			}
-			return strcmp($a['type'], $b['type']);
-		}
-		// Count how many questions there are
-		$length = count($qarray);
-		
-	// If there are questions, sort the questions & generate list
-	if ($length !== 0) {
-			usort($qarray, 'comp');
-			
-		// Generate the list of questions 	
-		for($i=0; $i < $length; $i++) {
-			
-			// If no department is set or just has one, let's use the first one		
-			if (!$qdept or count($deptarray) === 1) { $qdept = $qarray[0]["dept"]; }
-	
-			if ($qarray[$i]["dept"] !== $qdept && intval($deptscount) > 1) {
-			}
-			else {	
-				if ($qarray[$i]["type"] == $qtype) {		
-					if ($hint=="") {
-						$isselected = ' active';
-						$currenti = $i;
-						$hint='<a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$isselected.'" onclick="load('.$qarray[$i]["uin"].','.$date.',document.getElementById(\'photos-input\').value);return false;" href="#">
-						   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
-						   <h4 class="list-group-item-heading"> <span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' '.$qarray[$i]["DisplayAs"].'</h4>
-						   <p class="list-group-item-text">'.$qarray[$i]["constituency"].'</p></a>';
-					} 
-					else {
-						$isselected = '';
-						$currenti = $currenti;
-						$hint=$hint .'<a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$isselected.'" onclick="load('.$qarray[$i]["uin"].','.$date.',document.getElementById(\'photos-input\').value);return false;"  href="#">
-						   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
-						   <h4 class="list-group-item-heading"><span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' '. $qarray[$i]["DisplayAs"].'</span></h4>
-						   <p class="list-group-item-text">'.$qarray[$i]["constituency"].'</p></a>';
-					}
-				}
-			  }
-			}
-		}
-	}	  
-
-// Set output if no questions were found or to the correct values
-if ($hint=="") {
-  
-  if(!$_GET["type"]){ 
-  		$iftype = '';
-  }
-  else {
-  		$iftype = ' '.$qtype;
-  }
-  
-  if(!$qdept){$ifdept = '';}
-  else {$ifdept = ' to '.$qdept;}
-  $response='<a class="list-group-item">
-			 <h4 class ="list-group-item-heading">No'.$iftype.' questions on '.$date.$ifdept.'</h4></a>';
-} else {
-// Otherwise respond with the information required 	
-  $response=$hint;
-}
-
-//Let's catch some information for below
-	if(!$m) { 
-		if ($hint !== "") {
-			$m = $qarray[$currenti]["MemberId"];
-		}
-		else {
-			$m = 4516;
-		}
-	}
-// Now load the data for the currently selected member. This shall be replaced by AJAX on selection futher down	
-	$xml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id=".$m."/FullBiog") or die("No MP with this id");
 ?>
 
 <script>
@@ -208,74 +75,56 @@ function load(num,date,photos){
    $('#q'+num).addClass("active");
 }
 function loadquestions(date,dept,type){
-   $("#livesearch").load('template/listquestions.php?date='+date+'&dept='+dept+'&type='+type);
+   $("#livesearch").load('template/listquestions.php?date='+date+'&type='+type+'&dept='+dept);
 }
+function loaddepts(date){
+   $("#dept-input").load('template/questiondepts.php?date='+date);
+   $("#type-input").load('template/questiontypes.php?date='+date);
+}
+function loadtypes(dept){
+   var date = document.getElementById("date-input").value;
+   $("#type-input").load('template/questiontypes.php?date='+date+'&dept='+dept);
+   $("#livesearch").load('template/listquestions.php?date='+date+'&dept='+dept);
+}
+
 </script>
 
 </head>
 
 <body>		
    <div class="container-fluid bootcards-container push-right">
-
     <div class="row">
-
       <!-- left list column -->
       <div class="col-sm-4 bootcards-list" id="list" data-title="Contacts">
-        <div class="panel panel-default">       
+        <div class="panel panel-default">     
           <div class="panel-body">
-			<form id="mpsearch">
             <div class="search-form">
 				<div class="form-inline">
-					<input id="date-input" type="date" class="input-sm form-control" value="<?php echo $date ?>" name="date" form="mpsearch">
-					<input id="photos-input" style="float:right !important;" class="pull-right" <?php if ($photos == "screenshot") {echo "checked";} ?> type="checkbox" value="screenshot" name="photos" form="mpsearch" data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-off="Stock">
-					<button type="submit" form="mpsearch" class="btn btn-primary pull-right">Load</button>
+					<input id="date-input" type="date" class="input-sm form-control" onchange="loaddepts(this.value)" value="<?php echo $date ?>" name="date" >
+					<input id="photos-input" style="float:right !important;" class="pull-right" <?php if ($photos == "screenshot") {echo "checked";} ?> type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-off="Stock">
 				</div>
-				<?php //If there are multiple departments let the user select which one to pull questions from
-					if(intval($deptscount) > 1) : 
-				?>
 				<div class="form-inline" style="padding-top:6px !important;">
-				<select id="dept-input" name="dept" class="form-control" form="mpsearch">
-						<?php 
-							foreach ($deptarray as $key => $value) {
-								if ($qdept == $value["dept"]) { $isdept = ' selected="selected" ';}
-								else { $isdept = "";}
-							   echo '<option'.$isdept.' value="'. $value["dept"].'">'. $value["dept"].'</option>';
-							}
-						?>
+				 	<label for="dept-input">Department:</label><br />
+					<select id="dept-input" name="type" class="form-control">
+						<?php include 'template/questiondepts.php' ?>
+					</select>			
+				</div>
+				<div class="form-inline" style="padding-top:6px !important;">
+				   <label for="type-input">Type:</label><br />
+				<select id="type-input" name="type" class="form-control" onchange="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(this.value));return false;">
+						Type: <?php include 'template/questiontypes.php' ?>
 				</select>
 				</div>
-				<?php endif;
-				 //If there are multiple departments let the user select which one to pull questions from
-					if(intval($typecount) > 0) : 
-				?>
-				<div class="form-inline" style="padding-top:6px !important;">
-				<select id="type-input" name="type" class="form-control" form="mpsearch">
-						<?php 
-							foreach ($typearray as $key => $value) {
-								if ($qtype == $value["type"]) { $istype = ' selected="selected" ';}
-								else { $istype = "";}
-							   echo '<option'.$istype.' value="'. $value["type"].'">'. $value["type"].'</option>';
-							}
-						?>
-				</select>
-				</div>
-				<?php endif; ?>
-				
             </div>
-			</form>
 			<br />
 			<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-info" role="button">Dynamic Load</a>
           </div><!--panel body-->
           <div class="list-group" id="livesearch">
-          
-		<?php echo $response;   ?>
-  		  
           </div><!--list-group-->
 
           <div class="panel-footer">
             <small class="pull-left">This section auto-populates by magic (and php).</small>
-            <a class="btn btn-link btn-xs pull-right" href="http://data.parliament.uk/membersdataplatform/">
-              Live Data</a>
+            <a class="btn btn-link btn-xs pull-right" href="http://data.parliament.uk/membersdataplatform/">Live Data</a>
           </div>
         </div><!--panel-->
 
@@ -286,12 +135,28 @@ function loadquestions(date,dept,type){
 
           <!--contact details -->
           <div id="contactCard">
-            <?php 
-            	$uin = $qarray[$currenti]["uin"];
-             	include 'template/questioner.php' ?>
-         </div><!--contact card-->
+             <div class="panel panel-default">
+              <div class="panel-heading clearfix">
+                <h3 class="panel-title pull-left">Please use the search tools </h3> 
+		 	  </div>
+		 	  <div class="list-group">
+                <div class="list-group-item">
+					<div class="search-form">
+						<div class="form-group">	
+							<div class="col-12">
+								Use the search tools on the left and MP details will appear here
+							</div>
+						</div>
+					</div>
+                </div>
+              </div>
+		 	  <div class="panel-footer">
+                  <small>Data from UK Parliament - <a href="http://data.parliament.uk/membersdataplatform/">Members' Names Data Platform</a></small>
+                </div>
+              </div>
 
-          <!--contact details -->
+
+          <!-- Group details -->
           <div id="groupCard">
 
             <div class="panel panel-default">
@@ -306,7 +171,7 @@ function loadquestions(date,dept,type){
 							<label for="date-input" class="col-2 col-form-label">Enter groups on seperate lines with questions space delimited</label>
 								<div class="col-10">
 									 <textarea class="form-control" rows="5" id="groups" form="groups"></textarea>
-									 <button type="submit" form="groups" class="btn btn-primary pull-left">Set groups</button>
+									 <button type="submit" form="groups" class="btn btn-primary pull-left" style="margin-top: 6px;">Set groups</button>
 									 <br />
 								</div>
 							</div>
@@ -320,7 +185,38 @@ function loadquestions(date,dept,type){
               </div>
               </div>
 
-            </div><!--contact card-->
+            </div><!--Group card-->
+            
+            <!-- Withdrawn details -->
+          <div id="groupCard">
+
+            <div class="panel panel-default">
+              <div class="panel-heading clearfix">
+                <h3 class="panel-title pull-left">Withdrawn Questions</h3>
+              </div>
+              <div class="list-group">
+                <div class="list-group-item">
+					<form id="groups">
+						<div class="search-form">
+							<div class="form-group">	
+							<label for="date-input" class="col-2 col-form-label">Enter withdrawn questions on seperate lines</label>
+								<div class="col-10">
+									 <textarea class="form-control" rows="5" id="groups" form="groups"></textarea>
+									 <button type="submit" form="groups" class="btn btn-primary pull-left" style="margin-top: 6px;">Withdraw these fellas</button>
+									 <br />
+								</div>
+							</div>
+						</div>
+					</form>	
+                </div>
+              
+                 <div class="panel-footer">
+                  <small>To un-withdraw any questions please resubmit the Withdrawn Questions box</small>
+                </div>
+              </div>
+              </div>
+
+            </div><!--Group card-->
 
         </div><!--list-details-->
 

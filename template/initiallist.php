@@ -1,41 +1,56 @@
-			<a class="list-group-item" href="?m=152">
-              <img src="https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/25640.jpg.jpg" class="img-rounded mini-member-image pull-left">
-              <h4 class="list-group-item-heading">Ian Duncan Smith</h4>
-              <p class="list-group-item-text">Conservative</p>
-            </a>
+<?php
+$xmlDoc=new DOMDocument();
 
-            <a class="list-group-item active" href="?m=8">
-              <img src="https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/25452.jpg.jpg" class="img-rounded mini-member-image pull-left ">
-              <h4 class="list-group-item-heading">T-May</h4>
-              <p class="list-group-item-text">Top-D.O.G</p>
-            </a>
-            
-            <a class="list-group-item" href="?m=185">
-              <img src="https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/25692.jpg.jpg" class="img-rounded mini-member-image pull-left ">
-              <h4 class="list-group-item-heading">Jezza C</h4>
-              <p class="list-group-item-text">So called Labour Leader</p>
-            </a>
-            
-            <a class="list-group-item" href="?m=1591">
-              <img src="https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/31716.jpg.jpg" class="img-rounded mini-member-image pull-left ">
-              <h4 class="list-group-item-heading">Tim Farron</h4>
-              <p class="list-group-item-text">Liberal Democrat</p>
-            </a>
-            
-            <a class="list-group-item" href="?m=577">
-              <img src="https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/25366.jpg.jpg" class="img-rounded mini-member-image pull-left ">
-              <h4 class="list-group-item-heading">Alex Salmond</h4>
-              <p class="list-group-item-text">A bit fishy</p>
-            </a>
+$house=$_GET["house"];
+if(!$house) {$house="Commons";} 
+if($house == "") {$house="Commons";} 
+$m = $_GET["m"];
+if(!$m) { $m = "8";}
 
-            <a class="list-group-item" href="?m=105">
-              <img src="https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/25564.jpg.jpg" class="img-rounded mini-member-image pull-left ">
-              <h4 class="list-group-item-heading">Spreadsheet Phil</h4>
-              <p class="list-group-item-text">Chancellor</p>
-            </a>
-            
-            <a class="list-group-item" href="?m=1458">
-              <img src="https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/25194.jpg.jpg" class="img-rounded mini-member-image pull-left ">
-              <h4 class="list-group-item-heading">George Osborne</h4>
-              <p class="list-group-item-text">Used to be somebody</p>
-            </a>
+$filename = "http://data.parliament.uk/membersdataplatform/services/mnis/members/query/house=".$house."|IsEligible=true|holdscabinetpost=true/";
+$xmlDoc->load($filename);
+
+$x=$xmlDoc->getElementsByTagName('Member');
+
+//lookup all links from the xml file if length of 2 or more
+	  $hint="";
+	  for($i=0; $i<($x->length); $i++) {
+		$FullTitle=$x->item($i)->getElementsByTagName('FullTitle');
+		$KnownAs=$x->item($i)->getElementsByTagName('DisplayAs');
+		$Party=$x->item($i)->getElementsByTagName('Party');
+		$MemberId=$x->item($i)->getAttribute('Member_Id');
+		$DodsId=$x->item($i)->getAttribute('Dods_Id');
+		$Const=$x->item($i)->getElementsByTagName('MemberFrom');
+		$ifactive = "";
+		if ($m == $MemberId)
+			{ $ifactive = " active";
+			}
+		if ($FullTitle->item(0)->nodeType==1) {
+			if ($hint=="") {
+			  $hint='<a class="list-group-item'.$ifactive.'" href="?m='.$MemberId.'&q='.$q.'&house='.$house.'">
+				  <img src="https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg" class="img-rounded mini-member-image pull-left">
+				  <h4 class="list-group-item-heading"> '.$KnownAs->item(0)->childNodes->item(0)->nodeValue .'</h4>
+				  <p class="list-group-item-text">'.
+			  $Party->item(0)->childNodes->item(0)->nodeValue.' ('.$Const->item(0)->childNodes->item(0)->nodeValue.")</p></a>";
+			} else {
+			  $hint=$hint .'<a class="list-group-item'.$ifactive.'" href="?m='.$MemberId.'&q='.$q.'&house='.$house.'">
+				  <img src="https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg" class="img-rounded mini-member-image pull-left">
+				  <h4 class="list-group-item-heading"> '.$KnownAs->item(0)->childNodes->item(0)->nodeValue .'</h4>
+				  <p class="list-group-item-text">'.
+			  $Party->item(0)->childNodes->item(0)->nodeValue.' ('.$Const->item(0)->childNodes->item(0)->nodeValue.")</p></a>";
+			}
+		}
+	  }
+
+// Set output if no members were found or to the correct values
+if ($hint=="") {
+  $response='<a class="list-group-item">
+			 <h4 class ="list-group-item-heading">Please try again</h4></a>';
+} else {
+  $response=$hint;
+}
+
+//output the response
+echo $response;
+
+?>

@@ -6,7 +6,7 @@
       <div class="bootcards-desktop-footer clearfix">
 
       <div class="btn-group">
-        <a href="index.php" class="btn btn-default <?php if ($_SERVER['REQUEST_URI'] === "/parliament/index.php" or $_SERVER['REQUEST_URI'] === "/parliament/") { echo 'active'; } ?>">
+        <a href="stacker.php" class="btn btn-default <?php if ($_SERVER['REQUEST_URI'] === "/parliament/stacker.php" or $_SERVER['REQUEST_URI'] === "/parliament/") { echo 'active'; } ?>">
           <i class="fa fa-2x fa-font"></i>Member Picker
         </a>
         <a href="qs.php" class="btn btn-default <?php if ($_SERVER['REQUEST_URI'] === "/parliament/qs.php") { echo 'active'; } ?>">

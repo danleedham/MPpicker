@@ -2,48 +2,26 @@
 <html lang="en">
 <head>
 <?php
+$start = microtime(true);
 $xmlDoc=new DOMDocument();
 
 	//get parameters from URL
-	$q=$_GET["q"];
-		if(!$q) {$q = 0;}
-	$qtype=$_GET["type"];
-		if(!$qtype) { $qtype = "Substantive"; }
-	$qdept=$_GET["dept"]; 
-		
-	$date=$_GET["date"];
+	if(!$qtype){$qtype=$_GET["type"];}
+		if(!$qtype){$qtype="Substantive";}
+	if(!$qdept){$qdept=$_GET["dept"];}
+	if(!$date){$date=$_GET["date"];}
 		if (!$date) {$date = date("Y-m-d");}
-	$groups=$_GET["groups"];
-
-	$m=$_GET["m"];
 	$house = "Commons";
 	$photos=$_GET["photos"];
-		if(!$photos) { $photos = "stock"; }
-		
-	$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&AnswerDate='.$date.'&_pageSize=500');
+	$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&AnswerDate='.$date.'&CommonsQuestionTime.QuestionType='.$qtype.'&_pageSize=500');
 	$x=$xmlDoc->getElementsByTagName('item');
 	$questionscount = $x->length;
-		
 	$qxml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/House=Commons%7CIsEligible=true/") or die("Can't load MPs");
 	$memberscount =  count($qxml);
-
-	// Arry with party ID and party color (from BBC Elections coverage)	
-	$colors = array (
-				"0"	  =>   "#000000",
-				"4"	  =>   "#0087DC",
-				"7"   =>   "#D46A4C",
-				"8"   =>   "#DDDDDD",
-				"15"  =>   "#DC241f",
-				"17"  =>   "#FDBB30",
-				"22"  =>   "#008142",
-				"29"  =>   "#FFFF00",
-				"30"  =>   "#008800",
-				"31"  =>   "#99FF66",
-				"35"  =>   "#70147A",
-				"38"  =>   "#9999FF",
-				"44"  =>   "#6AB023",
-				"47"  =>   "#FFFFFF");
 	
+	$time_elapsed_postload = microtime(true) - $start; 	
+	// Arry with party ID and party color
+	$colors = array("0"=>"#000000","4"=>"#0087DC","7"=>"#D46A4C","8"=>"#DDDDDD","15"=>"#DC241f","17"=>"#FDBB30","22"=>"#008142","29"=>"#FFFF00","30"=>"#008800","31"=>"#99FF66","35"=>"#70147A","38"=>"#9999FF","44"=>"#6AB023","47"=>"#FFFFFF");	
 	if ($questionscount == 1) {
 			$hint = "";
 	}
@@ -91,25 +69,11 @@ $xmlDoc=new DOMDocument();
 								  'constituency'=>$Constituency,
 								  'party'=>$party,
 								  'color'=>$color);
-								  
-				$deptarray[] = array('dept' => $Department);
-				$typearray[] = array('type' => $QuestionType[0]->textContent);
-	  			
 			}
 		}
-		// This gives us a unique list of departments & question types
-		if (count($deptarray) !== 0) {
-			$deptarray = array_map("unserialize", array_unique(array_map("serialize", $deptarray)));
-		}
-		if (count($typearray) !== 0) {
-			$typearray = array_map("unserialize", array_unique(array_map("serialize", $typearray)));
-		}
-		// Count how many unique departments/types there are
-		$deptscount = count($deptarray);
-		$typecount = count($typearray);
 		
 		// Function to sort questions by type then by number
-		function comp($a, $b) {
+		function compqs($a, $b) {
 			if ($a['type'] == $b['type']) {
 				return $a['number'] - $b['number'];
 			}
@@ -117,10 +81,12 @@ $xmlDoc=new DOMDocument();
 		}
 		// Count how many questions there are
 		$length = count($qarray);
-		
+		$time_elapsed_preloop = microtime(true) - $start; 	
+	
+	
 	// If there are questions, sort the questions & generate list
 	if ($length !== 0) {
-			usort($qarray, 'comp');
+			usort($qarray, 'compqs');
 			
 		// Generate the list of questions 	
 		for($i=0; $i < $length; $i++) {
@@ -128,14 +94,14 @@ $xmlDoc=new DOMDocument();
 			// If no department is set or just has one, let's use the first one		
 			if (!$qdept or count($deptarray) === 1) { $qdept = $qarray[0]["dept"]; }
 	
-			if ($qarray[$i]["dept"] !== $qdept && intval($deptscount) > 1) {
-			}
-			else {	
-				if ($qarray[$i]["type"] == $qtype) {		
+				if ($qarray[$i]["dept"] == $qdept) {		
+						$currenti = $i;
+						$next = [$i + 1];
+						$previous = [$i - 1];					
 					if ($hint=="") {
 						$isselected = ' active';
 						$currenti = $i;
-						$hint='<a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$isselected.'" onclick="load('.$qarray[$i]["uin"].','.$date.',\''.$photos.'\');return false;" href="#">
+						$hint='<a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$isselected.'" onclick="load('.$qarray[$i]["uin"].','.$date.',\''.$photos.'\','.$previous[0].','.$next.');return false;" href="#">
 						   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
 						   <h4 class="list-group-item-heading"> <span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' '.$qarray[$i]["DisplayAs"].'</h4>
 						   <p class="list-group-item-text">'.$qarray[$i]["constituency"].'</p></a>';
@@ -148,8 +114,7 @@ $xmlDoc=new DOMDocument();
 						   <h4 class="list-group-item-heading"><span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' '. $qarray[$i]["DisplayAs"].'</span></h4>
 						   <p class="list-group-item-text">'.$qarray[$i]["constituency"].'</p></a>';
 					}
-				}
-			  }
+			   }
 			}
 		}
 	}	  
@@ -165,20 +130,15 @@ if ($hint=="") {
   }
   
   if(!$qdept){$ifdept = '';}
-  else {$ifdept = ' to '.$qdept;}
+  else {
+  		$ifdept = ' to '.$qdept;
+  }
+  
   $response='<a class="list-group-item">
 			 <h4 class ="list-group-item-heading">No'.$iftype.' questions on '.$date.$ifdept.'</h4></a>';
 } else {
-// Otherwise respond with the information required 	
-  $response=$hint;
+	// Otherwise respond with the information required 	
+    $response=$hint;
 }
-
-?>
-</head>
-
-<body>		
-
-		<?php echo $response;   ?>
-  		   
-  </body>
-</html>
+	echo $response;
+?>	   

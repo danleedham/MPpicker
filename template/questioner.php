@@ -7,17 +7,14 @@ $xmlDoc=new DOMDocument();
 	$prev=$_GET["prev"];
 	
 	if(!$date) {$date=$_GET["date"];}
-
+	
 	$house = "Commons";
 	if(!$photos){$photos=$_GET["photos"];}
-
-	$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&uin='.$uin);
+	$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&uin='.$uin.'&AnswerDate='.$date);
 	$x=$xmlDoc->getElementsByTagName('item');
 	$questionscount = $x->length;
-		
-	$qxml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/House=Commons%7CIsEligible=true/") or die("Can't load MPs");
+	$qxml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/house=Commons|IsEligible=true") or die("Can't load MPs");
 	$memberscount =  count($qxml);
-	
 	$betaimages =simplexml_load_file("http://leedhammedia.com/parliament/betaimages.xml") or die("Can't load Beta Images");
 	$imagescount =  count($betaimages);
 
@@ -47,10 +44,9 @@ $xmlDoc=new DOMDocument();
 				$BallotNo=$x->item($i)->getElementsByTagName('ballotNumber');
 				$Dept=$x->item($i)->getElementsByTagName('AnsweringBody');
 					$Department=trim($Dept->item(0)->textContent);
-
 				for ($y = 0; $y < $memberscount; $y++){
 					$CurrentMP = trim($qxml->Member[$y]->ListAs);
-						if($CurrentQuestioner === $CurrentMP) { 
+						if($CurrentQuestioner == $CurrentMP) { 
 							$DodsId=$qxml->Member[$y]->attributes()->Dods_Id;
 							$MemberId=$qxml->Member[$y]->attributes()->Member_Id;
 							$DisplayAs=$qxml->Member[$y]->DisplayAs;
@@ -85,7 +81,7 @@ $xmlDoc=new DOMDocument();
 			usort($qarray, 'compsort');
 		}
 	}	  
-
+	
 	// If date is set, use it to ensure we get the correct question
 	for ($i = 0; $i < count($qarray); $i++){
 			if($qarray[$i]["date"] == $date){
@@ -95,11 +91,12 @@ $xmlDoc=new DOMDocument();
 	// If date isn't set, let's presume they want the most recent question	
 	if(!$q) { $q = 0; }			
 	$m = intval($qarray[$q]["MemberId"]);
-
+	
 	// Now load the data for the currently selected member. This shall be replaced by AJAX on selection futher down	
 	$xml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id=".$m."/FullBiog") or die("No MP with this id");
-?>
-
+	
+	?>
+			
            <div class="panel panel-default">
               <div class="panel-heading clearfix">
                 <h3 class="panel-title pull-left">

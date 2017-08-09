@@ -44,13 +44,13 @@ else {
 		  //find a link matching the search text
 		  if (stristr($FullTitle->item(0)->childNodes->item(0)->nodeValue,$q)) {
 			if ($hint=="") {
-			  $hint='<a class="list-group-item'.$ifactive.'" href="?m='.$MemberId.'&q='.$q.'&house='.$house.'&searchby='.$searchby.'">
+			  $hint='<a id="m'.$MemberId.'" class="list-group-item'.$ifactive.'" onclick="load('.$MemberId.');return false;" href="#">
 				  <img src="https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg" class="img-rounded mini-member-image pull-left">
 				  <h4 class="list-group-item-heading"> '.$KnownAs->item(0)->childNodes->item(0)->nodeValue .'</h4>
 				  <p class="list-group-item-text">'.
 			  $Party->item(0)->childNodes->item(0)->nodeValue.' ('.$Const->item(0)->childNodes->item(0)->nodeValue.")</p></a>";
 			} else {
-			  $hint=$hint .'<a class="list-group-item'.$ifactive.'" href="?m='.$MemberId.'&q='.$q.'&house='.$house.'&searchby='.$searchby.'">
+			  $hint=$hint .'<a id="m'.$MemberId.'" class="list-group-item'.$ifactive.'" onclick="load('.$MemberId.');return false;" href="#">
 				  <img src="https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg" class="img-rounded mini-member-image pull-left">
 				  <h4 class="list-group-item-heading"> '.$KnownAs->item(0)->childNodes->item(0)->nodeValue .'</h4>
 				  <p class="list-group-item-text">'.
@@ -86,13 +86,13 @@ else {
 		  //find a link matching the search text
 		  if (stristr($Const->item(0)->childNodes->item(0)->nodeValue,$q)) {
 			if ($hint=="") {
-			  $hint='<a class="list-group-item'.$ifactive.'" href="?m='.$MemberId.'&q='.$q.'&house='.$house.'&searchby='.$searchby.'">
+			  $hint='<a id="m'.$MemberId.'" class="list-group-item'.$ifactive.'" onclick="load('.$MemberId.');return false;" href="#">
 				  <img src="https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg" class="img-rounded mini-member-image pull-left">
 				  <h4 class="list-group-item-heading"> '.$KnownAs->item(0)->childNodes->item(0)->nodeValue .'</h4>
 				  <p class="list-group-item-text">'.
 			  $Party->item(0)->childNodes->item(0)->nodeValue.' ('.$Const->item(0)->childNodes->item(0)->nodeValue.")</p></a>";
 			} else {
-			  $hint=$hint .'<a class="list-group-item'.$ifactive.'" href="?m='.$MemberId.'&q='.$q.'&house='.$house.'&searchby='.$searchby.'">
+			  $hint=$hint .'<a id="m'.$MemberId.'" class="list-group-item'.$ifactive.'" onclick="load('.$MemberId.');return false;" href="#">
 				  <img src="https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg" class="img-rounded mini-member-image pull-left">
 				  <h4 class="list-group-item-heading"> '.$KnownAs->item(0)->childNodes->item(0)->nodeValue .'</h4>
 				  <p class="list-group-item-text">'.

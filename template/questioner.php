@@ -1,76 +1,74 @@
 <?php 
-$xmlDoc=new DOMDocument();
+$xmlQuestions=new DOMDocument();
+$xmlMembers=new DOMDocument();
 
 	//get parameters from URL
 	if(!$uin) {$uin=$_GET["uin"];}
 	$next=$_GET["next"];
 	$prev=$_GET["prev"];
-	
+	$date=$_GET["date"];
 	if(!$date) {$date=$_GET["date"];}
-	
 	$house = "Commons";
 	if(!$photos){$photos=$_GET["photos"];}
-	$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&uin='.$uin.'&AnswerDate='.$date);
-	$x=$xmlDoc->getElementsByTagName('item');
-	$questionscount = $x->length;
-	$qxml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/house=Commons|IsEligible=true") or die("Can't load MPs");
-	$memberscount =  count($qxml);
+
+	//Load quesetions with specified UIN & Date. Should return just a single question.
+	$xmlQuestions->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&uin='.$uin.'&AnswerDate='.$date);
+	$xQuestions=$xmlQuestions->getElementsByTagName('item');
+	$questionscount = $xQuestions->length;
+	
+	//Load xml with codes for new Parliament Beta images
 	$betaimages =simplexml_load_file("http://leedhammedia.com/parliament/betaimages.xml") or die("Can't load Beta Images");
 	$imagescount =  count($betaimages);
-
-	// Arry with party ID and party color (from BBC Elections coverage)	
+	// Arry with party ID and party colors
 	$colors = array (
 	"0"=>"#000000","4"=>"#0087DC","7"=>"#D46A4C","8"=>"#DDDDDD","15"=>"#DC241f","17"=>"#FDBB30","22"=>"#008142","29"=>"#FFFF00","30"=>"#008800","31"=>"#99FF66","35"=>"#70147A","38"=>"#9999FF","44"=>"#6AB023","47"=>"#FFFFFF");
 	
-	if ($questionscount == 1) {
-			$m = 4516;
-	}
-	else {	
-		$hint="";
-		for($i=0; $i<($x->length); $i++) {
-			$QText=$x->item($i)->getElementsByTagName('questionText');
-			if ($QText[0]->textContent=="") {
-			}
-			else {
-				$QuestionID=$x->item($i)->getElementsByTagName('ID');
-				$AnswerDate=$x->item($i)->getElementsByTagName('AnswerDate');
-				$MemberId=$x->item($i)->getElementsByTagName('tablingMemberPrinted');
-					$CurrentQuestioner = trim($MemberId->item(0)->textContent);
-				$Const=$x->item($i)->getElementsByTagName('constituency');
-					$Constituency = trim($Const['prefLabel']->textContent);
-				$TabledDate=$x->item($i)->getElementsByTagName('TabledDate');
-				$QuestionType=$x->item($i)->getElementsByTagName('QuestionType');
-				$DateDue=$x->item($i)->getElementsByTagName('AnswerDate');
-				$BallotNo=$x->item($i)->getElementsByTagName('ballotNumber');
-				$Dept=$x->item($i)->getElementsByTagName('AnsweringBody');
-					$Department=trim($Dept->item(0)->textContent);
-				for ($y = 0; $y < $memberscount; $y++){
-					$CurrentMP = trim($qxml->Member[$y]->ListAs);
-						if($CurrentQuestioner == $CurrentMP) { 
-							$DodsId=$qxml->Member[$y]->attributes()->Dods_Id;
-							$MemberId=$qxml->Member[$y]->attributes()->Member_Id;
-							$DisplayAs=$qxml->Member[$y]->DisplayAs;
-							$party=$qxml->Member[$y]->Party;
-							$PartyID =$qxml->Member[$y]->Party[0]->attributes()->Id;              	          	          	     
-							$color = $colors[intval($PartyID)];
-						}
-				}				
-				$qarray[] = array('number'=>$BallotNo[0]->textContent,
-								  'date'=>$AnswerDate[0]->textContent,
-								  'dept'=>$Department,
-								  'text'=>$QText[0]->textContent,
-								  'type'=>$QuestionType[0]->textContent,
-								  'member'=>$CurrentQuestioner,
-								  'DisplayAs'=>$DisplayAs,
-								  'DodsId'=>$DodsId,
-								  'MemberId'=>$MemberId,
-								  'constituency'=>$Constituency,
-								  'party'=>$party,
-								  'color'=>$color);		
-			}
+	$hint="";
+	for($i=0; $i<($questionscount); $i++) {
+		$QText=$xQuestions->item($i)->getElementsByTagName('questionText');
+		if ($QText[0]->textContent=="") {
 		}
+		else {
+			$QuestionID=$xQuestions->item($i)->getElementsByTagName('ID');
+			$AnswerDate=$xQuestions->item($i)->getElementsByTagName('AnswerDate');
+			$MemberId=$xQuestions->item($i)->getElementsByTagName('tablingMemberPrinted');
+				$CurrentQuestioner = trim($MemberId->item(0)->textContent);
+			$Const=$xQuestions->item($i)->getElementsByTagName('constituency');
+				$Constituency = trim($Const['prefLabel']->textContent);
+			$TabledDate=$xQuestions->item($i)->getElementsByTagName('TabledDate');
+			$QuestionType=$xQuestions->item($i)->getElementsByTagName('QuestionType');
+			$DateDue=$xQuestions->item($i)->getElementsByTagName('AnswerDate');
+			$BallotNo=$xQuestions->item($i)->getElementsByTagName('ballotNumber');
+			$Dept=$xQuestions->item($i)->getElementsByTagName('AnsweringBody');
+				$Department=trim($Dept->item(0)->textContent);
+				
+			$xmlMembers->load('http://data.parliament.uk/membersdataplatform/services/mnis/members/query/constituency='.$Constituency);
+			$xMembers=$xmlMembers->getElementsByTagName('Member');
+			$memberscount = $xMembers->length;
+			for ($y = 0; $y < $memberscount; $y++){
+						$DisplayAs=$xMembers->item($y)->getElementsByTagName('DisplayAs');
+						$party=$xMembers->item($y)->getElementsByTagName('Party');
+						$DodsId=$xMembers->item($y)->getAttribute('Dods_Id');
+						$MemberId=$xMembers->item($y)->getAttribute('Member_Id');
+						$PartyID=$party->item($y)->getAttribute('Id');           	          	          	     
+						$color = $colors[intval($PartyID)];
+			}				
+			$qarray[] = array('number'=>$BallotNo[0]->textContent,
+							  'date'=>$AnswerDate[0]->textContent,
+							  'dept'=>$Department,
+							  'text'=>$QText[0]->textContent,
+							  'type'=>$QuestionType[0]->textContent,
+							  'member'=>$CurrentQuestioner,
+							  'DisplayAs'=>$DisplayAs[0]->textContent,
+							  'DodsId'=>$DodsId,
+							  'MemberId'=>$MemberId,
+							  'constituency'=>$Constituency,
+							  'party'=>$party[0]->textContent,
+							  'color'=>$color);		
+		}
+	}
 	// Function to sort questions by date
-	function compsort( $a, $b ) {
+	function compsortqs( $a, $b ) {
 		return strtotime($b["date"]) - strtotime($a["date"]);
 	}
 	// Count how many questions there are
@@ -78,23 +76,14 @@ $xmlDoc=new DOMDocument();
 		
 	// If there are questions, sort the questions
 	if ($length !== 0) {
-			usort($qarray, 'compsort');
-		}
-	}	  
+			usort($qarray, 'compsortqs');
+		}  
 	
-	// If date is set, use it to ensure we get the correct question
-	for ($i = 0; $i < count($qarray); $i++){
-			if($qarray[$i]["date"] == $date){
-				$q = $i;
-			}
-		}
-	// If date isn't set, let's presume they want the most recent question	
-	if(!$q) { $q = 0; }			
-	$m = intval($qarray[$q]["MemberId"]);
+	$PullThisMember = intval($qarray[0]["MemberId"]);
 	
-	// Now load the data for the currently selected member. This shall be replaced by AJAX on selection futher down	
-	$xml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id=".$m."/FullBiog") or die("No MP with this id");
-	
+	// Now load the data for the currently selected member. 
+	$xml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id=".$PullThisMember."/FullBiog") or die("Cannot Load MP ".$m." from ".print_r($qarray));
+
 	?>
 			
            <div class="panel panel-default">

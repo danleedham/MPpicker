@@ -101,7 +101,7 @@ $xmlDoc=new DOMDocument();
 					if ($hint=="") {
 						$isselected = ' active';
 						$currenti = $i;
-						$hint='<a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$isselected.'" onclick="load('.$qarray[$i]["uin"].','.$date.',\''.$photos.'\','.$previous[0].','.$next.');return false;" href="#">
+						$hint='<a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$isselected.'" onclick="load('.$qarray[$i]["uin"].','.'\''.$date.'\',\''.$photos.'\');return false;" href="#">
 						   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
 						   <h4 class="list-group-item-heading"> <span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' '.$qarray[$i]["DisplayAs"].'</h4>
 						   <p class="list-group-item-text">'.$qarray[$i]["constituency"].'</p></a>';
@@ -109,7 +109,7 @@ $xmlDoc=new DOMDocument();
 					else {
 						$isselected = '';
 						$currenti = $currenti;
-						$hint=$hint .'<a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$isselected.'" onclick="load('.$qarray[$i]["uin"].','.$date.',\''.$photos.'\');return false;"  href="#">
+						$hint=$hint .'<a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$isselected.'" onclick="load('.$qarray[$i]["uin"].','.'\''.$date.'\',\''.$photos.'\');return false;"  href="#">
 						   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
 						   <h4 class="list-group-item-heading"><span style="color:'.$qarray[$i]["color"].'">'.$qarray[$i]["number"].' '. $qarray[$i]["DisplayAs"].'</span></h4>
 						   <p class="list-group-item-text">'.$qarray[$i]["constituency"].'</p></a>';

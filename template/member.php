@@ -119,24 +119,26 @@
 			} 
 			
 			?>
+
                 </div>
-                
-                <div class="list-group-item">
-                  <label>Constituency</label>
-                  <h4 class="list-group-item-heading"><?php echo $xml->Member[0]->MemberFrom ?></h4>
-                </div>
-               
-		<? // if the MP has twitter, show their latest tweets
-		for($i = 0; $i < count($xml->Member[0]->Addresses[0]); $i ++) {
+              <div class="list-group-item">
+                  <div id="twitter">
+                  		<?php for($i = 0; $i < count($xml->Member[0]->Addresses[0]); $i ++) {
 			if ($xml->Member[0]->Addresses->Address[$i]->Type == "Twitter") {
-				$twitter = $xml->Member[0]->Addresses->Address[$i]->Address1[0]; 
-				echo '<div class="list-group-item">
-				<a class="twitter-timeline" href="'.$twitter.'" data-chrome="nofooter noheader noborders"  data-tweet-limit="2">Tweets</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></div> ';
-			}
-		} ?>
+				$twitter = $xml->Member[0]->Addresses->Address[$i]->Address1[0];  
+					}
+				}?>
+              		<a href="#" onclick="twitter('<?php echo $twitter ?>');return false;" class="btn btn-info" role="button">Load Twitter</a> 
+              	  </div>
+                </div>
 		
 	<div class="panel-footer">
                   <small>Data from UK Parliament - <a href="http://data.parliament.uk/membersdataplatform/">Members' Names Data Platform</a></small>
                 </div>
               </div>
               </div>	
+        	<script>      
+			function twitter(handle){
+			   $("#twitter").load('template/twitter.php?handle='+handle);
+			}
+			</script> 

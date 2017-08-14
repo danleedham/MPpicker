@@ -11,102 +11,24 @@
   <title>Guess Who?</title>
 
 	<?php
-		
 		//get the css and js nonesense
-		include 'template/headinc.php';
-		
-		//get the q parameter from URL
-		$m=$_GET["m"];
-		if (!$m){ $m="8";}
-		$xml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id=".$m."/FullBiog") or die("No MP with this id");
-		$q=$_GET["q"];
-		if (!$q){ $SearchContactsMessage="Search MPs..."; 
-				}
-			else { $SearchContactsMessage=$q; 
-				}
-				
-		$house=$_GET["house"];
-		if ($house != "") { $houseurl = "House=".$house.'|'; }
-		if (!$house) { $houseurl = ""; }
-		if ($house == "both") { $houseurl = ""; }
-		if ($house == "commons") { $memberimgurlpre = "http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/";
-		$memberimgurlsuf = ""; }
-		else { $memberimgurlpre = "https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/";
-				$memberimgurlsuf = ".jpg.jpg"; }
-		$sex=$_GET["sex"];
-		if ($sex != "") { $sexurl = "gender=".$sex.'|'; }
-		if ($sex === "all") { $sexurl = ""; }
-		if (!$sex) { $sexurl = ""; }
-		$party=$_GET["party"];
-		if ($party != "") { $partyurl = "party=".$party.'|'; }
-		if (!$party) { $partyurl = ""; }
-		$positions=$_GET["positions"];
-		if (!$positions) { $positionsurl = ""; }
-		if ($positions == "all") { $positionsurl = ""; }
-		if ($positions == "cabinet") { $positionsurl = "holdscabinetpost=true".'|'; }
-		if ($positions == "shadow") { $positionsurl = "holdsshadowcabinetpost=true".'|'; }
-		if ($positions == "government") { $positionsurl = "holdsgovernmentpost=true".'|'; }
-		if ($positions == "opposition") { $positionsurl = "holdsoppositionpost=true".'|'; }
-		if ($positions == "none") { $positionsurl = "holdsoppositionpost=false|holdsgovernmentpost=false".'|'; }
-		$sortby=$_GET["sortby"];
-		$committee=$_GET["committee"];
-		if (!$committee) { $committeeurl = ""; }
-		if ($committee == "") { $committeeurl = ""; }
-		if ($committee != "") { $committeeurl = "committee=".$committee.'|';}
-		$department=$_GET["department"];
-		if (!$department) { $departmenturl = ""; }
-		if ($department == "") { $departmenturl = "";}
-		
-		
-		$partieslords=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/HouseOverview/Lords/".date("Y-m-d")."/");
-		$partiescommons=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/HouseOverview/Commons/".date("Y-m-d")."/");
-		if ($house != "" ) {
-		$xmlresults=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/IsEligible=true|".$houseurl.$partyurl.$sexurl.$positionsurl.$committeeurl."/GovernmentPosts|OppositionPosts");
-		$xmlDoc->load("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/IsEligible=true|".$houseurl.$partyurl.$sexurl.$positionsurl.$committeeurl."/GovernmentPosts|OppositionPosts");
-		$x=$xmlDoc->getElementsByTagName('Member');
-		
-		$xarray = json_decode(json_encode($x), true);
-		
-		usort($xarray, function($a, $b) {
-			return strcmp($a['HouseStartDate'] - $b['HouseStartDate']);
-		});
-
-		$resultsfound=count($xmlresults)." Members found"; 
-						}  
-		else { 
-			$resultsfound="Please narrow search"; 
-			}
-		//Let's get a list of all current committees
-		$com=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/ReferenceData/Committees/");
-		
-		$Committees = array();
-		for($i = 0; $i < count($com); $i ++) {
-			if (!strtotime($com->Committee[$i]->EndDate[0]) >= time()) {
-				$Committees[] = $com->Committee[$i]->Name;
-			}
-		}
-
-		$ComSorted = sort($Committees,2);
-		
-		//Let's get a list of all current departments
-		$dept=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/ReferenceData/Departments/");
-		
-		$Departments = array();
-			for($i = 0; $i < count($dept); $i ++) {
-				if (!strtotime($dept->Department[$i]->EndDate[0]) >= time()) {
-					$DepartmentName = $dept->Department[$i]->Name;
-					$DepartmentId = $dept->Department[$i]->Department_Id;
-					$DepartmentAcronym = $dept->Department[$i]->Acronym;
-					$Departments[] = $dept->Department[$i]->Name;
-					}
-			}
-
-			$DeptSorted = sort($Departments,2);
-		
-		//array for party colors
-		include 'template/colors.php';				
-								
+		include 'template/headinc.php';	
 		?>
+<script>
+function loadsex(){
+   var house = document.getElementById("house-input").value;
+   $("#sex-input").load('template/whosex.php?&house='+house);
+}
+function loadparties(){
+   var house = document.getElementById("house-input").value;
+   var sex = document.getElementById("sex-input").value;
+   $("#party-input").load('template/whoparty.php?house='+house+'&sex='+sex);
+}
+function loadcommittees(){
+   var house = document.getElementById("house-input").value;
+   $("#committee-input").load('template/whocommittee.php?house='+house);
+}
+</script>
 
 </head>
 
@@ -120,95 +42,88 @@
       <div class="col-sm-3 bootcards-list" id="list" data-title="Contacts">
         <div class="panel panel-default">  
          <div class="panel-heading clearfix">
-                <h3 class="panel-title pull-left"> <?php if ($resultsfound === "0" ) { echo "Guess Who?"; }
-														 else { echo $resultsfound; }	?>
-				</h3> <?php echo $selectedcommittee; ?>
-              </div>     
-	
-		
-			 <div class="list-group">
-				<!-- start search form -->
-				<form id="mpsearch" action="who.php" method="GET">	
-					<!-- house -->
-					 <div class="list-group-item">
-					 <select name="house" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="house">
-					 <option value="">House</option>
-				     <option value="commons" <?php if ($house === 'commons') { echo 'selected="selected"'; } ?>> Commons </option>
-				     <option value="lords" <?php if ($house === 'lords') { echo 'selected="selected"'; } ?>> Lords </option>
-				     <option value="both" <?php if ($house === 'both') { echo 'selected="selected"'; } ?>> Both </option>
-				     </select>
-				     </div>
-				     	
-					<!-- sex -->
-					 <div class="list-group-item">
-					 <select name="sex" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="sex">
-					 <?php if(!$sex) {echo '<option value="">Sex</option>'; } ?>
-				     <option value="m" <?php if ($sex === 'm') { echo 'selected="selected"'; } ?>> Male </option>
-				     <option value="f" <?php if ($sex === 'f') { echo 'selected="selected"'; } ?>> Female </option>
-				     <option value="all" <?php if ($sex === 'all') { echo 'selected="selected"'; } ?>> All </option>
-				     </select>
-				     </div>
-
-					<!-- party -->		
-					<div class="list-group-item">
-					<select name="party" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="party">
-						<?php if(!$party) {echo '<option value="">Select Party</option>'; } ?>
-						<option <?php if ($party === 'all') { echo 'selected="selected"'; } ?> value="all">All</option>
-						<?php echo file_get_contents("http://leedhammedia.com/parliament/template/whoparty.php?sex=".$sex); ?>
-					</select>
-					</div>
-					
-					
-					<!-- positions -->
-					 <div class="list-group-item">
-					 <select name="positions" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="positions">
-					 <?php if(!$positions) {echo '<option value="">Select Current position</option>'; } ?>
-					 <option value="all" <?php if ($positions === 'all') { echo 'selected="selected"'; } ?>> All </option>
-					 <option value="cabinet" <?php if ($positions === 'cabinet') { echo 'selected="selected"'; } ?>> Cabinet </option>
-					 <option value="shadow" <?php if ($positions === 'shadow') { echo 'selected="selected"'; } ?>> Shadow Cabinet </option>
-				     <option value="government" <?php if ($positions === 'government') { echo 'selected="selected"'; } ?>> Government </option>
-				     <option value="opposition" <?php if ($positions === 'opposition') { echo 'selected="selected"'; } ?>> Opposition </option>
-				     <option value="none" <?php if ($positions === 'none') { echo 'selected="selected"'; } ?>> None </option>
-				     </select>
-				     </div>
-					
-					<!-- committees -->
-					<div class="list-group-item">
-					<select name="committee" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="committee">
-						<?php if(!$committee) {echo '<option value="">Select Committee</option>'; } ?>
-						<option <?php if ($committee === 'all') { echo 'selected="selected"'; } ?> value="all">All</option>
-						<?php echo file_get_contents("http://leedhammedia.com/parliament/template/whocommittee.php?house=".$house); ?>
-					</select>
-					</div>
-					
-						<!-- departments -->
-					<div class="list-group-item">
-					<select name="department" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="department">
-						<?php if(!$department) {echo '<option value="">Select Department</option>'; } ?>
-						<option <?php if ($department === 'all') { echo 'selected="selected"'; } ?> value="all">All</option>
-						<?php echo file_get_contents("http://leedhammedia.com/parliament/template/whodepartment.php"); ?>
-					</select>
-					</div>
-					
+                <h3 class="panel-title pull-left"> 
+					Use the search tools below
+				</h3> 
+         </div>     
+		 <div class="list-group">
+			<!-- start search form -->
+				<!-- house -->
+				 <div class="list-group-item">
+				 <select name="house" onchange="loadsex(); loadcommittees();" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="house-input">
+				 <option value="">House</option>
+				 <option value="Commons"> Commons </option>
+				 <option value="Lords"> Lords </option>
+				 <option value="all"> Both </option>
+				 </select>
+				 </div>
 				
-					<!-- sortby -->
-					 <div class="list-group-item">
-					 <select name="sortby" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="sortby">
-					 <?php if(!$sortby) {echo '<option value="">Sort by</option>'; } ?>
-				     <option value="joined-recent" <?php if ($sortby === 'joined-recent') { echo 'selected="selected"'; } ?>> Date Joined (Most Recent) </option>
-					 <option value="joined-furthest" <?php if ($sortby === 'joined-furthest') { echo 'selected="selected"'; } ?>> Date Joined (Least Recent) </option>
-				     <option value="alpha" <?php if ($sortby === 'alpha') { echo 'selected="selected"'; } ?>> Alphabetical </option>
-				     <option value="age" <?php if ($sortby === 'age') { echo 'selected="selected"'; } ?>> Age </option>
-				     </select>
-				     </div>
-				     
-						
-					<!-- submit -->
-					<div class="list-group-item">
-						<button type="submit" id="mpsearch" class="btn btn-primary" onsubmit="SubmitForm(this);">Submit</button>
-					</div>
-			  </form>
+				<!-- sex -->
+				 <div class="list-group-item">
+				 <select name="sex" onchange="loadparties()" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="sex-input">
+				 <option value="">Select Sex</option>
+				 <?php echo file_get_contents("http://leedhammedia.com/parliament/template/whosex.php?house=".$house); ?>
+				 </select>
+				 </div>
 
+				<!-- party -->		
+				<div class="list-group-item">
+				<select name="party" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="party-input">
+					<option value="">Select Party</option>
+					<?php echo file_get_contents("http://leedhammedia.com/parliament/template/whoparty.php?sex=".$sex); ?>
+				</select>
+				</div>
+			
+			
+				<!-- positions -->
+				 <div class="list-group-item">
+				 <select name="positions" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="positions">
+				 <option value="">Select Current position</option>
+				 <?php echo file_get_contents("http://leedhammedia.com/parliament/template/whopositions.php"); ?>
+				 </select>
+				 </div>
+			
+				<!-- committees -->
+				<div class="list-group-item">
+				<select name="committee" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="committee-input">
+					<option value="">Select Committee</option>
+					<?php echo file_get_contents("http://leedhammedia.com/parliament/template/whocommittee.php?house=".$house); ?>
+				</select>
+				</div>
+			
+					<!-- departments -->
+				<div class="list-group-item">
+				<select name="department" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="department">
+					<option value="">Select Department</option>
+					<option value="all">All</option>
+					<?php echo file_get_contents("http://leedhammedia.com/parliament/template/whodepartment.php"); ?>
+				</select>
+				</div>
+			
+				<!-- Joined after -->
+				<div class="list-group-item">
+				<label for="joined-input">Joined After:</label>	
+				<input id="joined-input" type="date" class="input-sm form-control" onchange="" name="joined-after" >
+				</div>
+				
+				<!-- sortby -->
+				 <div class="list-group-item">
+				 <select name="sortby" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="sortby">
+				 <option value="">Sort by</option>
+				 <option value="alphabetical">Alphabetical</option>
+				 <option value="joined-recent"> Date Joined (Most Recent) </option>
+				 <option value="joined-furthest"> Date Joined (Least Recent) </option>
+				 <option value="alpha"> Alphabetical </option>
+				 <option value="age"> Age </option>
+				 </select>
+				 </div>
+			 	
+				
+				<!-- submit -->
+				<div class="list-group-item">
+					<a href="#" onclick="loadcommittees();return false;" class="btn btn-info" role="button">Test</a>
+					<a href="#" onclick="loadcommittees();return false;" class="btn btn-danger" role="button"><i class="fa fa-refresh"></i>Reset</a>
+				</div>
             </div> <!--list group-->
 
         </div><!--panel-->
@@ -217,132 +132,6 @@
 
         <!--list details column-->
         <div class="col-sm-9 bootcards-cards bootcards-who">
-        
-        <?php 
-        $hint = "";
-
-			for($i=0; $i<($x->length); $i++) {
-				$FullTitle=$x->item($i)->getElementsByTagName('FullTitle');
-				$KnownAs=$x->item($i)->getElementsByTagName('DisplayAs');
-				$Party=$x->item($i)->getElementsByTagName('Party');
-					foreach ($Party as $PartiesForId){ 
-							$PartyID = $PartiesForId->getAttribute('Id'); }
-							$MemberId=$x->item($i)->getAttribute('Member_Id');
-							$DodsId=$x->item($i)->getAttribute('Dods_Id');
-							$Const=$x->item($i)->getElementsByTagName('MemberFrom');
-					
-							$Govecho = "";
-							$Oppecho = "";
-							$Parecho = "";
-							$Comecho = "";
-		
-			if ($house == "commons") { 
-				$imgid = $MemberId; 
-			}
-			else {
-				$imgid = $DodsId;
-			}
-		
-		
-			for($ii = 0; $ii < count($xmlresults->Member[$i]->GovernmentPosts[0]); $ii ++) {
-				if (!strtotime($xmlresults->Member[$i]->GovernmentPosts->GovernmentPost[$ii]->EndDate[0]) >= time()) {
-					$Government = $xmlresults->Member[$i]->GovernmentPosts->GovernmentPost[$ii]->HansardName[0]; 
-					$Govecho = '<h4 class="list-group-item-heading">'. $Government . "</h4>";
-					}
-				} 			
-				// let's see if they're currently a member of the opposition
-				for($ii = 0; $ii < count($xmlresults->Member[$i]->OppositionPosts[0]); $ii ++) {
-					if (!strtotime($xmlresults->Member[$i]->OppositionPosts->OppositionPost[$ii]->EndDate[0]) >= time()) {
-						$Opposition = $xmlresults->Member[$i]->OppositionPosts->OppositionPost[$ii]->HansardName[0]; 
-						$Oppecho = '<h4 class="list-group-item-heading">'. $Opposition . "</h4>";
-					}
-				}
-				// let's see if they've got a parliamentary post
-				for($ii = 0; $ii < count($xmlresults->Member[$i]->ParliamentaryPosts[0]); $ii ++) {
-					if (!strtotime($xmlresults->Member[$i]->ParliamentaryPosts->ParliamentaryPost[$ii]->EndDate[0]) >= time()) {
-						$Parliamentary = $xmlresults->Member[$i]->ParliamentaryPosts->ParliamentaryPost[$ii]->Name[0]; 
-						$Parecho = '<h4 class="list-group-item-heading">'. $Parliamentary . "</h4>";
-					}
-				}
-				// let's see if they're currently on any committees
-				for($ii = 0; $ii < count($xmlresults->Member[$i]->Committees[0]); $ii ++) {
-					if (!strtotime($xmlresults->Member[$i]->Committees->Committee[$ii]->EndDate[0]) >= time()) {
-						$Committee = $xmlresults->Member[$i]->Committees->Committee[$ii]->Name[0]; 
-						$Comecho = '<h4 class="list-group-item-heading">'.$Committee . "</h4>";
-					}
-				} 		
-			
-				if ($hint=="") {
-				  $hint='<div class="col-sm-3 bootcards-cards bootcards-group"><div id="contactCard"><div class="panel panel-default">
-					<div class="panel-heading clearfix">
-						<h3 class="panel-title pull-left">'. $KnownAs->item(0)->childNodes->item(0)->nodeValue.'</h3>
-						</div>
-					  <div class="list-group">
-						<div class="list-group-item">
-						  <img src="'.$memberimgurlpre.$imgid.$memberimgurlsuf.'" class="img-rounded group-member-image">
-						 </div>
-						 <div class="list-group-item">
-						  <h4 class="list-group-item-heading" style="color:'
-						  .$colors[intval($PartyID)].'">'.$Party->item(0)->childNodes->item(0)->nodeValue.'</h4>
-						</div>
-						<div class="list-group-item">
-						  <h4 class="list-group-item-heading">'.$Const->item(0)->childNodes->item(0)->nodeValue.'</h4>
-						</div>
-						<div class="list-group-item">'.$Govecho.$Oppecho.$Parecho.$Comecho.' 
-						</div>
-					  </div>
-					  </div>
-
-					</div><!--contact card-->
-
-				</div>';	
-				} 
-			else {
-				  $hint=$hint .'<div class="col-sm-3 bootcards-cards bootcards-group"><div id="contactCard"><div class="panel panel-default">
-					<div class="panel-heading clearfix">
-						<h3 class="panel-title pull-left">'. $KnownAs->item(0)->childNodes->item(0)->nodeValue.'</h3>
-						</div>
-					  <div class="list-group">
-						<div class="list-group-item">
-						  <img src="'.$memberimgurlpre.$imgid.$memberimgurlsuf.'" class="img-rounded group-member-image">
-						 </div>
-						 <div class="list-group-item">
-						  <h4 class="list-group-item-heading" style="color:'
-						  .$colors[intval($PartyID)].'">'.$Party->item(0)->childNodes->item(0)->nodeValue.'</h4>
-						</div>
-						<div class="list-group-item">
-						  <h4 class="list-group-item-heading">'.$Const->item(0)->childNodes->item(0)->nodeValue.'</h4>
-						</div>
-					   <div class="list-group-item">'.$Govecho.$Oppecho.$Parecho.$Comecho.' 
-					  </div>
-						 
-					  </div>
-					  </div>
-
-					</div><!--contact card-->
-
-				</div>';
-				}
-			}
-	    
-		if ($hint=="") {
-		  $response='<div class="col-sm-12 bootcards-cards bootcards-group">
-					   <div id="contactCard">
-						  <div class="panel panel-default">
-							<div class="panel-heading clearfix">
-								<h3 class="panel-title pull-left">Please try again</h3>
-							</div>
-						  </div>
-						</div>
-					  </div>		';
-		} else {
-		  $response=$hint;
-		}
-		
-		//output the response
-		echo $response;
-
-	  ?>
 
 		
 		</div><!--list-details-->

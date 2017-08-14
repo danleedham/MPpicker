@@ -16,10 +16,10 @@ $xmlDoc->load("http://data.parliament.uk/membersdataplatform/services/mnis/House
 				$MaleCount = $x->item($i)->getElementsByTagName('MaleCount');
 				$FemaleCount = $x->item($i)->getElementsByTagName('FemaleCount');
 				$TotalCount = $x->item($i)->getElementsByTagName('TotalCount');
-				if ($sex == "Male") {
+				if ($sex == "m") {
 					$count = $MaleCount->item(0)->textContent;
 				}
-				elseif ($sex == "Female") {
+				elseif ($sex == "f") {
 					$count = $FemaleCount->item(0)->textContent;
 				}
 				else { 
@@ -32,6 +32,7 @@ $xmlDoc->load("http://data.parliament.uk/membersdataplatform/services/mnis/House
 										  'Seats' => $count);
 				}
 		}
+		   echo '<option value"all">All Parties</option>';
 		foreach ($partyarray as $key => $value) {
 		   echo '<option value="'. $value["Name"].'">'. $value["Name"].' - '.$value["Seats"].'</option>';
 		}

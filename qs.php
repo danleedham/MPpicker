@@ -73,9 +73,16 @@ function load(num,date,photos){
    $("#contactCard").load('template/questioner.php?uin='+num+'&date='+date+'&photos='+photos);
    $('.active').removeClass('active');
    $('#q'+num).addClass("active");
+   
 }
 function loadquestions(date,dept,type){
-   $("#livesearch").load('template/listquestions.php?date='+date+'&type='+type+'&dept='+dept);
+   var groups = document.getElementById("groups-input").value;
+   var withdrawn = document.getElementById("withdrawn-input").value;
+   console.log('Loading questions using groups: '+groups+' and withdrawing: '+withdrawn);
+   groups = groups.replace(/[\r\n]+/g,",");
+   groups = encodeURI(groups);
+   withdrawn = encodeURI(withdrawn);
+   $("#livesearch").load('template/listquestions.php?date='+date+'&type='+type+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn);
 }
 function loaddepts(date){
    $("#dept-input").load('template/questiondepts.php?date='+date);
@@ -86,7 +93,20 @@ function loadtypes(dept){
    $("#type-input").load('template/questiontypes.php?date='+date+'&dept='+dept);
    $("#livesearch").load('template/listquestions.php?date='+date+'&dept='+dept);
 }
-
+function gotopicals(){
+   document.getElementById("type-input").value = 'Topical';
+   var date = document.getElementById("date-input").value;
+   date = date.toString();
+   var dept = document.getElementById("dept-input").value;
+   dept = encodeURI(dept);
+   var groups = document.getElementById("groups-input").value;
+   var withdrawn = document.getElementById("withdrawn-input").value;
+   console.log('Loading questions using groups: '+groups+' and withdrawing: '+withdrawn);
+   groups = groups.replace(/[\r\n]+/g,",");
+   groups = encodeURI(groups);
+   withdrawn = encodeURI(withdrawn);
+   $("#livesearch").load('template/listquestions.php?date='+date+'&type=Topical&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn);
+}
 </script>
 
 </head>
@@ -117,7 +137,7 @@ function loadtypes(dept){
 				</div>
             </div>
 			<br />
-			<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-info" role="button">Dynamic Load</a>
+			<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-info" role="button">Load Questions</a>
           </div><!--panel body-->
           <div class="list-group" id="livesearch">
           </div><!--list-group-->
@@ -154,14 +174,14 @@ function loadtypes(dept){
                   <small>Data from UK Parliament - <a href="http://data.parliament.uk/membersdataplatform/">Members' Names Data Platform</a></small>
                 </div>
               </div>
-
-
+		</div>
+	
           <!-- Group details -->
           <div id="groupCard">
 
             <div class="panel panel-default">
               <div class="panel-heading clearfix">
-                <h3 class="panel-title pull-left">Group Details</h3>
+                <h3 class="panel-title pull-left">Substantive Question Group Details</h3>
               </div>
               <div class="list-group">
                 <div class="list-group-item">
@@ -170,9 +190,7 @@ function loadtypes(dept){
 							<div class="form-group">	
 							<label for="date-input" class="col-2 col-form-label">Enter groups on seperate lines with questions space delimited</label>
 								<div class="col-10">
-									 <textarea class="form-control" rows="5" id="groups" form="groups"></textarea>
-									 <button type="submit" form="groups" class="btn btn-primary pull-left" style="margin-top: 6px;">Set groups</button>
-									 <br />
+									 <textarea class="form-control" rows="3" id="groups-input" form="groups"></textarea>
 								</div>
 							</div>
 						</div>
@@ -180,7 +198,7 @@ function loadtypes(dept){
                 </div>
               
                  <div class="panel-footer">
-                  <small>Please enter the question groups on seperate lines using commas to split each question in the group</small>
+                  <small>Please enter the question groups on seperate lines using spaces to split each question in the group</small>
                 </div>
               </div>
               </div>
@@ -188,7 +206,7 @@ function loadtypes(dept){
             </div><!--Group card-->
             
             <!-- Withdrawn details -->
-          <div id="groupCard">
+          <div id="withdrawnCard">
 
             <div class="panel panel-default">
               <div class="panel-heading clearfix">
@@ -199,10 +217,9 @@ function loadtypes(dept){
 					<form id="groups">
 						<div class="search-form">
 							<div class="form-group">	
-							<label for="date-input" class="col-2 col-form-label">Enter withdrawn questions on seperate lines</label>
+							<label for="date-input" class="col-2 col-form-label">Enter withdrawn questions (s1 t1) seperated by spaces</label>
 								<div class="col-10">
-									 <textarea class="form-control" rows="5" id="groups" form="groups"></textarea>
-									 <button type="submit" form="groups" class="btn btn-primary pull-left" style="margin-top: 6px;">Withdraw these fellas</button>
+									 <input type="text" class="form-control" id="withdrawn-input" form="withdrawn"></input>
 									 <br />
 								</div>
 							</div>
@@ -211,7 +228,7 @@ function loadtypes(dept){
                 </div>
               
                  <div class="panel-footer">
-                  <small>To un-withdraw any questions please resubmit the Withdrawn Questions box</small>
+                  <small>To un-withdraw any questions just reload questions with them removed from the box</small>
                 </div>
               </div>
               </div>

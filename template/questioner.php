@@ -89,15 +89,18 @@ $xmlMembers=new DOMDocument();
            <div class="panel panel-default">
               <div class="panel-heading clearfix">
                 <h3 class="panel-title pull-left">
-              	<?php //If there are multiple departments let the user select which one to pull questions from
+              	<?php 
 					if($uin) : 
 				?>
-           <?php echo $qarray[$q]["type"] ?> Question <?php echo $qarray[$q]["number"] ?> Details</h3>
+           <?php echo $qarray[0]["type"] ?> Question <?php echo $qarray[0]["number"] ?> Details</h3>
                 <a class="btn btn-primary pull-right" onclick="location.href='?uin=<?php echo $next; ?>';" data-toggle="modal" data-target="#editModal">
                   <i class="fa fa-arrow-right"></i><span href="?uin=<?php echo $next; ?>">Next</span>
                 </a>
 				 <a class="btn btn-primary pull-right" onclick="location.href='?uin=<?php echo $prev; ?>';" data-toggle="modal" data-target="#editModal">
                   <i class="fa fa-arrow-left"></i><span href="?uin=<?php echo $prev; ?>">Previous</span>
+                </a>
+                 <a class="btn btn-warning pull-right" style="margin-right: 6px;" onclick="gotopicals()" data-toggle="modal">
+                  <i class="fa fa-refresh"></i><span href="?uin=<?php echo $prev; ?>">To Topicals</span>
                 </a>
               </div>
               <div class="list-group">
@@ -109,6 +112,7 @@ $xmlMembers=new DOMDocument();
 	  					 echo $colors[intval($PartyID)];
 					?>">
 				  <?php echo $xml->Member[0]->Party ?></span>
+				  <?php echo $xml->Member[0]->MemberFrom ?>
 				  </h4>
                 </div>
 				<div class="list-group-item">
@@ -138,13 +142,8 @@ $xmlMembers=new DOMDocument();
 				<img src="<?php echo $imageurl; ?>" class="img-rounded main-question-image">
 				</div>	
                 <div class="list-group-item">
-                  <label>Constituency</label>
-                  <h4 class="list-group-item-heading"><?php echo $xml->Member[0]->MemberFrom ?></h4>
-                </div>
-
-                <div class="list-group-item">
                   <label>Question</label>
-                  <h4 class="list-group-item-heading"><?php echo $qarray[$q]["text"]; ?></h4>
+                  <h4 class="list-group-item-heading"><?php echo $qarray[0]["text"]; ?></h4>
                 </div>
 
                 <div class="list-group-item">
@@ -189,5 +188,4 @@ $xmlMembers=new DOMDocument();
                   <small>Data from UK Parliament - <a href="http://data.parliament.uk/membersdataplatform/">Members' Names Data Platform</a></small>
                 </div>
               </div>
-
 

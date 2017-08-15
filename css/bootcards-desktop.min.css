@@ -88,6 +88,10 @@
 	 
 }	
 
-#contactCard {
-	width: 250px;
+.guesswho {
+	width: 200px;
+}
+
+h4.list-group-item-heading.post {
+	font-size: 14px !important;
 }

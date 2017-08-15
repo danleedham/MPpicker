@@ -199,30 +199,30 @@ $xmlDoc=new DOMDocument();
 			$Govecho = "";
 			if($whoarray[$j]["GovenmentPosts"]){
 				foreach($whoarray[$j]["GovenmentPosts"] as $value) {
-				   $Govecho=$Govecho.'<h4 class="list-group-item-heading">'. $value.'</h4>';
+				   $Govecho=$Govecho.'<h4 class="list-group-item-heading post">'. $value.'</h4>';
 				}
 			}
 			$Oppecho = "";
 			if($whoarray[$j]["OppositionPosts"]){
 				foreach($whoarray[$j]["OppositionPosts"] as $value) {
-				   $Oppecho=$Oppecho.'<h4 class="list-group-item-heading">'. $value.'</h4>';
+				   $Oppecho=$Oppecho.'<h4 class="list-group-item-heading post">'. $value.'</h4>';
 				}
 			}
 			$Parecho = "";
 			if($whoarray[$j]["ParliamentaryPosts"]){
 				foreach($whoarray[$j]["ParliamentaryPosts"] as $value) {
-				   $Parecho=$Parecho.'<h4 class="list-group-item-heading">'. $value.'</h4>';
+				   $Parecho=$Parecho.'<h4 class="list-group-item-heading post">'. $value.'</h4>';
 				}
 			}
 			$Comecho = "";
 			if($whoarray[$j]["Committees"]){
 				foreach($whoarray[$j]["Committees"] as $value) {
-				   $Comecho=$Comecho.'<h4 class="list-group-item-heading">'. $value.'</h4>';
+				   $Comecho=$Comecho.'<h4 class="list-group-item-heading post">'. $value.'</h4>';
 				}
 			}
 			$hint=$hint .'		
 				<div class="bootcards-cards bootcards-group">
-					<div id="contactCard">
+					<div id="contactCard" class="guesswho">
 						<div class="panel panel-default">
 							<div class="panel-heading clearfix">
 								<h3 class="panel-title pull-left">'.$whoarray[$j]["DisplayAs"].'</h3>

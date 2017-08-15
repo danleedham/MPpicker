@@ -164,7 +164,8 @@ function gotopicals(){
 					<div class="search-form">
 						<div class="form-group">	
 							<div class="col-12">
-								Use the search tools on the left and MP details will appear here
+								Use the search tools on the left and MP details will appear here. 
+								<a href="https://www.parliament.uk/documents/commons-table-office/Oral-questions-rota.pdf">Click here to view the Oral Questions Rota (external).</a href>
 							</div>
 						</div>
 					</div>

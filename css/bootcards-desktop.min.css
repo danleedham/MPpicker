@@ -32,13 +32,13 @@
 }
 
 .bootcards-group {
-  padding-right: 3px !important;
-  padding-left: 3px !important;
+  padding-right: 1px !important;
+  padding-left: 1px !important;
 }
 
 .bootcards-who {
-  padding-right: 4px !important;
-  padding-left: 4px !important;
+  padding-right: 2px !important;
+  padding-left: 2px !important;
 }
 
 .btn-danger,
@@ -76,4 +76,18 @@
 
 .ingroup {
 	float:right !important;
+}
+
+#whoresults {
+	 display: flex;
+	 flex-direction: row;
+	 flex-wrap: wrap;
+	 justify-content: space-evenly;
+	 align-items: flex-start;
+	 align-content: flex-start;
+	 
 }	
+
+#contactCard {
+	width: 250px;
+}

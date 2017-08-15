@@ -7,7 +7,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google" value="notranslate">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-
+  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+  <style> 
+  	.grid-item { width: 200px; }
+  </style>
   <title>Guess Who?</title>
 
 	<?php
@@ -27,6 +30,29 @@ function loadparties(){
 function loadcommittees(){
    var house = document.getElementById("house-input").value;
    $("#committee-input").load('template/whocommittee.php?house='+house);
+}
+
+function loadresults(){
+   var house = document.getElementById("house-input").value;
+   		if(house) { var houseurl = '&house='+house; }
+   		else { var houseurl = ""; }
+   var sex = document.getElementById("sex-input").value;
+		if(sex) { var sexurl = '&sex='+sex; }
+   		else { var sexurl = ""; }
+   var party = document.getElementById("party-input").value;
+   		if(party) { var partyurl = '&party='+party; }
+   		else { var partyurl = ""; }
+   var position = document.getElementById("position-input").value;
+   		if(position) { var positionurl = '&position='+position; }
+   		else { var positionurl = ""; }
+   var committee = document.getElementById("committee-input").value;
+   		if(committee) { var committeeurl = '&committee='+encodeURI(committee); }
+   		else { var committeeurl = ""; }
+   var department = document.getElementById("department-input").value;
+   		if(department) { var departmenturl = '&department='+encodeURI(department); }
+   		else { var departmenturl = ""; }
+   console.log('Loading List: '+houseurl+sexurl+partyurl+positionurl+committeeurl+departmenturl);
+   $("#whoresults").load('template/wholist.php?'+houseurl+sexurl+partyurl+positionurl+committeeurl+departmenturl);
 }
 </script>
 
@@ -51,10 +77,9 @@ function loadcommittees(){
 				<!-- house -->
 				 <div class="list-group-item">
 				 <select name="house" onchange="loadsex(); loadcommittees();" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="house-input">
-				 <option value="">House</option>
 				 <option value="Commons"> Commons </option>
 				 <option value="Lords"> Lords </option>
-				 <option value="all"> Both </option>
+				 <option value="both"> Both </option>
 				 </select>
 				 </div>
 				
@@ -77,7 +102,7 @@ function loadcommittees(){
 			
 				<!-- positions -->
 				 <div class="list-group-item">
-				 <select name="positions" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="positions">
+				 <select name="positions" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="position-input">
 				 <option value="">Select Current position</option>
 				 <?php echo file_get_contents("http://leedhammedia.com/parliament/template/whopositions.php"); ?>
 				 </select>
@@ -87,15 +112,14 @@ function loadcommittees(){
 				<div class="list-group-item">
 				<select name="committee" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="committee-input">
 					<option value="">Select Committee</option>
-					<?php echo file_get_contents("http://leedhammedia.com/parliament/template/whocommittee.php?house=".$house); ?>
+					<?php echo file_get_contents("http://leedhammedia.com/parliament/template/whocommittee.php?house=Commons"); ?>
 				</select>
 				</div>
 			
 					<!-- departments -->
 				<div class="list-group-item">
-				<select name="department" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="department">
+				<select name="department" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="department-input">
 					<option value="">Select Department</option>
-					<option value="all">All</option>
 					<?php echo file_get_contents("http://leedhammedia.com/parliament/template/whodepartment.php"); ?>
 				</select>
 				</div>
@@ -122,7 +146,7 @@ function loadcommittees(){
 				<!-- submit -->
 				<div class="list-group-item">
 					<a href="#" onclick="loadcommittees();return false;" class="btn btn-info" role="button">Test</a>
-					<a href="#" onclick="loadcommittees();return false;" class="btn btn-danger" role="button"><i class="fa fa-refresh"></i>Reset</a>
+					<a href="#" onclick="loadresults();return false;" class="btn btn-danger" role="button"><i class="fa fa-refresh"></i>Reset</a>
 				</div>
             </div> <!--list group-->
 
@@ -131,9 +155,10 @@ function loadcommittees(){
         </div><!--options column-->
 
         <!--list details column-->
-        <div class="col-sm-9 bootcards-cards bootcards-who">
+        <div id="whoresults" class="col-sm-9 bootcards-cards bootcards-who">
+        	
 
-		
+			</div>
 		</div><!--list-details-->
 
     </div><!--row-->

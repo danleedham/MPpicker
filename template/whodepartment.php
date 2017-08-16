@@ -11,15 +11,17 @@ $xmlDoc->load('http://data.parliament.uk/membersdataplatform/services/mnis/Refer
 					$EndString = $EndDate->item(0)->textContent;					 
 				if (!strtotime($EndString) >= time()) {
 					$Name=$x->item($i)->getElementsByTagName('Name');
-					$DepartmentName=trim($Name->item(0)->textContent);  
-					$departmentarray[] = $DepartmentName;
+					$DepartmentName=trim($Name->item(0)->textContent);
+					$Department_Id=$x->item($i)->getElementsByTagName('Department_Id')[0]->textContent;
+					$departmentarray[] = array('Name' => $DepartmentName,
+											   'Id' => $Department_Id);	
 				}			
 		}
 	
 		sort($departmentarray);	
-		
-		foreach ($departmentarray as $value) {
-		   echo '<option value="'. $value.'">'. $value.'</option>';
+		foreach ($departmentarray as $key => $value) {
+		   echo '<option value="'. $value["Id"].'">'. $value["Name"].'</option>';
 		   }
 	}
-?>
+?>  
+

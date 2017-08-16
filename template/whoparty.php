@@ -32,9 +32,9 @@ $xmlDoc->load("http://data.parliament.uk/membersdataplatform/services/mnis/House
 										  'Seats' => $count);
 				}
 		}
-		   echo '<option value"all">All Parties</option>';
+		   echo '<option value="">All Parties</option>';
 		foreach ($partyarray as $key => $value) {
-		   echo '<option value="'. $value["Name"].'">'. $value["Name"].' - '.$value["Seats"].'</option>';
+		   echo '<option value="'. $value["Name"].'">'. $value["Name"].'</option>';
 		}
 
 	}

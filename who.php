@@ -8,15 +8,13 @@
   <meta name="google" value="notranslate">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-  <style> 
-  	.grid-item { width: 200px; }
-  </style>
-  <title>Guess Who?</title>
+  <link rel="stylesheet" href="http://leedhammedia.com/parliament/template/chosen/chosen.css">
+  <title>Who's that?</title>
 
 	<?php
 		//get the css and js nonesense
 		include 'template/headinc.php';	
-		?>
+	?>
 <script>
 function loadsex(){
    var house = document.getElementById("house-input").value;
@@ -27,10 +25,6 @@ function loadparties(){
    var sex = document.getElementById("sex-input").value;
    $("#party-input").load('template/whoparty.php?house='+house+'&sex='+sex);
 }
-function loadcommittees(){
-   var house = document.getElementById("house-input").value;
-   $("#committee-input").load('template/whocommittee.php?house='+house);
-}
 
 function loadresults(){
    var house = document.getElementById("house-input").value;
@@ -40,10 +34,10 @@ function loadresults(){
 		if(sex) { var sexurl = '&sex='+sex; }
    		else { var sexurl = ""; }
    var party = document.getElementById("party-input").value;
-   		if(party) { var partyurl = '&party='+party; }
+   		if(party) { var partyurl = '&party='+encodeURI(party); }
    		else { var partyurl = ""; }
    var position = document.getElementById("position-input").value;
-   		if(position) { var positionurl = '&position='+position; }
+   		if(position) { var positionurl = '&position='+encodeURI(position); }
    		else { var positionurl = ""; }
    var committee = document.getElementById("committee-input").value;
    		if(committee) { var committeeurl = '&committee='+encodeURI(committee); }
@@ -51,8 +45,17 @@ function loadresults(){
    var department = document.getElementById("department-input").value;
    		if(department) { var departmenturl = '&department='+encodeURI(department); }
    		else { var departmenturl = ""; }
-   console.log('Loading List: '+houseurl+sexurl+partyurl+positionurl+committeeurl+departmenturl);
-   $("#whoresults").load('template/wholist.php?'+houseurl+sexurl+partyurl+positionurl+committeeurl+departmenturl);
+   var photos = document.getElementById("photos-input").value;
+   		if(photos) { var photosurl = '&photos='+encodeURI(photos); }
+   		else { var photosurl = ""; }
+   var joined = document.getElementById("joined-input").value;
+   		if(joined) { var joinedurl = '&joined='+String(joined); }
+   		else { var joinedurl = ""; }
+   var sortby = document.getElementById("sortby-input").value;
+   		if(sortby) { var sortbyurl = '&sortby='+String(sortby); }
+   		else { var sortbyurl = ""; }		
+   console.log('Loading List: '+houseurl+sexurl+partyurl+positionurl+committeeurl+departmenturl+photosurl+joinedurl);
+   $("#whoresults").load('template/wholist.php?'+houseurl+sexurl+partyurl+positionurl+committeeurl+departmenturl+photosurl+joinedurl+sortbyurl);
 }
 </script>
 
@@ -76,7 +79,7 @@ function loadresults(){
 			<!-- start search form -->
 				<!-- house -->
 				 <div class="list-group-item">
-				 <select name="house" onchange="loadsex(); loadcommittees();" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="house-input">
+				 <select name="house" onchange="loadsex();" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="house-input">
 				 <option value="Commons"> Commons </option>
 				 <option value="Lords"> Lords </option>
 				 <option value="both"> Both </option>
@@ -85,17 +88,17 @@ function loadresults(){
 				
 				<!-- sex -->
 				 <div class="list-group-item">
-				 <select name="sex" onchange="loadparties()" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="sex-input">
+				 <select name="sex" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="sex-input">
 				 <option value="">Select Sex</option>
-				 <?php echo file_get_contents("http://leedhammedia.com/parliament/template/whosex.php?house=".$house); ?>
+				 <?php echo file_get_contents("http://leedhammedia.com/parliament/template/whosex.php?house=Commons"); ?>
 				 </select>
 				 </div>
 
 				<!-- party -->		
 				<div class="list-group-item">
-				<select name="party" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="party-input">
-					<option value="">Select Party</option>
-					<?php echo file_get_contents("http://leedhammedia.com/parliament/template/whoparty.php?sex=".$sex); ?>
+				<select data-placeholder="Choose a Party..." class="chosen-select form-control custom-select mb-2 mr-sm-2 mb-sm-0" tabindex="2" id="party-input">
+					<option value=""</option>
+					<?php echo file_get_contents("http://leedhammedia.com/parliament/template/whoparty.php"); ?>
 				</select>
 				</div>
 			
@@ -110,16 +113,16 @@ function loadresults(){
 			
 				<!-- committees -->
 				<div class="list-group-item">
-				<select name="committee" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="committee-input">
-					<option value="">Select Committee</option>
+				<select data-placeholder="Choose a Committee..." class="chosen-select form-control custom-select mb-2 mr-sm-2 mb-sm-0" tabindex="2" id="committee-input">
+					<option value=""></option>
 					<?php echo file_get_contents("http://leedhammedia.com/parliament/template/whocommittee.php?house=Commons"); ?>
 				</select>
 				</div>
 			
 					<!-- departments -->
 				<div class="list-group-item">
-				<select name="department" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="department-input">
-					<option value="">Select Department</option>
+				<select data-placeholder="Choose a Department..." class="chosen-select form-control custom-select mb-2 mr-sm-2 mb-sm-0" tabindex="2" id="department-input">
+					<option value=""></option>
 					<?php echo file_get_contents("http://leedhammedia.com/parliament/template/whodepartment.php"); ?>
 				</select>
 				</div>
@@ -132,21 +135,33 @@ function loadresults(){
 				
 				<!-- sortby -->
 				 <div class="list-group-item">
-				 <select name="sortby" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="sortby">
+				 <select name="sortby" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="sortby-input">
 				 <option value="">Sort by</option>
-				 <option value="alphabetical">Alphabetical</option>
-				 <option value="joined-recent"> Date Joined (Most Recent) </option>
-				 <option value="joined-furthest"> Date Joined (Least Recent) </option>
-				 <option value="alpha"> Alphabetical </option>
-				 <option value="age"> Age </option>
+				 <option value="first">Name First</option>
+				 <option value="last">Name Last</option>
+				 <option value="consta">Constituency A-Z</option>
+				 <option value="constz">Constituency Z-A</option>
+				 <option value="joinedlast"> Date Joined (Most Recent) </option>
+				 <option value="joinedfirst"> Date Joined (Least Recent) </option>
+				 <option value="oldest"> Age (Oldest) </option>
+				 <option value="youngest"> Age (Youngest) </option>
+				 </select>
+				 </div>
+				 
+				 <!-- sortby -->
+				 <div class="list-group-item">
+				 <select name="photos" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="photos-input">
+				 <option value="">Picture Type</option>
+				 <option value="stock"> Stock</option>
+				 <option value="screenshot"> Screenshot</option>
 				 </select>
 				 </div>
 			 	
 				
 				<!-- submit -->
 				<div class="list-group-item">
-					<a href="#" onclick="loadcommittees();return false;" class="btn btn-info" role="button">Test</a>
-					<a href="#" onclick="loadresults();return false;" class="btn btn-danger" role="button"><i class="fa fa-refresh"></i>Reset</a>
+					<a href="#" onclick="loadresults();return false;" class="btn btn-success" role="button">Fetch</a>
+					<a href="#" onclick="window.location.reload()" class="btn btn-danger" role="button"><i class="fa fa-refresh"></i>Reset</a>
 				</div>
             </div> <!--list group-->
 
@@ -156,8 +171,6 @@ function loadresults(){
 
         <!--list details column-->
         <div id="whoresults" class="col-sm-9 bootcards-cards bootcards-who">
-        	
-
 			</div>
 		</div><!--list-details-->
 
@@ -165,6 +178,12 @@ function loadresults(){
 
 
   </div><!--container-->
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.js" type="text/javascript"></script>
+  <script src="http://leedhammedia.com/parliament/template/chosen/chosen.jquery.js" type="text/javascript"></script>
+  <script src="http://leedhammedia.com/parliament/template/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+  <script src="http://leedhammedia.com/parliament/template/chosen/docsupport/init.js" type="text/javascript" charset="utf-8"></script>
 
 <?php include 'template/footer.php'; ?>
 

@@ -113,7 +113,7 @@ $xmlDoc=new DOMDocument();
 	// If there are questions, sort the questions & generate list
 	if ($length !== 0) {
 			usort($qarray, 'compqs');
-			
+	$hint = "";		
 		// Generate the list of questions 	
 		for($i=0; $i < $length; $i++) {
 			
@@ -142,22 +142,10 @@ $xmlDoc=new DOMDocument();
 							}
 						}
 					}
-					
-					// Finally render the HTML
-					if ($hint=="") {
-						$currenti = $i;
-						$hint='<a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$iswithdrawn.'" onclick="load('.$qarray[$i]["uin"].','.'\''.$date.'\',\''.$photos.'\');return false;" href="#">
-						   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
-						   <h4 class="list-group-item-heading"> <span class="membername" style="color:'.$qarray[$i]["color"].'">'.strtoupper($qarray[$i]["qref"]).' '.$qarray[$i]["DisplayAs"].$ingroup.'</h4>
-						   <p class="list-group-item-text">'.$qarray[$i]["constituency"].' ('.$qarray[$i]["party"].')</p></a><div id="firstquestion" style="display: none;">'.$qarray[$i]["uin"].'</div>';
-					} 
-					else {
-						$currenti = $currenti;
-						$hint=$hint .'<a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$iswithdrawn.'" onclick="load('.$qarray[$i]["uin"].','.'\''.$date.'\',\''.$photos.'\');return false;"  href="#">
-						   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
-						   <h4 class="list-group-item-heading"><span class="membername" style="color:'.$qarray[$i]["color"].'">'.strtoupper($qarray[$i]["qref"]).' '. $qarray[$i]["DisplayAs"].$ingroup.'</span></h4>
-						   <p class="list-group-item-text">'.$qarray[$i]["constituency"].' ('.$qarray[$i]["party"].')</p></a>';
-					}
+					$hint=$hint .'<a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$iswithdrawn.'" onclick="load('.$qarray[$i]["uin"].','.'\''.$date.'\',\''.$photos.'\');return false;"  href="#">
+					   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
+					   <h4 class="list-group-item-heading">'.$ingroup.'<span class="partybox" style="background:'.$qarray[$i]["color"].'"></span>'.strtoupper($qarray[$i]["qref"]).' '. $qarray[$i]["DisplayAs"].'</h4>
+					   <p class="list-group-item-text">'.$qarray[$i]["constituency"].' ('.$qarray[$i]["party"].')</p></a>';
 			   }
 			}
 		}
@@ -184,9 +172,5 @@ if ($hint=="") {
 	// Otherwise respond with the information required 	
     $response=$hint;
 }	
-    echo $howmanygroups.' groups: ';
-    print_r($groupssplit);
-    echo '<br />'.$howmanywithdrawn.' withdrawn: ';
-    print_r($withdrawnquestions);
 	echo $response;
 ?>	   

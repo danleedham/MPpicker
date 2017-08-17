@@ -122,9 +122,9 @@
           </div><!--list-group-->
 
           <div class="panel-footer">
-            <small class="pull-left">This section auto-populates by magic (and php).</small>
+            <small class="pull-left">This section auto-populates by magic (and JavaScript).</small>
             <a class="btn btn-link btn-xs pull-right" href="data.parliament.uk/membersdataplatform/">
-              Live Data</a>
+              PDS Live Data</a>
           </div>
         </div><!--panel-->
 

@@ -41,31 +41,5 @@
       //activate the sub-menu options in the offcanvas menu
       $('.collapse').collapse();
 
-      //theme switcher: only needed for this sample page to set the active CSS
-      $('input[name=themeSwitcher]').on('change', function(ev) {
-        var theme = $(ev.target).val();
-        var themeCSSLoaded = false;
-
-        $.each( document.styleSheets, function(idx, css) {
-          var href = css.href;
-          if (href.indexOf('bootcards')>-1) {
-            if (href.indexOf(theme)>-1) {
-              themeCSSLoaded = true;
-              css.disabled = false;
-            } else {
-              css.disabled = true;
-            }
-          }
-        });
-
-        if (!themeCSSLoaded) {
-          $("<link/>", {
-             rel: "stylesheet",
-             type: "text/css",
-             href: "//cdnjs.cloudflare.com/ajax/libs/bootcards/1.1.1/css/bootcards-" + theme + ".min.css"
-          }).appendTo("head");
-        }
-        
-      });
 
     </script>

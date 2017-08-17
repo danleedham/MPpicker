@@ -76,6 +76,7 @@
 
 .ingroup {
 	float:right !important;
+	padding-right: 24px;
 }
 
 #whoresults {
@@ -103,4 +104,23 @@ div#constituency.list-group-item {
 h3.panel-title.pull-left {
 	font-weight: bold;
 }
-	
+
+.partybox {
+	width: 17px;
+	height: 17px;
+	vertical-align: bottom;
+	margin-left: 5px;
+	margin-right: 5px;
+	display: inline-block;
+	border: 1px solid rgba(0, 0, 0, .8);
+}	
+
+.partybox-large {
+	width: 19px;
+	height: 19px;
+	vertical-align: bottom;
+	margin-left: 5px;
+	margin-right: 5px;
+	display: inline-block;
+	border: 1px solid rgba(0, 0, 0, .8);
+}	

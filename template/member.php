@@ -18,16 +18,16 @@
 	if(!$m) {$m=$_GET["m"];}
 		if (!$m){ $m="8";}	
 	if(!$house){$house=$_GET["house"];}
-	if(!$house){$house = "Commons";}	
 	$xml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id=".$m."/FullBiog") or die("No MP with this id");
 	if(!$photos){$photos=$_GET["photos"];}
 	$betaimages =simplexml_load_file("http://leedhammedia.com/parliament/betaimages.xml") or die("Can't load Images");
 	$imagescount = count($betaimages);
 
-	
+	if(!$house){ $house = $xml->Member[0]->House; }
+	echo $house;
 						$DodsId=$xml->Member[0]->attributes()->Dods_Id;
 						if ($photos !== "screenshot") {	
-							if ($house === "Commons") {
+							if ($house == "Commons") {
 									for($ii=0; $ii < $imagescount; $ii++) {
 										if (trim($betaimages->member[$ii]->KnownAs) == trim($xml->Member[0]->DisplayAs)){
 											$BetaId = $betaimages->member[$ii]->imageid;
@@ -53,7 +53,8 @@
 
 				  <label>Name</label>
                   <h4 class="list-group-item-heading"><?php echo $xml->Member[0]->DisplayAs ?></h4>
-                </div>
+                  <span stlye="padding-top: 4px !important;"><?php echo $xml->Member[0]->BasicDetails[0]->GivenForename ?> <?php echo $xml->Member[0]->BasicDetails[0]->GivenMiddleNames ?> <?php echo $xml->Member[0]->BasicDetails[0]->GivenSurname ?></span>
+                </div>    
 
                 <div class="list-group-item">
                   <label>Party</label>
@@ -122,23 +123,98 @@
 
                 </div>
               <div class="list-group-item">
-                  <div id="twitter">
-                  		<?php for($i = 0; $i < count($xml->Member[0]->Addresses[0]); $i ++) {
-			if ($xml->Member[0]->Addresses->Address[$i]->Type == "Twitter") {
-				$twitter = $xml->Member[0]->Addresses->Address[$i]->Address1[0];  
+                  
+				<?php for($i = 0; $i < count($xml->Member[0]->Addresses[0]); $i ++) {
+						if ($xml->Member[0]->Addresses->Address[$i]->Type == "Twitter") {
+							$twitter = $xml->Member[0]->Addresses->Address[$i]->Address1[0];  
+							}
 					}
-				}?>
-              		<a href="#" onclick="twitter('<?php echo $twitter ?>');return false;" class="btn btn-info" role="button">Load Twitter</a> 
-              	  </div>
-                </div>
-		
-	<div class="panel-footer">
+					?>
+				 <a href="#" onclick="loadextras();return false;" class="btn btn-danger" role="button">Late shift data</a> 
+				 <?php if($twitter): ?> 
+				 <a href="#" onclick="twitter('<?php echo $twitter ?>');return false;" class="btn btn-info" role="button">Toggle Twitter</a> 
+              	 <?php endif; ?> 
+              	 </div>
+              	 <div class="list-group-item" id="twitter" style="display:none;"></div>
+                <div class="list-group-item" id="extras" style="display:none;">
+                <?php if($xml->Member[0]->BiographyEntries[0]->BiographyEntry[0]->Entry): ?>
+                 <label>Interests</label>
+                  <h4 class="list-group-item-heading"><?php echo $xml->Member[0]->BiographyEntries[0]->BiographyEntry[0]->Entry ?></h4>
+                <?php endif; ?>
+                <?php if (trim($xml->Member[0]->Interests[0]->Category[$i]->Interest[0]->RegisteredInterest) !== ""): ?>
+                <br />
+                 <label>Business Interests</label>
+                <?php   
+				 	for($i = 0; $i < count($xml->Member[0]->Interests[0]); $i ++) {
+				 		if ($xml->Member[0]->Interests[0]->Category[$i]->Interest[0]->RegisteredInterest) {
+							$interest = $xml->Member[0]->Interests[0]->Category[$i]->Interest[0]->RegisteredInterest; 
+							echo '<h4 class="list-group-item-heading">'.$interest."</h4>";
+					    }
+					}
+				endif; ?>
+				
+				<?php if (trim($xml->Member[0]->BasicDetails[0]->TownOfBirth) !== ""): ?>
+				 <br />
+                 <label>Born In:</label>
+                  <h4 class="list-group-item-heading"><?php echo trim($xml->Member[0]->BasicDetails[0]->TownOfBirth).', '.trim($xml->Member[0]->BasicDetails[0]->CountryOfBirth); ?></h4>
+                 <?php endif; ?>
+                 
+                 <?php if($xml->Member[0]->ElectionsContested->ElectionContested[0]->Constituency[0]): ?>
+                 <br />
+                 <label>Constituencies Contested Not Won:</label>
+				 <?php   
+				 	for($i = 0; $i < count($xml->Member[0]->ElectionsContested[0]); $i ++) {
+				 		if ($xml->Member[0]->ElectionsContested->ElectionContested[$i]->Constituency[0]) {
+							$Committee = $xml->Member[0]->ElectionsContested->ElectionContested[$i]->Constituency[0]; 
+							echo '<h4 class="list-group-item-heading">'.$Committee . " (".$xml->Member[0]->ElectionsContested->ElectionContested[$i]->Election[0]->Name.")</h4>";
+					    }
+					}
+				?>
+				<?php endif; ?>
+				<br />
+                <label>Previous gigs</label>
+				<?php   
+				 	for($i = 0; $i < count($xml->Member[0]->GovernmentPosts[0]); $i ++) {
+				 		if ($xml->Member[0]->GovernmentPosts->GovernmentPost[$i]->EndDate[0]) {
+							$Committee = $xml->Member[0]->GovernmentPosts->GovernmentPost[$i]->Name[0]; 
+							echo '<h4 class="list-group-item-heading">'.$Committee . " (".date("M Y",strtotime($xml->Member[0]->GovernmentPosts->GovernmentPost[$i]->StartDate[0]))." - ".date("M Y",strtotime($xml->Member[0]->GovernmentPosts->GovernmentPost[$i]->EndDate[0])).")</h4>";
+					    }
+					}
+					for($i = 0; $i < count($xml->Member[0]->OppositionPosts[0]); $i ++) {
+				 		if ($xml->Member[0]->OppositionPosts->OppositionPost[$i]->EndDate[0]) {
+							$Committee = $xml->Member[0]->OppositionPosts->OppositionPost[$i]->Name[0]; 
+							echo '<h4 class="list-group-item-heading">'.$Committee . " (".date("M Y",strtotime($xml->Member[0]->OppositionPosts->OppositionPost[$i]->StartDate[0]))." - ".date("M Y",strtotime($xml->Member[0]->OppositionPosts->OppositionPost[$i]->EndDate[0])).")</h4>";
+					    }
+					} 	 			
+					for($i = 0; $i < count($xml->Member[0]->Committees[0]); $i ++) {
+						if ($xml->Member[0]->Committees->Committee[$i]->EndDate[0]) {
+							$Committee = $xml->Member[0]->Committees->Committee[$i]->Name[0]; 
+							echo '<h4 class="list-group-item-heading">'.$Committee . " (".date("M Y",strtotime($xml->Member[0]->Committees->Committee[$i]->StartDate[0]))." - ".date("M Y",strtotime($xml->Member[0]->Committees->Committee[$i]->EndDate[0])).")</h4>";
+						}
+					} 	
+					for($i = 0; $i < count($xml->Member[0]->ParliamentaryPosts[0]); $i ++) {
+						if ($xml->Member[0]->ParliamentaryPosts->ParliamentaryPost[$i]->EndDate[0]) {
+							$Committee = $xml->Member[0]->ParliamentaryPosts->ParliamentaryPost[$i]->Name[0]; 
+							echo '<h4 class="list-group-item-heading">'.$Committee . " (".date("M Y",strtotime($xml->Member[0]->ParliamentaryPosts->ParliamentaryPost[$i]->StartDate[0]))." - ".date("M Y",strtotime($xml->Member[0]->ParliamentaryPosts->ParliamentaryPost[$i]->EndDate[0])).")</h4>";
+						}
+					}           
+				?> 
+					</div>
+				</div>
+				
+				<div class="panel-footer">
                   <small>Data from UK Parliament - <a href="http://data.parliament.uk/membersdataplatform/">Members' Names Data Platform</a></small>
                 </div>
               </div>
               </div>	
         	<script>      
 			function twitter(handle){
+				var twitter = document.getElementById("twitter");
+				twitter.style.display = twitter.style.display === 'none' ? '' : 'none';
 			   $("#twitter").load('template/twitter.php?handle='+handle);
 			}
-			</script> 
+			function loadextras(){
+				var yourUl = document.getElementById("extras");
+				yourUl.style.display = yourUl.style.display === 'none' ? '' : 'none';
+			}
+			</script>

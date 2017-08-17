@@ -40,11 +40,20 @@ $xmlMembers=new DOMDocument();
 			$DateDue=$xQuestions->item($i)->getElementsByTagName('AnswerDate');
 			$BallotNo=$xQuestions->item($i)->getElementsByTagName('ballotNumber');
 			$Dept=$xQuestions->item($i)->getElementsByTagName('AnsweringBody');
-				$Department=trim($Dept->item(0)->textContent);
-				
-			$xmlMembers->load('http://data.parliament.uk/membersdataplatform/services/mnis/members/query/constituency='.$Constituency);
-			$xMembers=$xmlMembers->getElementsByTagName('Member');
-			$memberscount = $xMembers->length;
+				$Department=trim($Dept->item(0)->textContent);			
+
+				$tablingMember=$xQuestions->item($i)->getElementsByTagName('tablingMember');
+				$tablingMemberId = str_replace("http://data.parliament.uk/members/","",$tablingMember->item(0)->getAttribute('href'));	
+				$xmlMembers->load('http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id='.$tablingMemberId);
+				$xMembers=$xmlMembers->getElementsByTagName('Member');
+				$memberscount = $xMembers->length;
+			// backup to search via constituency if the member id method doesn't work
+			if($memberscount == 0) {			
+				$xmlMembers->load('http://data.parliament.uk/membersdataplatform/services/mnis/members/query/constituency='.$Constituency);
+				$xMembers=$xmlMembers->getElementsByTagName('Member');
+				$memberscount = $xMembers->length;
+			}
+			
 			for ($y = 0; $y < $memberscount; $y++){
 						$DisplayAs=$xMembers->item($y)->getElementsByTagName('DisplayAs');
 						$party=$xMembers->item($y)->getElementsByTagName('Party');
@@ -67,6 +76,7 @@ $xmlMembers=new DOMDocument();
 							  'color'=>$color);		
 		}
 	}
+	// print_r($qarray);
 	// Function to sort questions by date
 	function compsortqs( $a, $b ) {
 		return strtotime($b["date"]) - strtotime($a["date"]);
@@ -107,12 +117,12 @@ $xmlMembers=new DOMDocument();
  				<div class="list-group-item">  
                   <h4 class="list-group-item-heading">
 				  <?php echo $xml->Member[0]->DisplayAs ?>
-				  <span style="color:                  
+				  <span class="partybox-large" style="background:                  
                   <?php  $PartyID = $xml->Member[0]->Party[0]->attributes()->Id;              	          	     
 	  					 echo $colors[intval($PartyID)];
-					?>">
-				  <?php echo $xml->Member[0]->Party ?></span>
-				  <?php echo $xml->Member[0]->MemberFrom ?>
+					?>"></span>
+				  <?php echo $xml->Member[0]->Party ?> 
+				  (<?php echo $xml->Member[0]->MemberFrom ?>)
 				  </h4>
                 </div>
 				<div class="list-group-item">

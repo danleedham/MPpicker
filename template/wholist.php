@@ -73,7 +73,35 @@ $xmlDoc=new DOMDocument();
 	// Departments don't allow direct querying, instead by positions attached to departments
 	$department=$_GET["department"];
 		if ($department) { 
-			$url = 'http://data.parliament.uk/membersdataplatform/services/mnis/Department/'.$department.'/Government/Current/';
+			if ($positions == "cabinet" or $positions == "government") {
+				$url = 'http://data.parliament.uk/membersdataplatform/services/mnis/Department/'.$department.'/Government/Current/';
+			} elseif ($positions == "shadow" or $positions == "opposition") {
+				$url = $url2 = 'http://data.parliament.uk/membersdataplatform/services/mnis/Department/'.$department.'/Opposition/Current/';
+			} else {
+				$url1 = 'http://data.parliament.uk/membersdataplatform/services/mnis/Department/'.$department.'/Government/Current/';
+				$url2 = 'http://data.parliament.uk/membersdataplatform/services/mnis/Department/'.$department.'/Opposition/Current/';
+				$doc1 = new DOMDocument();
+				$doc1->load($url1);
+
+				$doc2 = new DOMDocument();
+				$doc2->load($url2);
+				   
+				// get 'res' element of document 1
+				$res1 = $doc1->getElementsByTagName('Department')->item(0);
+
+				// iterate over 'item' elements of document 2
+				$items2 = $doc2->getElementsByTagName('Post');
+				for ($i = 0; $i < $items2->length; $i ++) {
+					$item2 = $items2->item($i);
+
+					// import/copy item from document 2 to document 1
+					$item1 = $doc1->importNode($item2, true);
+
+					// append imported item to document 1 'res' element
+					$res1->appendChild($item1);
+				}	
+				$xmlDoc=$doc1;
+			} 
 		}
 		if ($department == "") { 
 			$departmenturl = "";
@@ -96,8 +124,8 @@ $xmlDoc=new DOMDocument();
 		if(!$url){
 			$url = "http://data.parliament.uk/membersdataplatform/services/mnis/members/query/IsEligible=true".$houseurl.$partyurl.$genderurl.$positionsurl.$committeeurl.$joinedurl."/".$returnpositions.$returncommittee."BiographyEntries";
 		}
-	echo $url;
-	$xmlDoc->load($url);
+	echo '<!-- '.$url.'-->';
+	if(!$department){$xmlDoc->load($url);}
 		$x=$xmlDoc->getElementsByTagName('Member');
 	$colors = array (
 								"0"	  =>   "#000000",
@@ -136,12 +164,8 @@ $xmlDoc=new DOMDocument();
 			foreach ($Party as $PartiesForId){ 
 					$PartyID = $PartiesForId->getAttribute('Id'); 
 			}
-		if(!$MemberID){
-			$MemberId=$x->item($i)->getAttribute('Member_Id');
-		}
-		if(!$DodsId){
-			$DodsId=$x->item($i)->getAttribute('Dods_Id');
-		}
+		$MemberId=$x->item($i)->getAttribute('Member_Id');
+		$DodsId=$x->item($i)->getAttribute('Dods_Id');
 		
 		if ($photos !== "screenshot") {				
 			if ($House[0]->textContent == "Commons") {
@@ -317,8 +341,11 @@ $xmlDoc=new DOMDocument();
 					$positionecho = '<div class="list-group-item"><h4 class="list-group-item-heading post">'.$whoarray[$j]["HansardName"].'</h4> 
 									</div>';
 				}
-		
-			
+				
+				if($photos == "screenshot"){
+					$ifscreenshot = " screenshot";
+				}
+				
 				$hint=$hint .'		
 					<div class="bootcards-cards bootcards-group">
 						<div id="contactCard" class="guesswho">
@@ -328,7 +355,7 @@ $xmlDoc=new DOMDocument();
 								</div>
 								<div class="list-group">
 									<div class="list-group-item">
-										<img src="'.$whoarray[$j]["imageurl"].'" class="img-rounded group-member-image">
+										<img src="'.$whoarray[$j]["imageurl"].'" class="img-rounded group-member-image'.$ifscreenshot.'">
 									</div>
 									<div class="list-group-item" style="background-color:'.$whoarray[$j]["color"].'" id="constituency">
 										<h4 class="list-group-item-heading">'.$whoarray[$j]["Party"].'</h4>

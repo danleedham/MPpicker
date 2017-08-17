@@ -1,4 +1,7 @@
 <?php
+
+	echo '<option value=""></option>';
+	echo '<option value="">All</option>';
 $xmlDoc=new DOMDocument();
 $xmlDoc->load('http://data.parliament.uk/membersdataplatform/services/mnis/ReferenceData/Departments/');
 	$x=$xmlDoc->getElementsByTagName('Department');

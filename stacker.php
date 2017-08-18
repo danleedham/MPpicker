@@ -25,7 +25,8 @@
 		  }	
 		if (!$m){ $m="8";}	
 		$xml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id=".$m."/FullBiog") or die("No MP with this id");
-		$betaimages =simplexml_load_file("http://leedhammedia.com/parliament/betaimages.xml") or die("Can't load Beta Images");
+		$feed = file_get_contents("betaimages.xml");
+		$betaimages = simplexml_load_string($feed) or die("Can't load Beta Images");
 	    $imagescount =  count($betaimages);
 		?>
 
@@ -102,6 +103,7 @@
 				<input id="choosehouse" <?php if ($house == "Lords") {echo "checked";} ?> type="checkbox" value="Lords" name="house" form="mpsearch" data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="Lords" data-off="Commons">
 				<input id="searchby" <?php if ($searchby == "constituency") {echo "checked";} ?> type="checkbox" value="constituency" name="searchby" form="mpsearch" data-toggle="toggle" data-on="Const" data-off="Name">
 				<input id="photos" <?php if ($photos == "screenshot") {echo "checked";} ?> type="checkbox" value="screenshot" name="photos" form="mpsearch" data-toggle="toggle" data-onstyle="warning" data-on="ScreenShot" data-off="Stock">
+				<br />
 				<a href="#" onclick="load(8);return false;" class="btn btn-info pull-right" role="button">Search</a>
 				</div>
             </div>
@@ -112,11 +114,11 @@
 		
 		<?php 
          	if (!$q){
-				echo file_get_contents("http://leedhammedia.com/parliament/template/initiallist.php?m=".$m."&house=".$house); 
+         		require ("template/initiallist.php"); 
             }
             else {
 				$mselected = '&mselected='.$m;
-				echo file_get_contents("http://leedhammedia.com/parliament/template/livesearch.php?q=".$q."&house=".$house."&searchby=".$searchby.$mselected.'"'); 
+				require("template/livesearch.php"); 
 			} 
           ?>  
           </div><!--list-group-->
@@ -136,7 +138,7 @@
           <!--contact details -->
           <div id="contactCard">
 
-			<?php echo file_get_contents("http://leedhammedia.com/parliament/template/member.php?m=".$m); ?>
+			<?php require("template/member.php"); ?>
 	
             </div><!--contact card-->
 

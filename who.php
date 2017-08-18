@@ -8,7 +8,7 @@
   <meta name="google" value="notranslate">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-  <link rel="stylesheet" href="http://leedhammedia.com/parliament/template/chosen/chosen.css">
+  <link rel="stylesheet" href="template/chosen/chosen.css">
   <title>Who's that?</title>
 
 	<?php
@@ -90,7 +90,7 @@ function loadresults(){
 				 <div class="list-group-item">
 				 <select name="sex" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="sex-input">
 				 <option value="">Select Sex</option>
-				 <?php echo file_get_contents("http://leedhammedia.com/parliament/template/whosex.php?house=Commons"); ?>
+				 <?php include("template/whosex.php?house=Commons"); ?>
 				 </select>
 				 </div>
 
@@ -98,7 +98,7 @@ function loadresults(){
 				<div class="list-group-item">
 				<select data-placeholder="Choose a Party..." class="chosen-select form-control custom-select mb-2 mr-sm-2 mb-sm-0" tabindex="2" id="party-input">
 					<option value=""</option>
-					<?php echo file_get_contents("http://leedhammedia.com/parliament/template/whoparty.php"); ?>
+					<?php include("template/whoparty.php"); ?>
 				</select>
 				</div>
 			
@@ -107,7 +107,7 @@ function loadresults(){
 				 <div class="list-group-item">
 				 <select name="positions" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="position-input">
 				 <option value="">Select Current position</option>
-				 <?php echo file_get_contents("http://leedhammedia.com/parliament/template/whopositions.php"); ?>
+				 <?php  include("template/whopositions.php"); ?>
 				 </select>
 				 </div>
 			
@@ -115,7 +115,8 @@ function loadresults(){
 				<div class="list-group-item">
 				<select data-placeholder="Choose a Committee..." class="chosen-select form-control custom-select mb-2 mr-sm-2 mb-sm-0" tabindex="2" id="committee-input">
 					<option value=""></option>
-					<?php echo file_get_contents("http://leedhammedia.com/parliament/template/whocommittee.php?house=Commons"); ?>
+					<?php $house = "Commons";
+						  include("template/whocommittee.php"); ?>
 				</select>
 				</div>
 			
@@ -123,7 +124,7 @@ function loadresults(){
 				<div class="list-group-item">
 				<select data-placeholder="Choose a Department..." class="chosen-select form-control custom-select mb-2 mr-sm-2 mb-sm-0" tabindex="2" id="department-input">
 					<option value=""></option>
-					<?php echo file_get_contents("http://leedhammedia.com/parliament/template/whodepartment.php"); ?>
+					<?php include("template/whodepartment.php"); ?>
 				</select>
 				</div>
 			
@@ -181,9 +182,9 @@ function loadresults(){
 
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.js" type="text/javascript"></script>
-  <script src="http://leedhammedia.com/parliament/template/chosen/chosen.jquery.js" type="text/javascript"></script>
-  <script src="http://leedhammedia.com/parliament/template/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
-  <script src="http://leedhammedia.com/parliament/template/chosen/docsupport/init.js" type="text/javascript" charset="utf-8"></script>
+  <script src="template/chosen/chosen.jquery.js" type="text/javascript"></script>
+  <script src="template/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+  <script src="template/chosen/docsupport/init.js" type="text/javascript" charset="utf-8"></script>
 
 <?php include 'template/footer.php'; ?>
 

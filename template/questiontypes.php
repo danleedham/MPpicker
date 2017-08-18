@@ -3,7 +3,7 @@ $xmlDoc=new DOMDocument();
 if(!$date){$date = $_GET["date"];}
 if(!$qdept){$qdept = $_GET["dept"];}
 $depturl = str_replace(' ', '%20', $qdept);
-$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&AnswerDate='.$date.'&AnsweringBody='.$depturl.'&_pageSize=500');
+$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&AnswerDate='.$date.'&AnsweringBody='.$depturl.'&_pageSize=100');
 	$x=$xmlDoc->getElementsByTagName('item');
 	$questionscount = $x->length;	
 	if ($questionscount == 1) {
@@ -18,12 +18,11 @@ $xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Comm
 					$Department=trim($Dept->item(0)->textContent);
 				$QuestionType=$x->item($i)->getElementsByTagName('QuestionType');
 				}	
-					$qarray[] = array('type'=>$QuestionType[0]->textContent,
-									  'dept'=>$Department);						  
-					$typearray[] = array('type' => $QuestionType[0]->textContent);			
+					$typearray[] = array('type'=>$QuestionType[0]->textContent,
+									  'dept'=>$Department);						  		
 			}
 		}
-		// This gives us a unique list of question types
+		// This gives us a unique list of question type / department mixes
 		if (count($typearray) !== 0) {
 			$typearray = array_values(array_map("unserialize", array_unique(array_map("serialize", $typearray))));
 		}
@@ -31,13 +30,16 @@ $xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Comm
 		if ($typearray[0]["type"] == '') {array_shift($typearray);}
 		// If no type set, let's use the first none blank one
 		if (!$qtype or count($typearray) === 1) { $qtype = $typesarray[0]["type"]; }
+
+		foreach ($typearray as $key => $value) {
+			if ($qtype == $value["type"]) { $istype = ' selected="selected" ';}
+			else { $istype = "";}
+			// If no department was set, let's take the first department
+			if(!$qdept) {
+				$qdept = $value["dept"];
+			}
+			if($value["type"] and $value["dept"] == $qdept){
+		   		echo '<option'.$istype.' value="'. $value["type"].'">'. $value["type"].'</option>';	   	
+		   }
+		} 
 	?>
-						<?php 
-							foreach ($typearray as $key => $value) {
-								if ($qtype == $value["type"]) { $istype = ' selected="selected" ';}
-								else { $istype = "";}
-								if ($value["type"]){
-							   echo '<option'.$istype.' value="'. $value["type"].'">'. $value["type"].'</option>';
-							   }
-							} 
-						?>

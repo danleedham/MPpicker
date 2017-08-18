@@ -20,7 +20,8 @@
 	if(!$house){$house=$_GET["house"];}
 	$xml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id=".$m."/FullBiog") or die("No MP with this id");
 	if(!$photos){$photos=$_GET["photos"];}
-	$betaimages =simplexml_load_file("http://leedhammedia.com/parliament/betaimages.xml") or die("Can't load Images");
+	$feed = file_get_contents("../betaimages.xml");
+	$betaimages = simplexml_load_string($feed) or die("Can't load Beta Images");
 	$imagescount = count($betaimages);
 
 	if(!$house){ $house = $xml->Member[0]->House; }
@@ -35,7 +36,7 @@
 									}
 									$imageurl = 'https://api20170418155059.azure-api.net/photo/'.$BetaId.'.jpeg?crop=CU_1:1&width=500&quality=70';
 									if (@getimagesize($imageurl)){}
-									else {$imageurl = 'http://leedhammedia.com/parliament/images/thumbs'.$DodsId.'.jpg';}
+									else {$imageurl = 'images/thumbs'.$DodsId.'.jpg';}
 									
 									if (@getimagesize($imageurl)){}
 									else {$imageurl = 'http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$m;}
@@ -45,7 +46,7 @@
 							}
 						}
 						else {
-							$imageurl = 'http://leedhammedia.com/parliament/images/thumbs/'.$DodsId.'.jpg';
+							$imageurl = 'images/thumbs/'.$DodsId.'.jpg';
 						}											
 					?>
 				

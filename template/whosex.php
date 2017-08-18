@@ -22,7 +22,7 @@ $xmlDoc->load("http://data.parliament.uk/membersdataplatform/services/mnis/House
 				$allcount = intval($TotalCount->item(0)->textContent)+$allcount;
 
 			}
-		   echo '<option value="all">Both Sexes - '.$allcount.'</option>';
+		   echo '<option value="all">Both - '.$allcount.'</option>';
 		   echo '<option value="m">Male - '.$mcount.'</option>';
 		   echo '<option value="f">Female - '.$fcount.'</option>';
 	}

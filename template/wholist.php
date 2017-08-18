@@ -145,7 +145,8 @@ $xmlDoc=new DOMDocument();
 	$hint = "";
 	
 	//Load xml with codes for new Parliament Beta images
-	$betaimages =simplexml_load_file("http://leedhammedia.com/parliament/betaimages.xml") or die("Can't load Beta Images");
+	$feed = file_get_contents("../betaimages.xml");
+	$betaimages = simplexml_load_string($feed) or die("Can't load Beta Images");
 	$imagescount =  count($betaimages);
 		
 	// Let's build an array with our results in

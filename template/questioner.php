@@ -17,7 +17,7 @@ $xmlMembers=new DOMDocument();
 	$questionscount = $xQuestions->length;
 	
 	//Load xml with codes for new Parliament Beta images
-	$betaimages =simplexml_load_file("http://leedhammedia.com/parliament/betaimages.xml") or die("Can't load Beta Images");
+	$betaimages =simplexml_load_file("betaimages.xml") or die("Can't load Beta Images");
 	$imagescount =  count($betaimages);
 	// Arry with party ID and party colors
 	$colors = array (
@@ -138,14 +138,14 @@ $xmlMembers=new DOMDocument();
 									}
 									$imageurl = 'https://api20170418155059.azure-api.net/photo/'.$BetaId.'.jpeg?crop=MCU_3:2&width=1000&quality=80';
 									if (@getimagesize($imageurl)){}
-									else {$imageurl = 'http://leedhammedia.com/parliament/images/'.$DodsId.'.jpg';}
+									else {$imageurl = 'http://leedhammedia.com/parliament/images/thumbs/'.$DodsId.'.jpg';}
 							}
 							else { 
 									$imageurl = 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg';
 							}
 						}
 						else {
-							$imageurl = 'images/'.$DodsId.'.jpg';
+							$imageurl = 'images/thumbs/'.$DodsId.'.jpg';
 						}											
 					?>
 				

@@ -44,11 +44,13 @@
 	function loaddepts(date){
 	   $("#dept-input").load('template/questiondepts.php?date='+date);
 	   $("#type-input").load('template/questiontypes.php?date='+date);
+	   console.log('Loading departments for: '+date);
 	}
-	function loadtypes(dept){
+	function loadtypes(){
 	   var date = document.getElementById("date-input").value;
+	   var dept = encodeURI(document.getElementById("dept-input").value);
 	   $("#type-input").load('template/questiontypes.php?date='+date+'&dept='+dept);
-	   $("#livesearch").load('template/listquestions.php?date='+date+'&dept='+dept);
+	   console.log('Loading Question Types for: '+date+' to '+dept);
 	}
 	function gotopicals(){
 	   document.getElementById("type-input").value = 'Topical';
@@ -67,7 +69,11 @@
 	function togglemenu(){
 				var menu = document.getElementById("menu");
 				menu.style.display = menu.style.display === 'none' ? '' : 'none';
-			}
+	}
+	function togglemobilelist(){
+				var list = document.getElementById("list");
+				list.style.display = list.style.display === 'block' ? '' : 'block';
+	}
 </script>
 
 </head>
@@ -75,6 +81,15 @@
 <body>		
 	<div class="container-fluid bootcards-container push-right">
 		<div class="row">
+			<!-- Mobile Menu -->	
+				<div class="col-sm-4 bootcards-list" id="mobilemenu" data-title="Mobile Menu">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<a href="#" onclick="togglemobilelist();return false;" class="btn btn-danger" role="button">
+							Toggle Search</a>
+						</div><!--panel body-->
+					</div><!--panel-->
+				</div><!--list-->
 			<!-- left list column -->
 				<div class="col-sm-4 bootcards-list" id="list" data-title="Contacts">
 					<div class="panel panel-default">
@@ -86,7 +101,7 @@
 								</div>
 								<div class="form-inline" style="padding-top:6px !important;">
 									<label for="dept-input">Department:</label><br />
-									<select id="dept-input" name="type" class="form-control">
+									<select id="dept-input" onchange="loadtypes()" name="type" class="form-control">
 										<?php include 'template/questiondepts.php' ?>
 									</select>			
 								</div>
@@ -100,8 +115,8 @@
 							<br />
 							<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-info" role="button">
 							Load Questions</a>
-							<a href="#" onclick="togglemenu();return false;" class="btn btn-danger" style="float:right !important;" role="button">
-							Toggle Menu</a>
+							<a href="#" onclick="togglemenu();return false;" class="btn btn-danger hidemobile" style="float:right !important;" role="button">
+							Toggle Search</a>
 						</div><!--panel body-->
 						
 						<div class="list-group" id="livesearch">
@@ -129,8 +144,8 @@
 					<div class="search-form">
 						<div class="form-group">	
 							<div class="col-12">
-								Use the search tools on the left and MP details will appear here. 
-								<a href="https://www.parliament.uk/documents/commons-table-office/Oral-questions-rota.pdf">Click here to view the Oral Questions Rota (external).</a href>
+								<p>Use the search tools on the left and MP details will appear here. </p>
+								<p><a href="https://www.parliament.uk/documents/commons-table-office/Oral-questions-rota.pdf">Click here to view the Oral Questions Rota (external).</a href></p>
 							</div>
 						</div>
 					</div>
@@ -147,7 +162,7 @@
 
             <div class="panel panel-default">
               <div class="panel-heading clearfix">
-                <h3 class="panel-title pull-left">Substantive Question Group Details</h3>
+                <h3 class="panel-title pull-left">Grouped & Withdrawn Questions</h3>
               </div>
               <div class="list-group">
                 <div class="list-group-item">
@@ -157,36 +172,18 @@
 							<label for="date-input" class="col-2 col-form-label">Enter groups on seperate lines with questions space delimited</label>
 								<div class="col-10">
 									 <textarea class="form-control" rows="3" id="groups-input" form="groups"></textarea>
+									<br />
+									<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-info" role="button">
+							Set Groups</a>
 								</div>
 							</div>
-						</div>
-					</form>	
-                </div>
-              
-                 <div class="panel-footer">
-                  <small>Please enter the question groups on seperate lines using spaces to split each question in the group</small>
-                </div>
-              </div>
-              </div>
-
-            </div><!--Group card-->
-            
-            <!-- Withdrawn details -->
-          <div id="withdrawnCard">
-
-            <div class="panel panel-default">
-              <div class="panel-heading clearfix">
-                <h3 class="panel-title pull-left">Withdrawn Questions</h3>
-              </div>
-              <div class="list-group">
-                <div class="list-group-item">
-					<form id="groups">
-						<div class="search-form">
 							<div class="form-group">	
 							<label for="date-input" class="col-2 col-form-label">Enter withdrawn questions (s1 t1) seperated by spaces</label>
 								<div class="col-10">
 									 <input type="text" class="form-control" id="withdrawn-input" form="withdrawn"></input>
 									 <br />
+									 <a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-info" role="button">
+									 Set Withdrawn</a>
 								</div>
 							</div>
 						</div>
@@ -194,12 +191,13 @@
                 </div>
               
                  <div class="panel-footer">
-                  <small>To un-withdraw any questions just reload questions with them removed from the box</small>
+                  <small>Please enter grouped (1 2 3) and withdrawn questions (s1 t4)</small>
                 </div>
               </div>
               </div>
 
-            </div><!--Group card-->
+            </div><!--Group / withdrawn card-->
+
 
         </div><!--list-details-->
 

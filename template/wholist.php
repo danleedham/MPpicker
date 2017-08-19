@@ -35,7 +35,7 @@ $xmlDoc=new DOMDocument();
 	$positions=$_GET["position"];
 		if (!$positions) { 
 			$positionsurl = "";
-			$returnpositions = "";  
+			$returnpositions = "GovernmentPosts|OppositionPosts|";  
 		} elseif ($positions == "cabinet") { 
 			$positionsurl = '|'."holdscabinetpost=true";
 			$returnpositions = "GovernmentPosts".'|';
@@ -155,7 +155,7 @@ $xmlDoc=new DOMDocument();
 		$FullTitle=$x->item($i)->getElementsByTagName('FullTitle');
 		$DisplayAs=$x->item($i)->getElementsByTagName('DisplayAs');
 		if($department){
-			$HansardName = $x->item($i)->getElementsByTagName('HansardName')[0]->textContent;
+			$HansardName = $x->item($i)->parentNode->parentNode->parentNode->getElementsByTagName('HansardName')[0]->textContent;
 		}
 		$House=$x->item($i)->getElementsByTagName('House');
 		$ListAs=$x->item($i)->getElementsByTagName('ListAs');
@@ -192,9 +192,9 @@ $xmlDoc=new DOMDocument();
 		}											
 		// Fix for the Lords not having decent photos... yet!
 		$Const=$x->item($i)->getElementsByTagName('MemberFrom');
-		$GovernmentPosts=$x->item($i)->getElementsByTagName('GovernmentPosts');
-		$OppositionPosts=$x->item($i)->getElementsByTagName('OppositionPosts');
-		$ParliamentaryPosts=$x->item($i)->getElementsByTagName('ParliamentaryPosts');
+		$GovernmentPosts=$x->item($i)->getElementsByTagName('GovernmentPost');
+		$OppositionPosts=$x->item($i)->getElementsByTagName('OppositionPost');
+		$ParliamentaryPosts=$x->item($i)->getElementsByTagName('ParliamentaryPost');
 		$Committees=$x->item($i)->getElementsByTagName('Committee');
 		
 		$GovernmentPostsList = array();
@@ -207,10 +207,10 @@ $xmlDoc=new DOMDocument();
 				} 
 			}
 		}
-		$OppositionPostsList = array(); 			
+		$OppositionPostsList = array(); 		
 		for($ii = 0; $ii < $OppositionPosts->length; $ii ++) {
 			if (!strtotime($OppositionPosts->item($ii)->getElementsByTagName('EndDate')[0]->textContent) >= time()) {
-				if($OppositionPosts->item($ii)->getElementsByTagName('HansardName')[0]->textContent){
+				if($OppositionPosts->item($ii)->getElementsByTagName('Name')[0]->textContent){
 					$OppositionPostsList[] = $OppositionPosts->item($ii)->getElementsByTagName('HansardName')[0]->textContent;
 				} else {
 					$OppositionPostsList[] = $OppositionPosts->item($ii)->getElementsByTagName('Name')[0]->textContent;
@@ -247,16 +247,17 @@ $xmlDoc=new DOMDocument();
 							  'DodsId'=>intval($DodsId),
 							  'MemberId'=>intval($MemberId),
 							  'imgid' => $imgid,
-							  'HansardName'=>$HansardName,
+							  'HansardName' => $HansardName,
 							  'constituency'=>$Const[0]->textContent,
 							  'GovenmentPosts'=>$GovernmentPostsList,
 							  'OppositionPosts'=>$OppositionPostsList,
+							  'OppositionPostsLength' => $OppositionPostsLength,
 							  'ParliamentaryPosts'=>$ParliamentaryPostsList,
 							  'Committees'=>$CommitteesList,
 							  'imageurl'=>$imageurl,
 							  );
 	}
-			
+
 	// Count how many questions there are
 	$length = count($whoarray);	
 	
@@ -333,13 +334,13 @@ $xmlDoc=new DOMDocument();
 				}
 			
 				if($Govecho or $Oppecho or $Parecho or $Comecho) {
-					$positionecho = '<div class="list-group-item">'.$Govecho.$Oppecho.$Parecho.$Comecho.' 
+					$positionecho = '<div class="list-group-item joblist">'.$Govecho.$Oppecho.$Parecho.$Comecho.' 
 									</div>';
 				} else {
 					$positionecho = "";
 				}
 				if($department){
-					$positionecho = '<div class="list-group-item"><h4 class="list-group-item-heading post">'.$whoarray[$j]["HansardName"].'</h4> 
+					$positionecho = '<div class="list-group-item joblist"><h4 class="list-group-item-heading post">'.$whoarray[$j]["HansardName"].'</h4> 
 									</div>';
 				}
 				

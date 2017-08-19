@@ -57,6 +57,13 @@ function loadresults(){
    console.log('Loading List: '+houseurl+sexurl+partyurl+positionurl+committeeurl+departmenturl+photosurl+joinedurl);
    $("#whoresults").load('template/wholist.php?'+houseurl+sexurl+partyurl+positionurl+committeeurl+departmenturl+photosurl+joinedurl+sortbyurl);
 }
+
+function hidejobs(){
+	elements = document.getElementsByClassName("joblist");
+    for (var i = 0; i < elements.length; i++) {
+        elements[i].style.display = elements[i].style.display == 'block' ? 'none' : 'block';
+    }
+}
 </script>
 
 </head>
@@ -89,8 +96,9 @@ function loadresults(){
 				<!-- sex -->
 				 <div class="list-group-item">
 				 <select name="sex" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="sex-input">
-				 <option value="">Select Sex</option>
-				 <?php include("template/whosex.php?house=Commons"); ?>
+				 <option value="">Choose Gender</option>
+				 <?php $house = "Commons" ?>
+				 <?php include("template/whosex.php"); ?>
 				 </select>
 				 </div>
 
@@ -161,8 +169,9 @@ function loadresults(){
 				
 				<!-- submit -->
 				<div class="list-group-item">
-					<a href="#" onclick="loadresults();return false;" class="btn btn-success" role="button">Fetch</a>
-					<a href="#" onclick="window.location.reload()" class="btn btn-danger" role="button"><i class="fa fa-refresh"></i>Reset</a>
+					<a href="#" onclick="loadresults();return false;" class="btn btn-success" role="button">Hit me up</a>
+					<a href="#" onclick="window.location.reload()" class="btn btn-danger" role="button">Reset</a>
+					<a href="#" onclick="hidejobs();return false;" class="btn btn-warning" role="button">Hide Jobs</a>
 				</div>
             </div> <!--list group-->
 

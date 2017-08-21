@@ -21,24 +21,31 @@
 
 <script>
 	function load(num,date,photos){
+		document.getElementById('loader').style.display = 'inline';
 		if (!document.getElementById("photos-input").checked){
-		 var photos = 'Stock';
+			var photos = 'Stock';
 		} else {
-		 var photos = "screenshot";
+			var photos = "screenshot";
 		}
-	   $("#contactCard").load('template/questioner.php?uin='+num+'&date='+date+'&photos='+photos);
-	   $('.active').removeClass('active');
-	   $('#q'+num).addClass("active");
+		console.log('Loading question: '+num);
+		$("#contactCard").load('template/questioner.php?uin='+num+'&date='+date+'&photos='+photos,function() {
+			document.getElementById('loader').style.display = 'none';
+		});
+		$('.active').removeClass('active');
+		$('#q'+num).addClass("active");
    
 	}
 	function loadquestions(date,dept,type){
-	   var groups = document.getElementById("groups-input").value;
-	   var withdrawn = document.getElementById("withdrawn-input").value;
-	   console.log('Loading questions using groups: '+groups+' and withdrawing: '+withdrawn);
-	   groups = groups.replace(/[\r\n]+/g,",");
-	   groups = encodeURI(groups);
-	   withdrawn = encodeURI(withdrawn);
-	   $("#livesearch").load('template/listquestions.php?date='+date+'&type='+type+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn);
+		document.getElementById('loader').style.display = 'inline';
+		var groups = document.getElementById("groups-input").value;
+		var withdrawn = document.getElementById("withdrawn-input").value;
+		console.log('Loading questions using groups: '+groups+' and withdrawing: '+withdrawn);
+		groups = groups.replace(/[\r\n]+/g,",");
+		groups = encodeURI(groups);
+		withdrawn = encodeURI(withdrawn);
+		$("#livesearch").load('template/listquestions.php?date='+date+'&type='+type+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn,function() {
+   		document.getElementById('loader').style.display = 'none';
+   		});
 	}
 	function loaddepts(date){
 	   $("#dept-input").load('template/questiondepts.php?date='+date);
@@ -66,12 +73,12 @@
 	   $("#livesearch").load('template/listquestions.php?date='+date+'&type=Topical&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn);
 	}
 	function togglemenu(){
-				var menu = document.getElementById("menu");
-				menu.style.display = menu.style.display === 'none' ? '' : 'none';
+		var menu = document.getElementById("menu");
+		menu.style.display = menu.style.display === 'none' ? '' : 'none';
 	}
 	function togglemobilelist(){
-				var list = document.getElementById("list");
-				list.style.display = list.style.display === 'block' ? '' : 'block';
+		var list = document.getElementById("list");
+		list.style.display = list.style.display === 'block' ? '' : 'block';
 	}
 </script>
 
@@ -111,11 +118,15 @@
 								</select>
 								</div>
 							</div>
-							<br />
-							<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-info" role="button">
-							Load Questions</a>
-							<a href="#" onclick="togglemenu();return false;" class="btn btn-danger hidemobile" style="float:right !important;" role="button">
-							Toggle Search</a>
+							<div class="form-inline" id="loadbuttons" style="padding-top:6px !important;">
+								<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-info" role="button">
+								Load Questions</a>
+								<span id="loader" style="display:none;">
+									<i class="fa fa-refresh fa-spin" class="pull-right" style="font-size:20px"></i>
+								</span>
+								<a href="#" onclick="togglemenu();return false;" class="btn btn-danger hidemobile" style="float:right !important;" role="button">
+								Toggle Search</a>
+							</div>
 						</div><!--panel body-->
 						
 						<div class="list-group" id="livesearch">

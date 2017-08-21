@@ -35,6 +35,7 @@ The application can run on any screen size from 400px width, and has been develo
 3. Start the server
 
 For Mac: 
+
 	1. Ensure the following Services are running as a minimum:
     	1. Apache
     	2. ProFTPD
@@ -42,6 +43,7 @@ For Mac:
 	3. Note the IP address of the server in the General tab (Example: 192.168.64.2)
 	
 For PC:	
+
 	1. Ensure the following Services are running as a minimum:
     	1. Apache
     	2. ProFTPD
@@ -50,17 +52,19 @@ For PC:
 	
 4. In Volumes mount the main stack exported data volumes. Click Explore to open up the server files. 
 5. Open up the htdocs folder and delete current files. Copy the entire distribution folder into htdocs.
-6. Open the file /etc/php.ini and on line 553 replace 'display_errors=On' with 'display_errors=Off'
+6. Open the file /etc/php.ini and on line 553 replace `display_errors=On` with `display_errors=Off`
 7. Within a Google Chrome browser open up the IP address of the server
 
 ## Static Data
-`Screenshot Images` As these images are not part of any external dataset they are taken manually, sorted and added to the project directory:
+### Screenshot Images 
+As these images are not part of any external dataset they are taken manually, sorted and added to the project directory:
 * A 'full-resolution' at 1920x1080 placed into the /images/screenshot directory
 * A smaller 960x540 version in the /images/screenshot/thumbs/ directory. 
 * Each of the images is named by the Members DodsId and is in jpg format with 60% quality. 
 * In future there is a possibility of pulling the swearing in section of the video stream from each parliament by using the AV Live Logging dataset found at http://www.data.parliament.uk/dataset/avlivelogging.
 
-`Beta Images` At the time of development these images are not part of an official external dataset so they have been included in this release as they were at the time of building. The images come in three types:
+### Beta Images 
+At the time of development these images are not part of an official external dataset API so the fancy new portraits have been included in this release as they were at the time of building. The images come in three types:
 * A 'high-resolution' image at 1920x1080 placed into the /images/stock/ directory at 80% quality
 * A smaller square 500x500 Close Up version placed in the /images/stock/500 directory at 70% quality
 * A thumbnail 240x240 version in the /images/stock/thumbs/ directory at 60% quality
@@ -81,7 +85,7 @@ A php file that declares an array of colors for each party. The colors defined b
 ```
 
 ## To-Do
- - Make new portraits dynamic
+ - Make new portraits dynamic. There is an API that can be scraped but at the moment it takes about 2 seconds per image to load. 
  - Continue mobile site improvement
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen.)

@@ -114,28 +114,30 @@ $xmlDoc=new DOMDocument();
 			   $typetext = $BallotNo[0]->textContent;
 			   $qref = $typeletter.$typetext;		
 				
-			   $qarray[] = array( 'number'=>$BallotNo[0]->textContent,
-								  'uin'=>$uin[0]->textContent,
-								  'dept'=>$Department,
-								  'text'=>$QText[0]->textContent,
-								  'type'=>$QuestionType[0]->textContent,
-								  'member'=>$CurrentQuestioner,
-								  'DisplayAs'=>$DisplayAs,
-								  'DodsId'=>$DodsId,
-								  'MemberId'=>intval($MemberId),
-								  'constituency'=>$Constituency,
-								  'party'=>$party,
-								  'color'=>$color,
-								  'qref'=>$qref);
+			   if($Department == $qdept) {			
+				   $qarray[] = array( 'number'=>$BallotNo[0]->textContent,
+									  'uin'=>$uin[0]->textContent,
+									  'dept'=>$Department,
+									  'text'=>$QText[0]->textContent,
+									  'type'=>$QuestionType[0]->textContent,
+									  'member'=>$CurrentQuestioner,
+									  'DisplayAs'=>$DisplayAs,
+									  'DodsId'=>$DodsId,
+									  'MemberId'=>intval($MemberId),
+									  'constituency'=>$Constituency,
+									  'party'=>$party,
+									  'color'=>$color,
+									  'qref'=>$qref);
+				}
 			}
 		}
 		
 		// Function to sort questions by type then by number
 		function compqs($a, $b) {
-			if ($a['type'] == $b['type']) {
-				return $a['number'] - $b['number'];
-			}
-			return strcmp($a['type'], $b['type']);
+				if ($a['type'] == $b['type']) {
+					return $a['number'] - $b['number'];
+				}
+				return strcmp($a['type'], $b['type']);
 		}
 		// Count how many questions there are
 		if(isset($qarray)){
@@ -143,16 +145,30 @@ $xmlDoc=new DOMDocument();
 		} else {
 			$length = 0;
 		}
-		$time_elapsed_preloop = microtime(true) - $start; 	
-	
 	
 	// If there are questions, sort the questions & generate list
 	if ($length !== 0) {
 			usort($qarray, 'compqs');
+	
 	$hint = "";		
 		// Generate the list of questions 	
 		for($i=0; $i < $length; $i++) {
+		
+			// Let's find out which question is next
+			// Let's find the next natural question
+			if ($i == $length-1) {
+				$next = $qarray[$i]["uin"];
+			} else {
+				$next = $qarray[$i+1]["uin"];
+			}
 			
+			if ($i == 0) {
+				$prev = $qarray[$i]["uin"];
+			} else {
+				$prev = $qarray[$i-1]["uin"];
+			}
+			
+
 			$deptcount = 0;
 			if(isset($deptarray)){
 				$deptcount = count($deptarray);
@@ -162,7 +178,6 @@ $xmlDoc=new DOMDocument();
 				$qdept = $qarray[0]["dept"]; 
 			}	
 				if ($qarray[$i]["dept"] == $qdept) {		
-					$currenti = $i;
 					$iswithdrawn = '';
 					$ingroup = '';
 					if(strlen($withdrawn)>=2){
@@ -184,9 +199,10 @@ $xmlDoc=new DOMDocument();
 							}
 						}
 					}
-					$hint=$hint .'<a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$iswithdrawn.'" onclick="load('.$qarray[$i]["uin"].','.'\''.$date.'\',\''.$photos.'\');return false;"  href="#">
+					$hint=$hint .'<a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$iswithdrawn.'" onclick="load('.$qarray[$i]["uin"].','.'\''.$date.'\');return false;"  href="#">
 					   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
 					   <h4 class="list-group-item-heading">'.$ingroup.'<span class="partybox" style="background:'.$qarray[$i]["color"].'"></span>'.strtoupper($qarray[$i]["qref"]).' '. $qarray[$i]["DisplayAs"].'</h4>
+					   <input type="hidden" id="next'.$qarray[$i]["uin"].'" value="'.$next.'"><input type="hidden" id="prev'.$qarray[$i]["uin"].'" value="'.$prev.'">
 					   <p class="list-group-item-text">'.$qarray[$i]["constituency"].' ('.$qarray[$i]["party"].')</p></a>';
 			   }
 			}

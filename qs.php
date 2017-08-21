@@ -20,20 +20,21 @@
 	?>
 
 <script>
-	function load(num,date,photos){
+	function load(num,date){
 		document.getElementById('loader').style.display = 'inline';
 		if (!document.getElementById("photos-input").checked){
 			var photos = 'Stock';
 		} else {
 			var photos = "screenshot";
 		}
-		console.log('Loading question: '+num);
-		$("#contactCard").load('template/questioner.php?uin='+num+'&date='+date+'&photos='+photos,function() {
+		var next = document.getElementById('next'+num).value;
+		var prev = document.getElementById('prev'+num).value;
+		console.log('Loading question: '+num+' next: '+next+' prev: '+prev);
+		$("#contactCard").load('template/questioner.php?uin='+num+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
 			document.getElementById('loader').style.display = 'none';
 		});
 		$('.active').removeClass('active');
 		$('#q'+num).addClass("active");
-   
 	}
 	function loadquestions(date,dept,type){
 		document.getElementById('loader').style.display = 'inline';
@@ -80,6 +81,51 @@
 		var list = document.getElementById("list");
 		list.style.display = list.style.display === 'block' ? '' : 'block';
 	}
+	
+document.onkeydown = checkKey;
+function checkKey(e) {
+
+	e = e || window.event;
+	if (e.keyCode == '37' || e.keyCode == '38') {
+       	document.getElementById('loader').style.display = 'inline';
+		if (!document.getElementById("photos-input").checked){
+			var photos = 'Stock';
+		} else {
+			var photos = "screenshot";
+		}
+		var num = document.getElementById("currentuin").value;
+		var thisprev = document.getElementById("currentprev").value;
+		var date = document.getElementById("date-input").value;
+		var next = document.getElementById('next'+thisprev).value;
+		var prev = document.getElementById('prev'+thisprev).value;
+		console.log('Loading question: '+thisprev+' next: '+next+' prev: '+prev);
+		$("#contactCard").load('template/questioner.php?uin='+thisprev+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
+			document.getElementById('loader').style.display = 'none';
+		});
+		$('.active').removeClass('active');
+		$('#q'+thisprev).addClass("active");
+    }
+    else if (e.keyCode == '39' || e.keyCode == '40') {
+           	document.getElementById('loader').style.display = 'inline';
+		if (!document.getElementById("photos-input").checked){
+			var photos = 'Stock';
+		} else {
+			var photos = "screenshot";
+		}
+		var num = document.getElementById("currentuin").value;
+		var thisnext = document.getElementById("currentnext").value;
+		var date = document.getElementById("date-input").value;
+		var next = document.getElementById('next'+thisnext).value;
+		var prev = document.getElementById('prev'+thisnext).value;
+		console.log('Loading question: '+thisnext+' next: '+next+' prev: '+prev);
+		$("#contactCard").load('template/questioner.php?uin='+thisnext+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
+			document.getElementById('loader').style.display = 'none';
+		});
+		$('.active').removeClass('active');
+		$('#q'+thisnext).addClass("active");
+   }
+
+}
 </script>
 
 </head>

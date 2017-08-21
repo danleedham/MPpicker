@@ -9,9 +9,13 @@ $xmlMembers=new DOMDocument();
 	
 	if(isset($_GET["next"])) {
 		$next=$_GET["next"];
+	} else  { 
+		$next = $uin;
 	}
 	if(isset($_GET["prev"])) {
 		$prev=$_GET["prev"];
+	} else  { 
+		$prev = $uin;
 	}
 	if(isset($_GET["date"])) {
 		$date=$_GET["date"];
@@ -115,14 +119,17 @@ $xmlMembers=new DOMDocument();
 					<?php 
 						if($uin) : 
 							echo $qarray[0]["type"] ?> Question <?php echo $qarray[0]["number"] ?> Details</h3>
-					<a class="btn btn-primary pull-right" onclick="location.href='?uin=<?php echo $next; ?>';" data-toggle="modal" data-target="#editModal">
-					  <i class="fa fa-arrow-right"></i><span href="?uin=<?php echo $next; ?>">Next</span>
+							<input type="hidden" id="currentuin" value="<?php echo $uin; ?>">
+							<input type="hidden" id="currentnext" value="<?php echo $next; ?>">
+							<input type="hidden" id="currentprev" value="<?php echo $prev; ?>">
+					<a class="btn btn-primary pull-right" onclick="load(<?php echo '\''.$next.'\',\''.$date.'\''; ?>);return false;" href="#" data-toggle="modal">
+					  <i class="fa fa-arrow-right"></i>Next
 					</a>
-					 <a class="btn btn-primary pull-right" onclick="location.href='?uin=<?php echo $prev; ?>';" data-toggle="modal" data-target="#editModal">
-					  <i class="fa fa-arrow-left"></i><span href="?uin=<?php echo $prev; ?>">Previous</span>
+					 <a class="btn btn-primary pull-right" onclick="load(<?php echo '\''.$prev.'\',\''.$date.'\''; ?>);return false;" data-toggle="modal">
+					  <i class="fa fa-arrow-left"></i>Previous
 					</a>
-					 <a class="btn btn-warning pull-right" style="margin-right: 6px;" onclick="gotopicals()" data-toggle="modal">
-					  <i class="fa fa-refresh"></i><span href="?uin=<?php echo $prev; ?>">To Topicals</span>
+					 <a class="btn btn-warning pull-right" style="margin-right: 6px;" onclick="gotopicals()">
+					  <i class="fa fa-refresh"></i>To Topicals
 					</a>
               	</div>
               	<div class="list-group">

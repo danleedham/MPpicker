@@ -150,25 +150,32 @@ $xmlDoc=new DOMDocument();
 	if ($length !== 0) {
 			usort($qarray, 'compqs');
 	
-	$hint = "";		
+		$hint = "";	
+		// Make a mini array removing the withdrawn questions
+		foreach ($qarray as $key => $value){
+			if(!in_array($value["qref"],$withdrawnquestions)){
+				$newarray[] = $value['uin'];
+			}
+		}
+		$remaingquestions = count($newarray);
+
 		// Generate the list of questions 	
 		for($i=0; $i < $length; $i++) {
 		
-			// Let's find out which question is next
-			// Let's find the next natural question
+			// If it's the first question, don't let it try go previous
+			if ($i == 0) {
+				$prev = $qarray[$i]["uin"];
+			} else {
+				$prev = $qarray[$i-1]["uin"];
+			}
+										
+			// If it's the last question don't let it try go to the next one
 			if ($i == $length-1) {
 				$next = $qarray[$i]["uin"];
 			} else {
 				$next = $qarray[$i+1]["uin"];
 			}
 			
-			if ($i == 0) {
-				$prev = $qarray[$i]["uin"];
-			} else {
-				$prev = $qarray[$i-1]["uin"];
-			}
-			
-
 			$deptcount = 0;
 			if(isset($deptarray)){
 				$deptcount = count($deptarray);

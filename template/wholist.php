@@ -1,39 +1,48 @@
 <?php
 $xmlDoc=new DOMDocument();
 	//get parameters from URL
-	$house=$_GET["house"];
-		if ($house !== "") { 
-			$houseurl = '|'."House=".$house; 
-		}
-		if (!$house) { 
-			$houseurl = ""; 
-		}
-		if ($house == "both") { 
-			$houseurl = ""; 
-		}
+	if(!isset($house) && isset($_GET["house"])){
+		$house=$_GET["house"];
+	}
+	if (isset($house)) { 
+		$houseurl = '|'."House=".$house; 
+	}
+	if (!isset($house)) { 
+		$houseurl = ""; 
+	}
+	if (isset($house) && $house == "both") { 
+		$houseurl = ""; 
+	}
 			
-	$gender=$_GET["sex"];
-		if ($gender !== "") { 
-			$genderurl = '|'."gender=".$gender; 
-		}
-		if ($gender === "all") { 
-			$genderurl = ""; 
-		}
-		if (!$gender) { 
-			$genderurl = ""; 
-		}
+	if(isset($_GET["sex"])){
+		$gender=$_GET["sex"];
+	}
+	if (isset($gender) and $gender !== "") { 
+		$genderurl = '|'."gender=".$gender; 
+	}
+	if (isset($gender) && $gender == "all") { 
+		$genderurl = ""; 
+	}
+	if (!isset($gender)) { 
+		$genderurl = ""; 
+	}
 	
-	$party=$_GET["party"];
-		if ($party !== "") { 
-			$partyurl = '|'."party=".$party; 
-		}
-		if (!$party) { 
-			$partyurl = ""; 
-		}
+	if(isset($_GET["party"])){
+		$party=$_GET["party"];
+	}	
+	if (isset($party) && $party !== "") { 
+		$partyurl = '|'."party=".$party; 
+	}
+	if (!isset($party)) { 
+		$partyurl = ""; 
+	}
 	
 	// Append search URL based on what positions the people may have. Append search query plus return data
-	$positions=$_GET["position"];
-		if (!$positions) { 
+	
+	if(!isset($positions) && isset($_GET["position"])){
+		$positions=$_GET["position"];
+	}
+		if (!isset($positions)) { 
 			$positionsurl = "";
 			$returnpositions = "GovernmentPosts|OppositionPosts|";  
 		} elseif ($positions == "cabinet") { 
@@ -60,88 +69,80 @@ $xmlDoc=new DOMDocument();
 		}
 	
 	// Committees are easy as we can search by them
-	$committee=$_GET["committee"];
-		if ($committee !== "") { 
+	if(!isset($committee) && isset($_GET["committee"])){
+		$committee=$_GET["committee"];
+	}
+		if (isset($committee) && $commitee !== "") { 
 			$committeeurl = '|'."committee=".$committee;
 		}
-		if (!$committee or $committee == "") { 
+		if (!isset($committee) or $committee == "") { 
 			$committeeurl = ""; 
+			$returncommittee = "";
 		} else { 
 			$returncommittee = "Committees".'|'; 
 		}
 	
 	// Departments don't allow direct querying, instead by positions attached to departments
-	$department=$_GET["department"];
-		if ($department) { 
-			if ($positions == "cabinet" or $positions == "government") {
-				$url = 'http://data.parliament.uk/membersdataplatform/services/mnis/Department/'.$department.'/Government/Current/';
-			} elseif ($positions == "shadow" or $positions == "opposition") {
-				$url = $url2 = 'http://data.parliament.uk/membersdataplatform/services/mnis/Department/'.$department.'/Opposition/Current/';
-			} else {
-				$url1 = 'http://data.parliament.uk/membersdataplatform/services/mnis/Department/'.$department.'/Government/Current/';
-				$url2 = 'http://data.parliament.uk/membersdataplatform/services/mnis/Department/'.$department.'/Opposition/Current/';
-				$doc1 = new DOMDocument();
-				$doc1->load($url1);
+	if(!isset($department) && isset($_GET["department"])){
+		$department=$_GET["department"];
+	}
+	if (isset($department)) { 
+		if ($positions == "cabinet" or $positions == "government") {
+			$url = 'http://data.parliament.uk/membersdataplatform/services/mnis/Department/'.$department.'/Government/Current/';
+		} elseif ($positions == "shadow" or $positions == "opposition") {
+			$url = $url2 = 'http://data.parliament.uk/membersdataplatform/services/mnis/Department/'.$department.'/Opposition/Current/';
+		} else {
+			$url1 = 'http://data.parliament.uk/membersdataplatform/services/mnis/Department/'.$department.'/Government/Current/';
+			$url2 = 'http://data.parliament.uk/membersdataplatform/services/mnis/Department/'.$department.'/Opposition/Current/';
+			$doc1 = new DOMDocument();
+			$doc1->load($url1);
 
-				$doc2 = new DOMDocument();
-				$doc2->load($url2);
-				   
-				// get 'res' element of document 1
-				$res1 = $doc1->getElementsByTagName('Department')->item(0);
+			$doc2 = new DOMDocument();
+			$doc2->load($url2);
+		   
+			// get 'res' element of document 1
+			$res1 = $doc1->getElementsByTagName('Department')->item(0);
 
-				// iterate over 'item' elements of document 2
-				$items2 = $doc2->getElementsByTagName('Post');
-				for ($i = 0; $i < $items2->length; $i ++) {
-					$item2 = $items2->item($i);
+			// iterate over 'item' elements of document 2
+			$items2 = $doc2->getElementsByTagName('Post');
+			for ($i = 0; $i < $items2->length; $i ++) {
+				$item2 = $items2->item($i);
 
-					// import/copy item from document 2 to document 1
-					$item1 = $doc1->importNode($item2, true);
+				// import/copy item from document 2 to document 1
+				$item1 = $doc1->importNode($item2, true);
 
-					// append imported item to document 1 'res' element
-					$res1->appendChild($item1);
-				}	
-				$xmlDoc=$doc1;
-			} 
-		}
-		if ($department == "") { 
-			$departmenturl = "";
-		}
+				// append imported item to document 1 'res' element
+				$res1->appendChild($item1);
+			}	
+			$xmlDoc=$doc1;
+		} 
+	}
 		
 	// Which sort function to use prior to rendering
-	$sortby=$_GET["sortby"];
-
-	$photos=$_GET["photos"];
-	
-	$joined=$_GET["joined"];
-		if (!$joined) {
-			$joindeurl = "";
-		} else {
-			$joinedurl = '|'."joinedsince=".$joined;
-		}
+	if(!isset($sortby) && isset($_GET["sortby"])) {
+		$sortby=$_GET["sortby"];
+	}
+	if(!isset($photos) && isset($_GET["photos"])) {
+		$photos=$_GET["photos"];
+	}
+	if(!isset($joined) && isset($_GET["joined"])) {
+		$joined=$_GET["joined"];
+		$joinedurl = '|'."joinedsince=".$joined;
+	} else {
+		$joinedurl = "";
+	}
 	
 	// Now load things
-	if ($house !== "" ) {
-		if(!$url){
+	if (isset($house) && $house !== "" ) {
+		if(!isset($url)){
 			$url = "http://data.parliament.uk/membersdataplatform/services/mnis/members/query/IsEligible=true".$houseurl.$partyurl.$genderurl.$positionsurl.$committeeurl.$joinedurl."/".$returnpositions.$returncommittee."BiographyEntries";
 		}
 	echo '<!-- '.$url.'-->';
-	if(!$department){$xmlDoc->load($url);}
-		$x=$xmlDoc->getElementsByTagName('Member');
-	$colors = array (
-								"0"	  =>   "#000000",
-								"4"	  =>   "#0087DC",
-								"7"   =>   "#D46A4C",
-								"8"   =>   "#000000",
-								"15"  =>   "#DC241f",
-								"17"  =>   "#FAA61A",
-								"22"  =>   "#008142",
-								"29"  =>   "#FFFF00",
-								"30"  =>   "#008800",
-								"31"  =>   "#99FF66",
-								"35"  =>   "#70147A",
-								"38"  =>   "#9999FF",
-								"44"  =>   "#6AB023",
-								"47"  =>   "#FFFFFF");
+	if(!isset($department)){
+		$xmlDoc->load($url);
+	}
+	$x=$xmlDoc->getElementsByTagName('Member');
+	require_once('colors.php');
 	$hint = "";
 	
 	//Load xml with codes for new Parliament Beta images
@@ -154,8 +155,10 @@ $xmlDoc=new DOMDocument();
 		
 		$FullTitle=$x->item($i)->getElementsByTagName('FullTitle');
 		$DisplayAs=$x->item($i)->getElementsByTagName('DisplayAs');
-		if($department){
+		if(isset($department)){
 			$HansardName = $x->item($i)->parentNode->parentNode->parentNode->getElementsByTagName('HansardName')[0]->textContent;
+		} else {
+			$HansardName ="";
 		}
 		$House=$x->item($i)->getElementsByTagName('House');
 		$ListAs=$x->item($i)->getElementsByTagName('ListAs');
@@ -168,19 +171,18 @@ $xmlDoc=new DOMDocument();
 		$MemberId=$x->item($i)->getAttribute('Member_Id');
 		$DodsId=$x->item($i)->getAttribute('Dods_Id');
 		
-		if ($photos !== "screenshot") {				
+		if (!isset($photos) or $photos !== "screenshot") {				
 			if ($House[0]->textContent == "Commons") {
-				if ($photos !== "stock") {
+				if (!isset($photos) or $photos !== "stock") {
 					$imageurl = "http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/".intval($MemberId);
 				} else {
 					for($ii=0; $ii < $imagescount; $ii++) {
 						if (trim($betaimages->member[$ii]->KnownAs) == trim($DisplayAs[0]->textContent)){
-							$BetaId = $betaimages->member[$ii]->imageid;
+							$BetaId = trim($betaimages->member[$ii]->imageid);
 						}
 					}
-					$imageurl = 'https://api20170418155059.azure-api.net/photo/'.$BetaId.'.jpeg?crop=CU_1:1&width=240&quality=60';
-					if (@getimagesize($imageurl)){
-					} else {
+					$imageurl = 'images/stock/thumbs/'.$BetaId.'.jpeg';
+					if (isset($BetaId) && $BetaId == ""){
 						$imageurl = "http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/".intval($MemberId);
 					}
 				}	
@@ -188,7 +190,7 @@ $xmlDoc=new DOMDocument();
 					$imageurl = 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg';
 			}
 		} else {
-			$imageurl = 'images/'.$DodsId.'.jpg';
+			$imageurl = 'images/screenshot/'.$DodsId.'.jpg';
 		}											
 		// Fix for the Lords not having decent photos... yet!
 		$Const=$x->item($i)->getElementsByTagName('MemberFrom');
@@ -246,12 +248,10 @@ $xmlDoc=new DOMDocument();
 							  'color'=>$colors[intval($PartyID)],
 							  'DodsId'=>intval($DodsId),
 							  'MemberId'=>intval($MemberId),
-							  'imgid' => $imgid,
 							  'HansardName' => $HansardName,
 							  'constituency'=>$Const[0]->textContent,
 							  'GovenmentPosts'=>$GovernmentPostsList,
 							  'OppositionPosts'=>$OppositionPostsList,
-							  'OppositionPostsLength' => $OppositionPostsLength,
 							  'ParliamentaryPosts'=>$ParliamentaryPostsList,
 							  'Committees'=>$CommitteesList,
 							  'imageurl'=>$imageurl,
@@ -265,40 +265,40 @@ $xmlDoc=new DOMDocument();
 	if ($length !== 0) {
 		
 		//Let's sort the data if requested			
-		if($sortby == "first"){
+		if(isset($sortby) && $sortby == "first"){
 				sort($whoarray);
 		}
-		if ($sortby == "last") {
+		if (isset($sortby) && $sortby == "last") {
 			usort($whoarray, function($a, $b) {
 				return strcmp($a["ListAs"], $b["ListAs"]);
 			});
 		} 
-		if ($sortby == "joinedlast") {
+		if (isset($sortby) && $sortby == "joinedlast") {
 			usort($whoarray, function($a, $b) {
 				return strcmp($b["StartDate"], $a["StartDate"]);
 			});
 		}
-		if ($sortby == "joinedfirst") {
+		if (isset($sortby) && $sortby == "joinedfirst") {
 			usort($whoarray, function($a, $b) {
 				return strcmp($a["StartDate"], $b["StartDate"]);
 			});
 		}
-		if ($sortby == "oldest") {
+		if (isset($sortby) && $sortby == "oldest") {
 			usort($whoarray, function($a, $b) {
 				return strcmp($a["DateOfBirth"], $b["DateOfBirth"]);
 			});
 		}	
-		if ($sortby == "youngest") {
+		if (isset($sortby) && $sortby == "youngest") {
 			usort($whoarray, function($a, $b) {
 				return strcmp($b["DateOfBirth"], $a["DateOfBirth"]);
 			});
 		}
-		if ($sortby == "consta") {
+		if (isset($sortby) && $sortby == "consta") {
 			usort($whoarray, function($a, $b) {
 				return strcmp($a["constituency"], $b["constituency"]);
 			});
 		}	
-		if ($sortby == "constz") {
+		if (isset($sortby) && $sortby == "constz") {
 			usort($whoarray, function($a, $b) {
 				return strcmp($b["constituency"], $a["constituency"]);
 			});
@@ -334,18 +334,20 @@ $xmlDoc=new DOMDocument();
 				}
 			
 				if($Govecho or $Oppecho or $Parecho or $Comecho) {
-					$positionecho = '<div class="list-group-item joblist">'.$Govecho.$Oppecho.$Parecho.$Comecho.' 
+					$positionecho = '<div class="list-group-item joblist" style="display:block">'.$Govecho.$Oppecho.$Parecho.$Comecho.' 
 									</div>';
 				} else {
 					$positionecho = "";
 				}
-				if($department){
+				if(isset($department)){
 					$positionecho = '<div class="list-group-item joblist"><h4 class="list-group-item-heading post">'.$whoarray[$j]["HansardName"].'</h4> 
 									</div>';
 				}
 				
-				if($photos == "screenshot"){
+				if(isset($photos) && $photos == "screenshot"){
 					$ifscreenshot = " screenshot";
+				} else {
+					$ifscreenshot = "";
 				}
 				
 				$hint=$hint .'		

@@ -1,11 +1,10 @@
 <?php
 $xmlDoc=new DOMDocument();
 
-$house=$_GET["house"];
-if(!$house) {$house="Commons";} 
-if($house == "") {$house="Commons";} 
-$m = $_GET["m"];
-if(!$m) { $m = "8";}
+if(isset($_GET["house"])){$house=$_GET["house"];}
+if(!isset($house)) {$house="Commons";} 
+if(isset($_GET['m'])){$m = $_GET["m"];}
+if(!isset($m)) { $m = "8";}
 
 $filename = "http://data.parliament.uk/membersdataplatform/services/mnis/members/query/house=".$house."|IsEligible=true|holdscabinetpost=true/";
 $xmlDoc->load($filename);

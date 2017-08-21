@@ -1,6 +1,10 @@
 <?php
-if(!$house){$house = $_GET["house"];}
-if(!$house){$house = "Commons";}
+if(!isset($house) && isset($_GET["house"])){
+	$house = $_GET["house"];
+}
+if(!isset($house)){
+	$house = "Commons";
+}
 
 $xmlDoc=new DOMDocument();
 $xmlDoc->load("http://data.parliament.uk/membersdataplatform/services/mnis/HouseOverview/".$house."/".date("Y-m-d")."/");

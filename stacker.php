@@ -8,27 +8,13 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <title>Parliamentary Stacker</title>
 
-  <?php include 'template/headinc.php'; ?>
-		<?php
-
-		//get the q parameter from URL
-		$m=$_GET["m"];
-		$q=$_GET["q"];
-		if (!$q){$SearchContactsMessage="Start typing...";}
-			else {$SearchContactsMessage=$q;}
-		$searchby=$_GET["searchby"];
-			if(!$searchby) {$searchby="name";}
-		$house=$_GET["house"];
-		if (!$house) {$house = "Commons";}
-		// Bad fix for if the house of lords is chosen but no member is called
-		if ($house == "Lords" && !$m) { $m = "4329";
-		  }	
-		if (!$m){ $m="8";}	
-		$xml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id=".$m."/FullBiog") or die("No MP with this id");
+  <?php include 'template/headinc.php';
+  	
+		$xml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id=8/FullBiog");
 		$feed = file_get_contents("betaimages.xml");
-		$betaimages = simplexml_load_string($feed) or die("Can't load Beta Images");
+		$betaimages = simplexml_load_string($feed);
 	    $imagescount =  count($betaimages);
-		?>
+?>
 
 <!-- Here's the script that *should* get the relevant members from the search. Note search string must be greater than 2 -->		
 		<script>
@@ -94,33 +80,30 @@
       <div class="col-sm-4 bootcards-list" id="list" data-title="Contacts">
         <div class="panel panel-default">       
           <div class="panel-body">
-			<form id="mpsearch">
             <div class="search-form">
-				<div class="form-group">
-				  <input type="text" name="q" form="mpsearch" class="form-control" placeholder="<?php echo $SearchContactsMessage ;?>" size="10" onkeyup="showResult(this.value)">			
+            	<div class="col-sm-9 input-toggle">
+					<div class="form-group">
+					  <input type="text" name="q" form="mpsearch" class="form-control" placeholder="Start Typing..." size="10" onkeyup="showResult(this.value)">			
+					</div>
 				</div>
-				<div class="form-group">	
-				<input id="choosehouse" <?php if ($house == "Lords") {echo "checked";} ?> type="checkbox" value="Lords" name="house" form="mpsearch" data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="Lords" data-off="Commons">
-				<input id="searchby" <?php if ($searchby == "constituency") {echo "checked";} ?> type="checkbox" value="constituency" name="searchby" form="mpsearch" data-toggle="toggle" data-on="Const" data-off="Name">
-				<input id="photos" <?php if ($photos == "screenshot") {echo "checked";} ?> type="checkbox" value="screenshot" name="photos" form="mpsearch" data-toggle="toggle" data-onstyle="warning" data-on="ScreenShot" data-off="Stock">
-				<br />
-				<a href="#" onclick="load(8);return false;" class="btn btn-info pull-right" role="button">Search</a>
+				<div class="col-sm-3">
+					<a href="#" onclick="load(8);return false;" class="btn btn-block btn-info col-sm-12 pull-right" role="button">Search</a>
+				</div>
+				<div class="col-sm-4 input-toggle">	
+					<input id="choosehouse" type="checkbox" value="Lords" name="house" data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="Lords" data-off="Commons">
+				</div>
+				<div class="col-sm-4 input-toggle">		
+					<input id="searchby" type="checkbox" value="constituency" name="searchby" data-toggle="toggle" data-on="Const" data-off="Name">
+				</div>
+				<div class="col-sm-4 input-toggle" >		
+					<input id="photos" type="checkbox" value="screenshot" name="photos" data-toggle="toggle" data-onstyle="warning" data-on="ScreenShot" data-off="Stock">
 				</div>
             </div>
-			</form>	
-          </div><!--panel body-->
+	          </div><!--panel body-->
 
           <div class="list-group" id="livesearch">
 		
-		<?php 
-         	if (!$q){
-         		require ("template/initiallist.php"); 
-            }
-            else {
-				$mselected = '&mselected='.$m;
-				require("template/livesearch.php"); 
-			} 
-          ?>  
+		<?php require ("template/initiallist.php"); ?>
           </div><!--list-group-->
 
           <div class="panel-footer">

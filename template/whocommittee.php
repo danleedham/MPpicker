@@ -1,14 +1,17 @@
 <?php
-if(!$house){$house = $_GET["house"];}
-if(!$house){$house = "all";}
+if(!isset($house) && isset($_GET["house"])){
+	$house = $_GET["house"];
+}
+if(!isset($house)){
+	$house = "all";
+}
 
 $xmlDoc=new DOMDocument();
 $xmlDoc->load('http://data.parliament.uk/membersdataplatform/services/mnis/ReferenceData/Committees/');
 	$x=$xmlDoc->getElementsByTagName('Committee');
 	$committeecount = $x->length;	
 	if ($committeecount == 1) {
-	}
-	else {	
+	} else {	
 		for($i=0; $i<($x->length); $i++) {
 				$EndDate=$x->item($i)->getElementsByTagName('EndDate');
 					$EndString = $EndDate->item(0)->textContent;

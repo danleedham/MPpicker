@@ -6,15 +6,48 @@ $start = microtime(true);
 $xmlDoc=new DOMDocument();
 
 	//get parameters from URL
-	if(!$qtype){$qtype=$_GET["type"];}
-		if(!$qtype){$qtype="Substantive";}
-	if(!$qdept){$qdept=$_GET["dept"];}
-	if(!$date){$date=$_GET["date"];}
-		if (!$date) {$date = date("Y-m-d");}
-	if(!$groups){$groups=$_GET["groups"];}
-	if(!$withdrawn){$withdrawn=$_GET["withdrawn"];}	
-	$house = "Commons";
-	$photos=$_GET["photos"];
+	// If type isn't set above and it's passed in the URL get it, otherwise set it as Substantive
+	if(!isset($qtype) && isset($_GET["type"])){
+		$qtype=$_GET["type"];
+	}
+	if(!isset($qtype)){
+		$qtype="Substantive";
+	}
+	
+	// If Department isn't set above and it's passed in the URL get it
+	if(!isset($qdept) && isset($_GET["dept"])){
+		$qdept=$_GET["dept"];
+	}
+	
+	// If the question date isn't set above and it's passed in the URL get it or set it to today
+	if(!isset($date) && isset($_GET["date"])){
+		$date=$_GET["date"];
+	}
+	if (!isset($date)) {
+		$date = date("Y-m-d");
+	}
+		
+	// If groups aren't set above and they're passed in the URL, get them
+	if(!isset($groups) && isset($_GET["groups"])){
+		$groups=$_GET["groups"];
+		}
+	
+	// If withdrawn questions aren't set above and they're passed in the URL, get them
+	if(!isset($withdrawn) && isset($_GET["withdrawn"])){
+		$withdrawn=$_GET["withdrawn"];
+	}	
+	
+	// For now questions are only searchable for the commons. In future we'll extend this
+	if(!isset($house)){
+		$house = "Commons";
+	}
+	
+	if(isset($_GET["photos"])){
+		$photos=$_GET["photos"];
+	} else {
+		$photos = "";
+	}
+	
 	$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&AnswerDate='.$date.'&CommonsQuestionTime.QuestionType='.$qtype.'&_pageSize=500');
 	$x=$xmlDoc->getElementsByTagName('item');
 	$questionscount = $x->length;
@@ -38,21 +71,20 @@ $xmlDoc=new DOMDocument();
 	}	
 	$time_elapsed_postload = microtime(true) - $start; 	
 	// Arry with party ID and party color
-	$colors = array("0"=>"#000000","4"=>"#0087DC","7"=>"#D46A4C","8"=>"#DDDDDD","15"=>"#DC241f","17"=>"#FDBB30","22"=>"#008142","29"=>"#FFFF00","30"=>"#008800","31"=>"#99FF66","35"=>"#70147A","38"=>"#9999FF","44"=>"#6AB023","47"=>"#FFFFFF");	
+	require_once('colors.php');	
 	if ($questionscount == 1) {
 			$hint = "";
-	}
-	else {	
+	} else {	
 		$hint="";
 		for($i=0; $i<($x->length); $i++) {
 			$QText=$x->item($i)->getElementsByTagName('questionText');
-			if ($QText[0]->textContent=="") {
+			if (!isset($QText[0]->textContent)) {
 			}
 			else {
 				$QuestionID=$x->item($i)->getElementsByTagName('ID');
 				$uin=$x->item($i)->getElementsByTagName('uin');
-				$MemberId=$x->item($i)->getElementsByTagName('tablingMemberPrinted');
-					$CurrentQuestioner = trim($MemberId->item(0)->textContent);
+				$tablingMemberPrinted=$x->item($i)->getElementsByTagName('tablingMemberPrinted');
+					$CurrentQuestioner = trim($tablingMemberPrinted->item(0)->textContent);
 				$Const=$x->item($i)->getElementsByTagName('constituency');
 					$Constituency = trim($Const['prefLabel']->textContent);
 				$TabledDate=$x->item($i)->getElementsByTagName('TabledDate');
@@ -106,7 +138,11 @@ $xmlDoc=new DOMDocument();
 			return strcmp($a['type'], $b['type']);
 		}
 		// Count how many questions there are
-		$length = count($qarray);
+		if(isset($qarray)){
+			$length = count($qarray);
+		} else {
+			$length = 0;
+		}
 		$time_elapsed_preloop = microtime(true) - $start; 	
 	
 	
@@ -117,8 +153,14 @@ $xmlDoc=new DOMDocument();
 		// Generate the list of questions 	
 		for($i=0; $i < $length; $i++) {
 			
+			$deptcount = 0;
+			if(isset($deptarray)){
+				$deptcount = count($deptarray);
+			}
 			// If no department is set or just has one, let's use the first one		
-			if (!$qdept or count($deptarray) === 1) { $qdept = $qarray[0]["dept"]; }	
+			if (!isset($qdept) or $deptcount === 1) { 
+				$qdept = $qarray[0]["dept"]; 
+			}	
 				if ($qarray[$i]["dept"] == $qdept) {		
 					$currenti = $i;
 					$iswithdrawn = '';

@@ -1,15 +1,22 @@
-<?php 		$colors = array (
-								"0"	  =>   "#000000",
-								"4"	  =>   "#0087DC",
-								"7"   =>   "#D46A4C",
-								"8"   =>   "#DDDDDD",
-								"15"  =>   "#DC241f",
-								"17"  =>   "#FDBB30",
-								"22"  =>   "#008142",
-								"29"  =>   "#FFFF00",
-								"30"  =>   "#008800",
-								"31"  =>   "#99FF66",
-								"35"  =>   "#70147A",
-								"38"  =>   "#9999FF",
-								"44"  =>   "#6AB023",
-								"47"  =>   "#FFFFFF");	?>
+<?php $colors = array (
+						"0"	  =>   "#000000", //
+						"3"   =>   "#020202", // Bishops
+						"4"	  =>   "#0087DC", // Conservative
+						"6"   =>   "#020202", // Crossbench
+						"7"   =>   "#D46A4C", // DUP
+						"8"   =>   "#000000", // Independent
+						"10"  =>   "#020202", // Independent Labour
+						"15"  =>   "#DC241f", // Labour
+						"17"  =>   "#FAA61A", // Liberal Democrats
+						"22"  =>   "#008142", // Plaid Cymru 
+						"29"  =>   "#FEF48B", // Scottish National Party 
+						"30"  =>   "#008800", // Sinn Féin
+						"35"  =>   "#70147A", // UK Independence Party
+						"38"  =>   "#9999FF", // Ulster Unionist Party
+						"44"  =>   "#6AB023", // Green Party
+						"47"  =>   "#020202", // Speaker
+						"49"  =>   "#020202", // Non-affiliated
+						"52"  =>   "#020202", // Independent Ulster Unionist
+						"53"  =>   "#020202" // Independent Social Democrat
+					);
+?>

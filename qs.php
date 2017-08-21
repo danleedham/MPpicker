@@ -11,13 +11,12 @@
 
 	<?php include 'template/headinc.php';
 	//get parameters from URL
-	$date=$_GET["date"];
-		if (!$date) {$date = date("Y-m-d");}
-	$groups=$_GET["groups"];
-	$m=$_GET["m"];
-	$house = "Commons";
-	$photos=$_GET["photos"];
-		if(!$photos) { $photos = "stock"; }
+	if(isset($_GET["date"])){
+		$date=$_GET["date"];
+	}
+	if (!isset($date)) {
+		$date = date("Y-m-d");
+	}
 	?>
 
 <script>
@@ -97,7 +96,7 @@
 							<div class="search-form" id="menu">
 								<div class="form-inline">
 									<input id="date-input" type="date" class="input-sm form-control" onchange="loaddepts(this.value)" value="<?php echo $date ?>" name="date" >
-									<input id="photos-input" style="float:right !important;" class="pull-right" <?php if ($photos == "screenshot") {echo "checked";} ?> type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-off="Stock">
+									<input id="photos-input" style="float:right !important;" class="pull-right" type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-off="Stock">
 								</div>
 								<div class="form-inline" style="padding-top:6px !important;">
 									<label for="dept-input">Department:</label><br />

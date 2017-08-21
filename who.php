@@ -27,6 +27,7 @@ function loadparties(){
 }
 
 function loadresults(){
+   document.getElementById('loader').style.display = 'inline';
    var house = document.getElementById("house-input").value;
    		if(house) { var houseurl = '&house='+house; }
    		else { var houseurl = ""; }
@@ -55,7 +56,9 @@ function loadresults(){
    		if(sortby) { var sortbyurl = '&sortby='+String(sortby); }
    		else { var sortbyurl = ""; }		
    console.log('Loading List: '+houseurl+sexurl+partyurl+positionurl+committeeurl+departmenturl+photosurl+joinedurl);
-   $("#whoresults").load('template/wholist.php?'+houseurl+sexurl+partyurl+positionurl+committeeurl+departmenturl+photosurl+joinedurl+sortbyurl);
+   $("#whoresults").load('template/wholist.php?'+houseurl+sexurl+partyurl+positionurl+committeeurl+departmenturl+photosurl+joinedurl+sortbyurl,function() {
+   		document.getElementById('loader').style.display = 'none';
+   });
 }
 
 function hidejobs(){
@@ -78,9 +81,12 @@ function hidejobs(){
       <div class="col-sm-3 bootcards-list" id="list" data-title="Contacts">
         <div class="panel panel-default">  
          <div class="panel-heading clearfix">
-                <h3 class="panel-title pull-left"> 
-					Use the search tools below
-				</h3> 
+			<h3 class="panel-title"> 
+				Use the search tools below 
+				<span id="loader" style="display:none;">
+					<i class="fa fa-refresh fa-spin" class="pull-right" style="font-size:20px"></i>
+				</span>
+			</h3> 
          </div>     
 		 <div class="list-group">
 			<!-- start search form -->
@@ -105,7 +111,7 @@ function hidejobs(){
 				<!-- party -->		
 				<div class="list-group-item">
 				<select data-placeholder="Choose a Party..." class="chosen-select form-control custom-select mb-2 mr-sm-2 mb-sm-0" tabindex="2" id="party-input">
-					<option value=""</option>
+					<option value=""></option>
 					<?php include("template/whoparty.php"); ?>
 				</select>
 				</div>

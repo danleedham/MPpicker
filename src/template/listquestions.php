@@ -151,19 +151,6 @@ $xmlDoc=new DOMDocument();
 			usort($qarray, 'compqs');
 	
 		$hint = "";	
-		// Make a mini array removing the withdrawn questions
-		$newarray = array();
-		foreach ($qarray as $key => $value){
-			if(isset($withdrawnquestions)){
-				if(!in_array($value["qref"],$withdrawnquestions)){
-					$newarray[] = $value['uin'];
-				}		
-			} else {
-				$newarray[] = $value['uin'];
-			} 
-		}
-		$remaingquestions = count($newarray);
-
 		// Generate the list of questions 	
 		for($i=0; $i < $length; $i++) {
 		

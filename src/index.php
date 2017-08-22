@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="google" value="notranslate">
+  	<meta charset="utf-8">
+  	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<meta name="google" value="notranslate">
+	<link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+	<link rel="manifest" href="favicons/manifest.json">
+	<link rel="mask-icon" href="favicons/safari-pinned-tab.svg" color="#5bbad5">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <title>Parliamentary Stacker</title>
+  	<title>Parliamentary Stacker</title>
 	<div class="container bootcards-container push-right">
 		<div class="row">
 			<div class="col-sm-12 bootcards-list" data-title="Mobile Menu">
@@ -18,19 +23,19 @@
 					<div class="row">
 					  <div class="col-xs-6 col-sm-4">
 						<a class="bootcards-summary-item" href="stacker.php">
-						  <i class="fa fa-3x fa-users"></i>
+						  <img src="favicons/android-chrome-192x192.png" height="64" width="64">
 						  <h4>Stacker <span class="label label-info">650</span></h4>
 						</a>
 					  </div>
 					  <div class="col-xs-6 col-sm-4">
 						<a class="bootcards-summary-item" href="qs.php">
-						  <i class="fa fa-3x fa-building-o"></i>
+						  <img src="favicons/android-chrome-192x192.png" height="64" width="64">
 						  <h4>Questions <span class="label label-danger"><?php echo date("Y-m-d");?></span></h4>
 						</a>
 					  </div>
 					  <div class="col-xs-6 col-sm-4">
 						<a class="bootcards-summary-item" href="who.php">
-						  <i class="fa fa-3x fa-clipboard"></i>
+						  <img src="favicons/android-chrome-192x192.png" height="64" width="64">
 						  <h4>Guess Who? <span class="label label-warning">650</span></h4>
 						</a>
 					  </div>

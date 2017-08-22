@@ -1,5 +1,5 @@
-# UK Parliamentary Stacker
-[![DPP|by PDS](https://cldup.com/u7xgYVBRwu.jpg)](http://www.data.parliament.uk/)
+# ![DPP|by PDS](https://cldup.com/YbN6rT2IVF.png) UK Parliamentary Stacker
+
 ## Introduction
 The Stacker is a browser based application that aids broadcast and journalistic coverage of Parliament by leveraging live data powered by Data.parliament (DDP). There is no database as part of the project as in previous incarnations, instead a minimal amount of bespoke data is stored in XML files. 
 
@@ -27,33 +27,36 @@ The stacker uses a number of open source projects to work:
 ## Installation
 The Stacker requires a computer (Windows 2008, 2012, Vista, 7, 8, 10 (Important: XP or 2003 not supported)) with a web connection and [PHP v5+](http://www.php.net) enabled server to run. The application has been developed to work on both standard cloud-based web servers and XAMPP which is an easy to install Apache distribution containing MariaDB, PHP and Perl. 
 
+For installation on a web server simply copy the contents of src to a folder of your choice and direct a browser to that folder. 
+
 The application can run on any screen size from 400px width, and has been developed with an optimal resolution of 1920x1080, used with the latest version of Google Chrome. Full-screen is suggested, but multiple windows can be run together. 
 
 ### Example Installation using XAMPP
 1. Download XAMPP for the chosen operating system from [https://www.apachefriends.org](https://www.apachefriends.org). 
-2. Install XAMPP using the easy to use installer. It doens't really matter where you install it to.
-3. Start the server
+2. Install XAMPP using the easy to use installer. Install it into C:/ (If you change this, just update the .bat file later)
+3. Open XAMPP
 
 For Mac: 
-
-	1. Ensure the following Services are running as a minimum:
-    	1. Apache
-    	2. ProFTPD
-	2. In Network settings, enable a port forwarding rule of: `localhost:8080 -> 80 (Over SSH)`
-	3. Note the IP address of the server in the General tab (Example: 192.168.64.2)
+	1. In the General tab click to Start the server
+	2. Note the IP address of the server in the General tab (Example: 192.168.64.2)
+	3. In the Services tab ensure the Apache service is running as a minimum
+	4. In Network tab, enable a port forwarding rule of: `localhost:8080 -> 80 (Over SSH)` (should display by default but will be off)
+	5. In the Volumes tab click Mount for /opt/lampp
+	6. Click Explore next to /opt/lampp to open the file directory
 	
 For PC:	
-
-	1. Ensure the following Services are running as a minimum:
-    	1. Apache
-    	2. ProFTPD
-	2. In Network settings, enable a port forwarding rule of: `localhost:8080 -> 80 (Over SSH)`
-	3. Note the IP address of the server in the General tab (Example: 192.168.64.2)
+	1. In the Control Panel click Start next to the Apache Module
+	2. In the main Config settings (top right of the CP) tick the box next to Apache in the autostart of modules selection
+	3. Click Explorer in the main Control Panel to open up the file directory
 	
-4. In Volumes mount the main stack exported data volumes. Click Explore to open up the server files. 
-5. Open up the htdocs folder and delete current files. Copy the entire distribution folder into htdocs.
-6. Open the file /etc/php.ini and on line 553 replace `display_errors=On` with `display_errors=Off`
-7. Within a Google Chrome browser open up the IP address of the server
+4. Open up the htdocs folder and delete current files. Copy the entire distribution folder into htdocs.
+5. XAMPP is typically used for development and as such has strict error reporting. We'll turn that off. Open the file `/etc/php.ini` and on line 553 replace `display_errors=On` with `display_errors=Off`
+6. Within a Google Chrome browser open up MAC: the IP address of the server from above; PC: localhost/
+
+## Application Usage
+### Launching Application
+PC: Once installed to load the Stacker simply double click `stacker.bat`
+Mac: Once installed to start the Stacker use the Open Stacker application ensuring that the server address is correct
 
 ## Static Data
 ### Screenshot Images 
@@ -96,4 +99,4 @@ A php file that declares an array of colors for each party. The colors defined b
    [DPP]: <http://www.data.parliament.uk/>
    [Chosen]: <https://harvesthq.github.io/chosen/>
    [jQuery]: <http://jquery.com>
-   [XAMPP]: <https://www.apachefriends.org/index.html>
+   [XAMPP]: <https://www.apachefriends.org/index.html>  

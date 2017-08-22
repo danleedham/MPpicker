@@ -152,10 +152,15 @@ $xmlDoc=new DOMDocument();
 	
 		$hint = "";	
 		// Make a mini array removing the withdrawn questions
+		$newarray = array();
 		foreach ($qarray as $key => $value){
-			if(!in_array($value["qref"],$withdrawnquestions)){
+			if(isset($withdrawnquestions)){
+				if(!in_array($value["qref"],$withdrawnquestions)){
+					$newarray[] = $value['uin'];
+				}		
+			} else {
 				$newarray[] = $value['uin'];
-			}
+			} 
 		}
 		$remaingquestions = count($newarray);
 

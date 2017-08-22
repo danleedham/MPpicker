@@ -25,6 +25,10 @@ function loadparties(){
    var sex = document.getElementById("sex-input").value;
    $("#party-input").load('template/whoparty.php?house='+house+'&sex='+sex);
 }
+function loadpartiesjusthouse() {
+   var house = document.getElementById("house-input").value;
+   $("#party-input").load('template/whoparty.php?house='+house);
+}
 
 function loadresults(){
    document.getElementById('loader').style.display = 'inline';
@@ -92,7 +96,7 @@ function hidejobs(){
 			<!-- start search form -->
 				<!-- house -->
 				 <div class="list-group-item">
-				 <select name="house" onchange="loadsex();" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="house-input">
+				 <select name="house" onchange="loadsex(); loadpartiesjusthouse();" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="house-input">
 				 <option value="Commons"> Commons </option>
 				 <option value="Lords"> Lords </option>
 				 <option value="both"> Both </option>
@@ -110,8 +114,7 @@ function hidejobs(){
 
 				<!-- party -->		
 				<div class="list-group-item">
-				<select data-placeholder="Choose a Party..." class="chosen-select form-control custom-select mb-2 mr-sm-2 mb-sm-0" tabindex="2" id="party-input">
-					<option value=""></option>
+				<select class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="party-input">
 					<?php include("template/whoparty.php"); ?>
 				</select>
 				</div>
@@ -120,7 +123,7 @@ function hidejobs(){
 				<!-- positions -->
 				 <div class="list-group-item">
 				 <select name="positions" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="position-input">
-				 <option value="">Select Current position</option>
+				 <option value="">Select Position Type</option>
 				 <?php  include("template/whopositions.php"); ?>
 				 </select>
 				 </div>
@@ -166,8 +169,8 @@ function hidejobs(){
 				 <!-- sortby -->
 				 <div class="list-group-item">
 				 <select name="photos" form="mpsearch" class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="photos-input">
-				 <option value="">Picture Type</option>
-				 <option value="stock"> Stock</option>
+				 <option value="stock">Picture Type</option>
+				 <option value="">Old Stock</option>
 				 <option value="screenshot"> Screenshot</option>
 				 </select>
 				 </div>
@@ -180,6 +183,9 @@ function hidejobs(){
 					<a href="#" onclick="hidejobs();return false;" class="btn btn-warning" role="button">Hide Jobs</a>
 				</div>
             </div> <!--list group-->
+            <div class="panel-footer">
+							<small class="pull-left">Use Department in isolation to Position</small>
+					</div>
 
         </div><!--panel-->
 

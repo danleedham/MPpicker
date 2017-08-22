@@ -42,6 +42,9 @@ $xmlDoc=new DOMDocument();
 	if(!isset($positions) && isset($_GET["position"])){
 		$positions=$_GET["position"];
 	}
+	else { 
+		$positions = "all";
+	}
 		if (!isset($positions)) { 
 			$positionsurl = "";
 			$returnpositions = "GovernmentPosts|OppositionPosts|";  
@@ -68,38 +71,26 @@ $xmlDoc=new DOMDocument();
 			$returnpositions = "GovernmentPosts|OppositionPosts|";
 		}
 	
-	// Committees are easy as we can search by them
-	if(!isset($committee) && isset($_GET["committee"])){
-		$committee=$_GET["committee"];
-	}
-		if (isset($committee) && $commitee !== "") { 
-			$committeeurl = '|'."committee=".$committee;
-		}
-		if (!isset($committee) or $committee == "") { 
-			$committeeurl = ""; 
-			$returncommittee = "";
-		} else { 
-			$returncommittee = "Committees".'|'; 
-		}
-	
 	// Departments don't allow direct querying, instead by positions attached to departments
 	if(!isset($department) && isset($_GET["department"])){
 		$department=$_GET["department"];
 	}
 	if (isset($department)) { 
 		if ($positions == "cabinet" or $positions == "government") {
-			$url = 'http://data.parliament.uk/membersdataplatform/services/mnis/Department/'.$department.'/Government/Current/';
+			$url1 = 'http://data.parliament.uk/membersdataplatform/services/mnis/Department/'.$department.'/Government/Current/';
 		} elseif ($positions == "shadow" or $positions == "opposition") {
-			$url = $url2 = 'http://data.parliament.uk/membersdataplatform/services/mnis/Department/'.$department.'/Opposition/Current/';
+			$url1 = 'http://data.parliament.uk/membersdataplatform/services/mnis/Department/'.$department.'/Opposition/Current/';
 		} else {
 			$url1 = 'http://data.parliament.uk/membersdataplatform/services/mnis/Department/'.$department.'/Government/Current/';
 			$url2 = 'http://data.parliament.uk/membersdataplatform/services/mnis/Department/'.$department.'/Opposition/Current/';
-			$doc1 = new DOMDocument();
-			$doc1->load($url1);
+		}	
+		$doc1 = new DOMDocument();
+		$doc1->load($url1);
 
+		if(isset($url2)){
 			$doc2 = new DOMDocument();
 			$doc2->load($url2);
-		   
+	   
 			// get 'res' element of document 1
 			$res1 = $doc1->getElementsByTagName('Department')->item(0);
 
@@ -114,9 +105,23 @@ $xmlDoc=new DOMDocument();
 				// append imported item to document 1 'res' element
 				$res1->appendChild($item1);
 			}	
-			$xmlDoc=$doc1;
-		} 
+		}
+	$xmlDoc=$doc1;	 
 	}
+	
+	// Committees are easy as we can search by them
+	if(!isset($committee) && isset($_GET["committee"])){
+		$committee=$_GET["committee"];
+	}
+		if (isset($committee) && $commitee !== "") { 
+			$committeeurl = '|'."committee=".$committee;
+		}
+		if (!isset($committee) or $committee == "") { 
+			$committeeurl = ""; 
+			$returncommittee = "";
+		} else { 
+			$returncommittee = "Committees".'|'; 
+		}
 		
 	// Which sort function to use prior to rendering
 	if(!isset($sortby) && isset($_GET["sortby"])) {
@@ -259,119 +264,134 @@ $xmlDoc=new DOMDocument();
 	}
 
 	// Count how many questions there are
-	$length = count($whoarray);	
+	if(isset($whoarray)){
+		$length = count($whoarray);	
 	
-	// If there are questions, sort the questions & generate list
-	if ($length !== 0) {
+	
+		// If there are questions, sort the questions & generate list
+		if ($length !== 0) {
 		
-		//Let's sort the data if requested			
-		if(isset($sortby) && $sortby == "first"){
-				sort($whoarray);
-		}
-		if (isset($sortby) && $sortby == "last") {
-			usort($whoarray, function($a, $b) {
-				return strcmp($a["ListAs"], $b["ListAs"]);
-			});
-		} 
-		if (isset($sortby) && $sortby == "joinedlast") {
-			usort($whoarray, function($a, $b) {
-				return strcmp($b["StartDate"], $a["StartDate"]);
-			});
-		}
-		if (isset($sortby) && $sortby == "joinedfirst") {
-			usort($whoarray, function($a, $b) {
-				return strcmp($a["StartDate"], $b["StartDate"]);
-			});
-		}
-		if (isset($sortby) && $sortby == "oldest") {
-			usort($whoarray, function($a, $b) {
-				return strcmp($a["DateOfBirth"], $b["DateOfBirth"]);
-			});
-		}	
-		if (isset($sortby) && $sortby == "youngest") {
-			usort($whoarray, function($a, $b) {
-				return strcmp($b["DateOfBirth"], $a["DateOfBirth"]);
-			});
-		}
-		if (isset($sortby) && $sortby == "consta") {
-			usort($whoarray, function($a, $b) {
-				return strcmp($a["constituency"], $b["constituency"]);
-			});
-		}	
-		if (isset($sortby) && $sortby == "constz") {
-			usort($whoarray, function($a, $b) {
-				return strcmp($b["constituency"], $a["constituency"]);
-			});
-		}			
+			//Let's sort the data if requested			
+			if(isset($sortby) && $sortby == "first"){
+					sort($whoarray);
+			}
+			if (isset($sortby) && $sortby == "last") {
+				usort($whoarray, function($a, $b) {
+					return strcmp($a["ListAs"], $b["ListAs"]);
+				});
+			} 
+			if (isset($sortby) && $sortby == "joinedlast") {
+				usort($whoarray, function($a, $b) {
+					return strcmp($b["StartDate"], $a["StartDate"]);
+				});
+			}
+			if (isset($sortby) && $sortby == "joinedfirst") {
+				usort($whoarray, function($a, $b) {
+					return strcmp($a["StartDate"], $b["StartDate"]);
+				});
+			}
+			if (isset($sortby) && $sortby == "oldest") {
+				usort($whoarray, function($a, $b) {
+					return strcmp($a["DateOfBirth"], $b["DateOfBirth"]);
+				});
+			}	
+			if (isset($sortby) && $sortby == "youngest") {
+				usort($whoarray, function($a, $b) {
+					return strcmp($b["DateOfBirth"], $a["DateOfBirth"]);
+				});
+			}
+			if (isset($sortby) && $sortby == "consta") {
+				usort($whoarray, function($a, $b) {
+					return strcmp($a["constituency"], $b["constituency"]);
+				});
+			}	
+			if (isset($sortby) && $sortby == "constz") {
+				usort($whoarray, function($a, $b) {
+					return strcmp($b["constituency"], $a["constituency"]);
+				});
+			}			
 
-		// Generate the list of questions 	
-		for($j=0; $j < $length; $j++) {	
+			// Generate the list of questions 	
+			for($j=0; $j < $length; $j++) {	
 		
-			if ($house == trim($whoarray[$j]["House"]) or $house == "both") {
-				$Govecho = "";
-				if($whoarray[$j]["GovenmentPosts"]){
-					foreach($whoarray[$j]["GovenmentPosts"] as $value) {
-					   $Govecho=$Govecho.'<h4 class="list-group-item-heading post">'. $value.'</h4>';
+				if ($house == trim($whoarray[$j]["House"]) or $house == "both") {
+					$Govecho = "";
+					if($whoarray[$j]["GovenmentPosts"]){
+						foreach($whoarray[$j]["GovenmentPosts"] as $value) {
+						   $Govecho=$Govecho.'<h4 class="list-group-item-heading post">'. $value.'</h4>';
+						}
 					}
-				}
-				$Oppecho = "";
-				if($whoarray[$j]["OppositionPosts"]){
-					foreach($whoarray[$j]["OppositionPosts"] as $value) {
-					   $Oppecho=$Oppecho.'<h4 class="list-group-item-heading post">'. $value.'</h4>';
+					$Oppecho = "";
+					if($whoarray[$j]["OppositionPosts"]){
+						foreach($whoarray[$j]["OppositionPosts"] as $value) {
+						   $Oppecho=$Oppecho.'<h4 class="list-group-item-heading post">'. $value.'</h4>';
+						}
 					}
-				}
-				$Parecho = "";
-				if($whoarray[$j]["ParliamentaryPosts"]){
-					foreach($whoarray[$j]["ParliamentaryPosts"] as $value) {
-					   $Parecho=$Parecho.'<h4 class="list-group-item-heading post">'. $value.'</h4>';
+					$Parecho = "";
+					if($whoarray[$j]["ParliamentaryPosts"]){
+						foreach($whoarray[$j]["ParliamentaryPosts"] as $value) {
+						   $Parecho=$Parecho.'<h4 class="list-group-item-heading post">'. $value.'</h4>';
+						}
 					}
-				}
-				$Comecho = "";
-				if($whoarray[$j]["Committees"]){
-					foreach($whoarray[$j]["Committees"] as $value) {
-					   $Comecho=$Comecho.'<h4 class="list-group-item-heading post">'. $value.'</h4>';
+					$Comecho = "";
+					if($whoarray[$j]["Committees"]){
+						foreach($whoarray[$j]["Committees"] as $value) {
+						   $Comecho=$Comecho.'<h4 class="list-group-item-heading post">'. $value.'</h4>';
+						}
 					}
-				}
 			
-				if($Govecho or $Oppecho or $Parecho or $Comecho) {
-					$positionecho = '<div class="list-group-item joblist" style="display:block">'.$Govecho.$Oppecho.$Parecho.$Comecho.' 
-									</div>';
-				} else {
-					$positionecho = "";
-				}
-				if(isset($department)){
-					$positionecho = '<div class="list-group-item joblist"><h4 class="list-group-item-heading post">'.$whoarray[$j]["HansardName"].'</h4> 
-									</div>';
-				}
+					if($Govecho or $Oppecho or $Parecho or $Comecho) {
+						$positionecho = '<div class="list-group-item joblist" style="display:block">'.$Govecho.$Oppecho.$Parecho.$Comecho.' 
+										</div>';
+					} else {
+						$positionecho = "";
+					}
+					if(isset($department)){
+						$positionecho = '<div class="list-group-item joblist"><h4 class="list-group-item-heading post">'.$whoarray[$j]["HansardName"].'</h4> 
+										</div>';
+					}
 				
-				if(isset($photos) && $photos == "screenshot"){
-					$ifscreenshot = " screenshot";
-				} else {
-					$ifscreenshot = "";
+					if(isset($photos) && $photos == "screenshot"){
+						$ifscreenshot = " screenshot";
+					} else {
+						$ifscreenshot = "";
+					}
+					
+					if(!isset($party)) {
+						$display = "yes";
+					} else {
+						if($party == $whoarray[$j]["Party"]){
+							$display = "yes";
+						} else { 
+							$display = "no";
+						}
+					}
+					
+					if($display == "yes") {
+						$hint=$hint .'		
+							<div class="bootcards-cards bootcards-group">
+								<div id="contactCard" class="guesswho">
+									<div class="panel panel-default">
+										<div class="panel-heading clearfix">
+											<h3 class="panel-title pull-left">'.$whoarray[$j]["DisplayAs"].'</h3>
+										</div>
+										<div class="list-group">
+											<div class="list-group-item">
+												<img src="'.$whoarray[$j]["imageurl"].'" class="img-rounded group-member-image'.$ifscreenshot.'">
+											</div>
+											<div class="list-group-item" style="background-color:'.$whoarray[$j]["color"].'" id="constituency">
+												<h4 class="list-group-item-heading">'.$whoarray[$j]["Party"].'</h4>
+											</div>
+											<div class="list-group-item">
+												<h4 class="list-group-item-heading">'.$whoarray[$j]["constituency"].'</h4>
+											</div>
+											'.$positionecho.'
+										</div>
+									</div>
+								</div><!--end contact card-->
+							</div>';
+					}		
 				}
-				
-				$hint=$hint .'		
-					<div class="bootcards-cards bootcards-group">
-						<div id="contactCard" class="guesswho">
-							<div class="panel panel-default">
-								<div class="panel-heading clearfix">
-									<h3 class="panel-title pull-left">'.$whoarray[$j]["DisplayAs"].'</h3>
-								</div>
-								<div class="list-group">
-									<div class="list-group-item">
-										<img src="'.$whoarray[$j]["imageurl"].'" class="img-rounded group-member-image'.$ifscreenshot.'">
-									</div>
-									<div class="list-group-item" style="background-color:'.$whoarray[$j]["color"].'" id="constituency">
-										<h4 class="list-group-item-heading">'.$whoarray[$j]["Party"].'</h4>
-									</div>
-									<div class="list-group-item">
-										<h4 class="list-group-item-heading">'.$whoarray[$j]["constituency"].'</h4>
-									</div>
-									'.$positionecho.'
-								</div>
-							</div>
-						</div><!--end contact card-->
-					</div>';
 			}
 		}
 	}

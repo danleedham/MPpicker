@@ -16,13 +16,13 @@ The Stacker consists of three sections:
 
 ## External Projects Ustalised
 The stacker uses a number of open source projects to work:
-* [Bootstrap] - Used to build responsive, mobile-first projects on the web with the world's most popular front-end component library.
-* [Bootcards] - A cards-based UI with dual-pane capability for mobile and desktop, built on top of Bootstrap
-* [Bootstrap Toggle] - Bootstrap Toggle is a highly flexible Bootstrap plugin that converts checkboxes into toggles
-* [DPP] - Data.Parliament - platform that enables sharing of data within and outside of Parliament
-* [Chosen] - A jQuery Plugin by Harvest to Tame Unwieldy Select Boxes
-* [jQuery] - a lightweight, "write less, do more", JavaScript library
-* [XAMPP] -  an easy to install Apache distribution containing MariaDB, PHP, and Perl. The XAMPP open source package has been set up to be incredibly easy to install and to use.
+- [Bootstrap] - Used to build responsive, mobile-first projects on the web with the world's most popular front-end component library.
+- [Bootcards] - A cards-based UI with dual-pane capability for mobile and desktop, built on top of Bootstrap
+- [Bootstrap Toggle] - Bootstrap Toggle is a highly flexible Bootstrap plugin that converts checkboxes into toggles
+- [DPP] - Data.Parliament - platform that enables sharing of data within and outside of Parliament
+- [Chosen] - A jQuery Plugin by Harvest to Tame Unwieldy Select Boxes
+- [jQuery] - a lightweight, "write less, do more", JavaScript library
+- [XAMPP] -  an easy to install Apache distribution containing MariaDB, PHP, and Perl. The XAMPP open source package has been set up to be incredibly easy to install and to use.
 
 ## Installation
 The Stacker requires a computer (Windows 2008, 2012, Vista, 7, 8, 10 (Important: XP or 2003 not supported)) with a web connection and [PHP v5+](http://www.php.net) enabled server to run. The application has been developed to work on both standard cloud-based web servers and XAMPP which is an easy to install Apache distribution containing MariaDB, PHP and Perl. 
@@ -61,16 +61,16 @@ Mac: Once installed to start the Stacker use the Open Stacker application ensuri
 ## Static Data
 ### Screenshot Images 
 As these images are not part of any external dataset they are taken manually, sorted and added to the project directory:
-* A 'full-resolution' at 1920x1080 placed into the /images/screenshot directory
-* A smaller 960x540 version in the /images/screenshot/thumbs/ directory. 
-* Each of the images is named by the Members DodsId and is in jpg format with 60% quality. 
-* In future there is a possibility of pulling the swearing in section of the video stream from each parliament by using the AV Live Logging dataset found at http://www.data.parliament.uk/dataset/avlivelogging.
+- A 'full-resolution' at 1920x1080 placed into the /images/screenshot directory
+- A smaller 960x540 version in the /images/screenshot/thumbs/ directory. 
+- Each of the images is named by the Members DodsId and is in jpg format with 60% quality. 
+- In future there is a possibility of pulling the swearing in section of the video stream from each parliament by using the AV Live Logging dataset found at http://www.data.parliament.uk/dataset/avlivelogging.
 
 ### Beta Images 
 At the time of development these images are not part of an official external dataset API so the fancy new portraits have been included in this release as they were at the time of building. The images come in three types:
-* A 'high-resolution' image at 1920x1080 placed into the /images/stock/ directory at 80% quality
-* A smaller square 500x500 Close Up version placed in the /images/stock/500 directory at 70% quality
-* A thumbnail 240x240 version in the /images/stock/thumbs/ directory at 60% quality
+- A 'high-resolution' image at 1920x1080 placed into the /images/stock/ directory at 80% quality
+- A smaller square 500x500 Close Up version placed in the /images/stock/500 directory at 70% quality
+- A thumbnail 240x240 version in the /images/stock/thumbs/ directory at 60% quality
 
 ### Static Data Files
 __/betaimages.xml__

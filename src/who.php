@@ -20,6 +20,13 @@ function loadsex(){
    var house = document.getElementById("house-input").value;
    $("#sex-input").load('template/whosex.php?&house='+house);
 }
+function hidemenu(){
+	var menu = document.getElementById("list");
+	menu.style.display = menu.style.display === 'none' ? '' : 'none';
+	var results = document.getElementById("whoresults");
+	results.classList.add("col-sm-12");
+	results.classList.remove("col-sm-9");
+}
 function loadparties(){
    var house = document.getElementById("house-input").value;
    var sex = document.getElementById("sex-input").value;
@@ -86,10 +93,12 @@ function hidejobs(){
         <div class="panel panel-default">  
          <div class="panel-heading clearfix">
 			<h3 class="panel-title"> 
+				<span style="float:right;" onclick="hidemenu();return false;"><i class="fa fa-bars" aria-hidden="true"></i></span>
 				Use the search tools below 
 				<span id="loader" style="display:none;">
 					<i class="fa fa-refresh fa-spin" class="pull-right" style="font-size:20px"></i>
 				</span>
+				
 			</h3> 
          </div>     
 		 <div class="list-group">

@@ -4,7 +4,7 @@
 <link rel="manifest" href="favicons/manifest.json">
 <link rel="mask-icon" href="favicons/safari-pinned-tab.svg" color="#5bbad5">
 <meta name="theme-color" content="#ffffff">
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+<link href="css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Bootcards CSS files for desktop, iOS and Android -->
    <!-- <link href="//cdnjs.cloudflare.com/ajax/libs/bootcards/1.1.1/css/bootcards-ios.min.css" rel="stylesheet"> -->
@@ -18,4 +18,5 @@
   <link href="css/bootstrap-toggle.min.css" rel="stylesheet">
   <script src="js/bootstrap-toggle.min.js"></script>
   
-  
+  <!-- Google Fonto -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">

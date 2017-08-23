@@ -228,9 +228,6 @@ function checkKey(e) {
 							<label for="date-input" class="col-2 col-form-label">Enter groups on seperate lines with questions space delimited</label>
 								<div class="col-10">
 									 <textarea class="form-control" rows="3" id="groups-input" form="groups"></textarea>
-									<br />
-									<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-info" role="button">
-							Set Groups</a>
 								</div>
 							</div>
 							<div class="form-group">	
@@ -239,7 +236,7 @@ function checkKey(e) {
 									 <input type="text" class="form-control" id="withdrawn-input" form="withdrawn"></input>
 									 <br />
 									 <a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-info" role="button">
-									 Set Withdrawn</a>
+									 Set Groups & Withdrawn</a>
 								</div>
 							</div>
 						</div>

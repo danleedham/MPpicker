@@ -40,7 +40,7 @@
 		document.getElementById('loader').style.display = 'inline';
 		var groups = document.getElementById("groups-input").value;
 		var withdrawn = document.getElementById("withdrawn-input").value;
-		console.log('Loading questions using groups: '+groups+' and withdrawing: '+withdrawn);
+		console.log('Loading '+type+' questions to '+dept+' on '+date+' using groups: '+groups+' and withdrawing: '+withdrawn);
 		groups = groups.replace(/[\r\n]+/g,",");
 		groups = encodeURI(groups);
 		withdrawn = encodeURI(withdrawn);
@@ -67,7 +67,7 @@
 	   dept = encodeURI(dept);
 	   var groups = document.getElementById("groups-input").value;
 	   var withdrawn = document.getElementById("withdrawn-input").value;
-	   console.log('Loading questions using groups: '+groups+' and withdrawing: '+withdrawn);
+	   console.log('Loading Topical questions to '+dept+' on '+date+' using groups: '+groups+' and withdrawing: '+withdrawn);
 	   groups = groups.replace(/[\r\n]+/g,",");
 	   groups = encodeURI(groups);
 	   withdrawn = encodeURI(withdrawn);

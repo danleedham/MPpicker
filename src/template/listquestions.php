@@ -75,6 +75,13 @@ $xmlDoc=new DOMDocument();
 	if ($questionscount == 1) {
 			$hint = "";
 	} else {	
+		// If beta images are loaded prior to this then skip
+		if(!isset($feed)){
+			$feed = file_get_contents("../betaimages.xml");
+			$betaimages = simplexml_load_string($feed) or die("Can't load Beta Images");
+			$imagescount = count($betaimages);
+		}
+
 		$hint="";
 		for($i=0; $i<($x->length); $i++) {
 			$QText=$x->item($i)->getElementsByTagName('questionText');
@@ -198,8 +205,19 @@ $xmlDoc=new DOMDocument();
 							}
 						}
 					}
+					
+					for($ii=0; $ii < $imagescount; $ii++) {
+						if (trim($betaimages->member[$ii]->KnownAs) == $qarray[$i]["DisplayAs"]){
+							$BetaId = $betaimages->member[$ii]->imageid;
+						}
+					}
+					$imageurl = 'images/stock/thumbs/'.$BetaId.'.jpeg';
+					if (isset($BetaId) && $BetaId == ""){
+						$imageurl = 'http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"];
+					}
+					
 					$hint=$hint .'<a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$iswithdrawn.'" onclick="load('.$qarray[$i]["uin"].','.'\''.$date.'\');return false;"  href="#">
-					   <img src="http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"].'" class="img-rounded mini-member-image pull-left">
+					   <img src="'.$imageurl.'" class="img-rounded mini-member-image pull-left">
 					   <h4 class="list-group-item-heading">'.$ingroup.'<span class="partybox" style="background:'.$qarray[$i]["color"].'"></span>'.strtoupper($qarray[$i]["qref"]).' '. $qarray[$i]["DisplayAs"].'</h4>
 					   <input type="hidden" id="next'.$qarray[$i]["uin"].'" value="'.$next.'"><input type="hidden" id="prev'.$qarray[$i]["uin"].'" value="'.$prev.'">
 					   <p class="list-group-item-text">'.$qarray[$i]["constituency"].' ('.$qarray[$i]["party"].')</p></a>';

@@ -86,7 +86,7 @@
 					  <input type="text" name="q" form="mpsearch" class="form-control" placeholder="Start Typing..." size="10" onkeyup="showResult(this.value)">			
 					</div>
 				</div>
-				<div class="col-sm-3">
+				<div class="col-sm-3" style="padding-left: 2px !important; padding-right: 2px !important;">
 					<a href="#" onclick="load(8);return false;" class="btn btn-block btn-info col-sm-12 pull-right" role="button">Search</a>
 				</div>
 				<div class="col-sm-4 input-toggle">	

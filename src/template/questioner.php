@@ -99,25 +99,27 @@ $xmlMembers=new DOMDocument();
 		return strtotime($b["date"]) - strtotime($a["date"]);
 	}
 	// Count how many questions there are
-	$length = count($qarray);
+	if(isset($qarray)){
+		$length = count($qarray);
+	}
 		
 	// If there are questions, sort the questions
-	if ($length !== 0) {
+	if (isset($length) && $length !== 0) {
 			usort($qarray, 'compsortqs');
 		}  
+	if (isset($qarray)) {
+		$PullThisMember = intval($qarray[0]["MemberId"]);
 	
-	$PullThisMember = intval($qarray[0]["MemberId"]);
-	
-	// Now load the data for the currently selected member. 
-	$xml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id=".$PullThisMember."/FullBiog") or die("Cannot Load MP ".$m." from ".print_r($qarray));
-
+		// Now load the data for the currently selected member. 
+		$xml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id=".$PullThisMember."/FullBiog") or die("Cannot Load Question ".$uin." on ".$date);
+	}
 	?>
 			
            <div class="panel panel-default">
             	<div class="panel-heading clearfix">
 					<h3 class="panel-title pull-left">
 					<?php 
-						if($uin) : 
+						if(isset($qarray)) : 
 							echo $qarray[0]["type"] ?> Question <?php echo $qarray[0]["number"] ?> Details</h3>
 							<input type="hidden" id="currentuin" value="<?php echo $uin; ?>">
 							<input type="hidden" id="currentnext" value="<?php echo $next; ?>">

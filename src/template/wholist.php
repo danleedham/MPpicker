@@ -113,7 +113,7 @@ $xmlDoc=new DOMDocument();
 	if(!isset($committee) && isset($_GET["committee"])){
 		$committee=$_GET["committee"];
 	}
-		if (isset($committee) && $commitee !== "") { 
+		if (isset($committee)) { 
 			$committeeurl = '|'."committee=".$committee;
 		}
 		if (!isset($committee) or $committee == "") { 

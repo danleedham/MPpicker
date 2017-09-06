@@ -737,7 +737,7 @@ a.list-group-item.active:before {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: space-evenly;
     align-items: flex-start;
     align-content: flex-start;
 }

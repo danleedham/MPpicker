@@ -786,3 +786,11 @@ h3.panel-title.pull-left {
 	border-color: transparent !important;
 }
 
+#livesearch { 
+	height: calc(100vh - 420px);  /* bad fix to make the questions scroll but not the image */
+	overflow: auto;
+}
+
+#livesearch::-webkit-scrollbar { 
+    display: none; 
+}

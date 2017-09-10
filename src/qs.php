@@ -76,6 +76,11 @@
 	function togglemenu(){
 		var menu = document.getElementById("menu");
 		menu.style.display = menu.style.display === 'none' ? '' : 'none';
+		var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+		var listsize = h - 165;
+		console.log('Removing Menu and Resizing list to '+listsize);
+		document.getElementById("livesearch").setAttribute("style","height:"+listsize+"px");
+		
 	}
 	function togglemobilelist(){
 		var list = document.getElementById("list");
@@ -96,7 +101,7 @@ function checkKey(e) {
 		var num = document.getElementById("currentuin").value;
 		var thisprev = document.getElementById("currentprev").value;
 		var date = document.getElementById("date-input").value;
-		var next = document.getElementById('next'+thisprev).value;
+		var next = document.getElementById('next'+thisprev).value	;
 		var prev = document.getElementById('prev'+thisprev).value;
 		console.log('Loading question: '+thisprev+' next: '+next+' prev: '+prev);
 		$("#contactCard").load('template/questioner.php?uin='+thisprev+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {

@@ -84,9 +84,9 @@
 	
 document.onkeydown = checkKey;
 function checkKey(e) {
-
 	e = e || window.event;
-	if (e.keyCode == '37' || e.keyCode == '38') {
+	if (e.keyCode == '37') {
+		$('.active').removeClass('active');
        	document.getElementById('loader').style.display = 'inline';
 		if (!document.getElementById("photos-input").checked){
 			var photos = 'Stock';
@@ -102,11 +102,11 @@ function checkKey(e) {
 		$("#contactCard").load('template/questioner.php?uin='+thisprev+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
 			document.getElementById('loader').style.display = 'none';
 		});
-		$('.active').removeClass('active');
 		$('#q'+thisprev).addClass("active");
     }
-    else if (e.keyCode == '39' || e.keyCode == '40') {
-           	document.getElementById('loader').style.display = 'inline';
+    else if (e.keyCode == '39') {
+    	$('.active').removeClass('active');
+        document.getElementById('loader').style.display = 'inline';
 		if (!document.getElementById("photos-input").checked){
 			var photos = 'Stock';
 		} else {
@@ -121,7 +121,6 @@ function checkKey(e) {
 		$("#contactCard").load('template/questioner.php?uin='+thisnext+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
 			document.getElementById('loader').style.display = 'none';
 		});
-		$('.active').removeClass('active');
 		$('#q'+thisnext).addClass("active");
    }
 
@@ -241,12 +240,8 @@ function checkKey(e) {
 							</div>
 						</div>
 					</form>	
-                </div>
-              
-                 <div class="panel-footer">
-                  <small>Please enter grouped (1 2 3) and withdrawn questions (s1 t4)</small>
-                </div>
-              </div>
+                </div>        
+	          </div>
               </div>
 
             </div><!--Group / withdrawn card-->

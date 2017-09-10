@@ -120,7 +120,14 @@ $xmlMembers=new DOMDocument();
 					<h3 class="panel-title pull-left">
 					<?php 
 						if(isset($qarray)) : 
-							echo $qarray[0]["type"] ?> Question <?php echo $qarray[0]["number"] ?> Details</h3>
+						echo $xml->Member[0]->DisplayAs ?>
+						<span class="partybox-large" style="background:                  
+						<?php  $PartyID = $xml->Member[0]->Party[0]->attributes()->Id;              	          	     
+							 echo $colors[intval($PartyID)];
+						?>"></span>
+						<?php echo $xml->Member[0]->Party ?> 
+						(<?php echo $xml->Member[0]->MemberFrom ?>)
+						</h3>
 							<input type="hidden" id="currentuin" value="<?php echo $uin; ?>">
 							<input type="hidden" id="currentnext" value="<?php echo $next; ?>">
 							<input type="hidden" id="currentprev" value="<?php echo $prev; ?>">
@@ -135,17 +142,6 @@ $xmlMembers=new DOMDocument();
 					</a>
               	</div>
               	<div class="list-group">
-					<div class="list-group-item">  
-						<h4 class="list-group-item-heading">
-						<?php echo $xml->Member[0]->DisplayAs ?>
-						<span class="partybox-large" style="background:                  
-						<?php  $PartyID = $xml->Member[0]->Party[0]->attributes()->Id;              	          	     
-							 echo $colors[intval($PartyID)];
-						?>"></span>
-						<?php echo $xml->Member[0]->Party ?> 
-						(<?php echo $xml->Member[0]->MemberFrom ?>)
-						</h4>
-					</div>
 					<div class="list-group-item">
 					<?php 
 						$DodsId=$xml->Member[0]->attributes()->Dods_Id;
@@ -178,46 +174,10 @@ $xmlMembers=new DOMDocument();
                   <h4 class="list-group-item-heading"><?php echo $qarray[0]["text"]; ?></h4>
                 </div>
 
-                <div class="list-group-item">
-			<?php for($i = 0; $i < count($xml->Member[0]->GovernmentPosts[0]); $i ++) {
-			if (!strtotime($xml->Member[0]->GovernmentPosts->GovernmentPost[$i]->EndDate[0]) >= time()) {
-				$Government = $xml->Member[0]->GovernmentPosts->GovernmentPost[$i]->HansardName[0]; 
-				echo '<h4 class="list-group-item-heading">'. $Government . "</h4>";
-				}
-			} 			
-			// let's see if they're currently a member of the opposition
-			for($i = 0; $i < count($xml->Member[0]->OppositionPosts[0]); $i ++) {
-				if (!strtotime($xml->Member[0]->OppositionPosts->OppositionPost[$i]->EndDate[0]) >= time()) {
-					$Opposition = $xml->Member[0]->OppositionPosts->OppositionPost[$i]->HansardName[0]; 
-					echo '<h4 class="list-group-item-heading">'. $Opposition . "</h4>";
-				}
-			}
-			// let's see if they've got a parliamentary post
-			for($i = 0; $i < count($xml->Member[0]->ParliamentaryPosts[0]); $i ++) {
-				if (!strtotime($xml->Member[0]->ParliamentaryPosts->ParliamentaryPost[$i]->EndDate[0]) >= time()) {
-					$Parliamentary = $xml->Member[0]->ParliamentaryPosts->ParliamentaryPost[$i]->Name[0]; 
-					 echo '<h4 class="list-group-item-heading">'. $Parliamentary . "</h4>";
-				}
-			}
-			// let's see if they're currently on any committees
-			for($i = 0; $i < count($xml->Member[0]->Committees[0]); $i ++) {
-				if (!strtotime($xml->Member[0]->Committees->Committee[$i]->EndDate[0]) >= time()) {
-					$Committee = $xml->Member[0]->Committees->Committee[$i]->Name[0]; 
-					echo '<h4 class="list-group-item-heading">'.$Committee . "</h4>";
-				}
-			} 
-			
-			?>
-			</div>
 	<?php 
 		else: 
 		echo 'Please use the search tools </h3> 
 		 </div>';
 			
 		endif; ?>
-              
-                 <div class="panel-footer">
-                  <small>Data from UK Parliament - <a href="http://data.parliament.uk/membersdataplatform/">Members' Names Data Platform</a></small>
-                </div>
-              </div>
 

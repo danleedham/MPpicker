@@ -93,10 +93,10 @@
 					<input id="choosehouse" type="checkbox" value="Lords" name="house" data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="Lords" data-off="Commons">
 				</div>
 				<div class="col-sm-4 input-toggle">		
-					<input id="searchby" type="checkbox" value="constituency" name="searchby" data-toggle="toggle" data-on="Const" data-off="Name">
+					<input id="searchby" type="checkbox" value="constituency" name="searchby" data-toggle="toggle" data-onstyle="warning" data-offstyle="primary" data-on="Const" data-off="Name">
 				</div>
 				<div class="col-sm-4 input-toggle" >		
-					<input id="photos" type="checkbox" value="screenshot" name="photos" data-toggle="toggle" data-onstyle="warning" data-on="ScreenShot" data-off="Stock">
+					<input id="photos" type="checkbox" value="screenshot" name="photos" data-toggle="toggle" data-onstyle="warning" data-offstyle="primary" data-on="ScreenShot" data-off="Stock">
 				</div>
             </div>
 	          </div><!--panel body-->

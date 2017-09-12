@@ -141,8 +141,8 @@ function checkKey(e) {
 				<div class="col-sm-4 bootcards-list" id="mobilemenu" data-title="Mobile Menu">
 					<div class="panel panel-default">
 						<div class="panel-body">
-							<a href="#" onclick="togglemobilelist();return false;" class="btn btn-danger" role="button">
-							Toggle Search</a>
+							<a href="#" onclick="togglemobilelist();return false;" class="btn btn-warning" role="button">
+							Toggle List</a>
 						</div><!--panel body-->
 					</div><!--panel-->
 				</div><!--list-->
@@ -219,7 +219,7 @@ function checkKey(e) {
 		</div>
 	
           <!-- Group details -->
-          <div id="groupCard">
+          <div id="groupCard" stlye="margin-bottom: 60px !important;">
 
             <div class="panel panel-default">
               <div class="panel-heading clearfix">

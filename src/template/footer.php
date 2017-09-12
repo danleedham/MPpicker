@@ -1,5 +1,5 @@
   <!-- fixed tabbed footer -->
-  <div class="navbar navbar-default navbar-fixed-bottom">
+  <div id="navbar" class="navbar navbar-default navbar-fixed-bottom">
 
     <div class="container">
 

@@ -566,6 +566,9 @@ a.list-group-item.bootcards-list-subheading.collapsed:before {
     }
     .hidemobile {
     	display: none;
+    }
+    #navbar {
+    	display: none;
     }	
 }
 @media (min-width: 768px) {
@@ -797,4 +800,8 @@ h3.panel-title.pull-left {
 
 ::-webkit-scrollbar { 
     display: none; 
+}
+
+#groupCard {
+	margin-bottom: 70px !important;
 }

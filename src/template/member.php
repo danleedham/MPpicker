@@ -158,6 +158,7 @@
 						$TownOfBirth = trim($xml->Member[0]->BasicDetails[0]->TownOfBirth);
 					}
 					if(isset($TownOfBirth)): ?>
+						
                  <h4>Date of Birth</h4>
                  <?php
                  	$dob = $xml->Member[0]->DateOfBirth;
@@ -167,7 +168,21 @@
                  	echo date('d-m-Y',strtotime($xml->Member[0]->DateOfBirth)).' ('.$diff->y.')'; ?>
                  <?php endif; ?>
                  
-                 <?php if(isset($xml->Member[0]->ElectionsContested->ElectionContested[0]->Constituency[0])): ?>
+                 <?php if(isset($xml->Member[0]->Constituencies->Constituency[0])): ?>
+                 <h4>Constituencies Represented</h4>
+                 <ul>
+				 <?php   
+				 	for($i = 0; $i < count($xml->Member[0]->Constituencies[0]); $i ++) {
+				 		if ($xml->Member[0]->Constituencies->Constituency[$i]->Name[0]) {
+							$Constituency = $xml->Member[0]->Constituencies->Constituency[$i]->Name[0]; 
+							echo '<li>'.$Constituency . " (".$xml->Member[0]->Constituencies->Constituency[$i]->Election[0]->Name.")</li>";
+					    }
+					}
+				 ?>
+				 </ul>
+				 <?php endif; ?>
+				 
+				 <?php if(isset($xml->Member[0]->ElectionsContested->ElectionContested[0]->Constituency[0])): ?>
                  <h4>Constituencies Contested Not Won</h4>
                  <ul>
 				 <?php   

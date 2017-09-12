@@ -170,7 +170,7 @@ $xmlMembers=new DOMDocument();
 				<img src="<?php echo $imageurl; ?>" class="img-rounded main-question-image">
 				</div>	
                 <div class="list-group-item">
-                  <label>Question</label>
+                  <label>Question <?php echo $qarray[0]["type"]; ?> <?php echo $qarray[0]["number"]; ?></label>
                   <h4 class="list-group-item-heading"><?php echo $qarray[0]["text"]; ?></h4>
                 </div>
 

@@ -1,18 +1,3 @@
-<div class="panel panel-default">
-              <div class="panel-heading clearfix">
-                <h3 class="panel-title pull-left">Member Details</h3>
-                <div class="btn-group pull-right visible-xs">
-                  <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#editModal">
-                    <i class="fa fa-pencil"></i><span>Edit</span>
-                  </a>
-                </div>  
-                <a class="btn btn-primary pull-right hidden-xs" href="#" data-toggle="modal" data-target="#editModal">
-                  <i class="fa fa-pencil"></i><span>Edit</span>
-                </a>
-              </div>
-              <div class="list-group">
-                <div class="list-group-item">
-                
                 <?php
 	// If $m isn't already set in a require, get it from URL if it's passed
 	if(!isset($m) && isset($_GET['m'])) {$m=$_GET["m"];}
@@ -54,8 +39,19 @@
 							}
 						} else {
 							$imageurl = 'images/screenshot/thumbs/'.$DodsId.'.jpg';
-						}											
+						}	
+					
+					
+	$PartyID = $xml->Member[0]->Party[0]->attributes()->Id;              	          	     
+                  	     	require_once('colors.php');															
 					?>
+					
+<div class="panel panel-default">
+              <div class="panel-heading clearfix">
+                <h3 class="panel-title pull-left"><span class="partybox" style="background:<?php echo $colors[intval($PartyID)]; ?>"></span><?php echo $xml->Member[0]->DisplayAs ?></h3>
+              </div>
+              <div class="list-group">
+                <div class="list-group-item">					
 				
 				<img src="<?php echo $imageurl; ?>" class="img-rounded pull-right main-member-image"">
 
@@ -67,9 +63,7 @@
                 <div class="list-group-item">
                   <label>Party</label>
                   <h4 class="list-group-item-heading" style="color:                  
-                  <?php  $PartyID = $xml->Member[0]->Party[0]->attributes()->Id;              	          	     
-                  	     	require_once('colors.php');
-	  					 	echo $colors[intval($PartyID)];
+                  <?php echo $colors[intval($PartyID)];
 					?>"><?php echo $xml->Member[0]->Party ?></h4>
                 </div>
 
@@ -159,6 +153,20 @@
                  <?php echo trim($xml->Member[0]->BasicDetails[0]->TownOfBirth).', '.trim($xml->Member[0]->BasicDetails[0]->CountryOfBirth); ?>
                  <?php endif; ?>
                  
+                 <?php 
+					if(isset($xml->Member[0]->BasicDetails[0]->TownOfBirth)){
+						$TownOfBirth = trim($xml->Member[0]->BasicDetails[0]->TownOfBirth);
+					}
+					if(isset($TownOfBirth)): ?>
+                 <h4>Date of Birth</h4>
+                 <?php
+                 	$dob = $xml->Member[0]->DateOfBirth;
+                 	$today = new DateTime();
+                 	$DOB = new DateTime($xml->Member[0]->DateOfBirth);
+                 	$diff = date_diff($DOB,$today);
+                 	echo date('d-m-Y',strtotime($xml->Member[0]->DateOfBirth)).' ('.$diff->y.')'; ?>
+                 <?php endif; ?>
+                 
                  <?php if(isset($xml->Member[0]->ElectionsContested->ElectionContested[0]->Constituency[0])): ?>
                  <h4>Constituencies Contested Not Won</h4>
                  <ul>
@@ -169,12 +177,12 @@
 							echo '<li>'.$Committee . " (".$xml->Member[0]->ElectionsContested->ElectionContested[$i]->Election[0]->Name.")</li>";
 					    }
 					}
-				?>
-				</ul>
-				<?php endif; ?>
-                <h4>Previous Positions</h4>
-                <ul>
-				<?php   
+				 ?>
+				 </ul>
+				 <?php endif; ?>
+                 <h4>Previous Positions</h4>
+                 <ul>
+				 <?php   
 				 	for($i = 0; $i < count($xml->Member[0]->GovernmentPosts[0]); $i ++) {
 				 		if ($xml->Member[0]->GovernmentPosts->GovernmentPost[$i]->EndDate[0]) {
 							$Committee = $xml->Member[0]->GovernmentPosts->GovernmentPost[$i]->Name[0]; 

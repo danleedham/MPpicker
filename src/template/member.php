@@ -7,6 +7,9 @@
 	// If $house isn't already set in a require, get it from URL if it's passed
 	if(!isset($house) && isset($_GET['house'])){$house=$_GET["house"];}
 	
+	
+	echo '<!-- URL: http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id='.$m.'/FullBiog -->';
+	
 	// Load selected Member ($m) full biography information
 	$xml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id=".$m."/FullBiog") or die("No MP with this id");
 	
@@ -102,8 +105,12 @@
 			// let's see if they're currently on any committees
 			for($i = 0; $i < count($xml->Member[0]->Committees[0]); $i ++) {
 				if (!strtotime($xml->Member[0]->Committees->Committee[$i]->EndDate[0]) >= time()) {
-					$Committee = $xml->Member[0]->Committees->Committee[$i]->Name[0]; 
-					echo '<h4 class="list-group-item-heading">'.$Committee . "</h4>";
+					$Committee = $xml->Member[0]->Committees->Committee[$i]->Name[0];
+					$ischair = "";
+					if(isset($xml->Member[0]->Committees->Committee[$i]->ChairDates->ChairDate[0]->StartDate[0])) {
+						$ischair = " (Chair)";
+					} 
+					echo '<h4 class="list-group-item-heading">'.$Committee.$ischair."</h4>";
 				}
 			} 
 			
@@ -212,8 +219,12 @@
 					} 	 			
 					for($i = 0; $i < count($xml->Member[0]->Committees[0]); $i ++) {
 						if ($xml->Member[0]->Committees->Committee[$i]->EndDate[0]) {
-							$Committee = $xml->Member[0]->Committees->Committee[$i]->Name[0]; 
-							echo '<li>'.$Committee . " (".date("M Y",strtotime($xml->Member[0]->Committees->Committee[$i]->StartDate[0]))." - ".date("M Y",strtotime($xml->Member[0]->Committees->Committee[$i]->EndDate[0])).")</li>";
+							$Committee = $xml->Member[0]->Committees->Committee[$i]->Name[0];
+							$ischair = ""; 
+							if ($xml->Member[0]->Committees->Committee[$i]->ChairDates->ChairDate[0]) {
+								$ischair = "Chair - ";
+							}
+							echo '<li>'.$ischair.$Committee . " (".date("M Y",strtotime($xml->Member[0]->Committees->Committee[$i]->StartDate[0]))." - ".date("M Y",strtotime($xml->Member[0]->Committees->Committee[$i]->EndDate[0])).")</li>";
 						}
 					} 	
 					for($i = 0; $i < count($xml->Member[0]->ParliamentaryPosts[0]); $i ++) {

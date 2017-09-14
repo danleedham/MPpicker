@@ -680,8 +680,8 @@ a.list-group-item.active:before {
     margin: auto !important;
 }
 .main-member-image {
-    height: 40% !important;
-    width: 40% !important;
+    height: 50% !important;
+    width: 50% !important;
     z-index: 3;
     position: relative;
     margin-right: 0px !important;
@@ -807,5 +807,9 @@ h3.panel-title.pull-left {
 }
 
 #contactCard {
+	margin-bottom: 15px !important;
+}
+
+#whoresults { 
 	margin-bottom: 70px !important;
 }

@@ -113,15 +113,21 @@ $xmlDoc=new DOMDocument();
 	if(!isset($committee) && isset($_GET["committee"])){
 		$committee=$_GET["committee"];
 	}
-		if (isset($committee)) { 
-			$committeeurl = '|'."committee=".$committee;
-		}
-		if (!isset($committee) or $committee == "") { 
-			$committeeurl = ""; 
-			$returncommittee = "";
-		} else { 
-			$returncommittee = "Committees".'|'; 
-		}
+	if (isset($committee)) { 
+		$committeeurl = '|'."committee=".$committee;
+	}
+	if (!isset($committee) or $committee == "") { 
+		$committeeurl = ""; 
+		$returncommittee = "";
+	} else { 
+		$returncommittee = "Committees".'|'; 
+	}
+	// If they asked for committee chairs we need to return committees:	
+	if (isset($positions) && $positions == "chair") {
+		$returncommittee = "Committees".'|';
+		$returnpositions = "";
+		$positionsurl = "";
+	}
 		
 	// Which sort function to use prior to rendering
 	if(!isset($sortby) && isset($_GET["sortby"])) {
@@ -237,8 +243,11 @@ $xmlDoc=new DOMDocument();
 		$CommitteesList = array();
 		for($ii = 0; $ii < $Committees->length; $ii ++) {
 			if (!strtotime($Committees->item($ii)->getElementsByTagName('EndDate')[0]->textContent) >= time()) {
-			
-				$CommitteesList[] = $Committees->item($ii)->getElementsByTagName('Name')[0]->textContent; 
+					$ischair = "";
+				if(isset($Committees->item($ii)->getElementsByTagName('ChairDates')[0]->ChairDate->StartDate[0]->textContent)){
+					$ischair = " - Chair ";
+				}	
+				$CommitteesList[] = $Committees->item($ii)->getElementsByTagName('Name')[0]->textContent.$ischair; 
 			}
 		}
 	

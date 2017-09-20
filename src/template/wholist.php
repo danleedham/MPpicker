@@ -122,11 +122,20 @@ $xmlDoc=new DOMDocument();
 	} else { 
 		$returncommittee = "Committees".'|'; 
 	}
+	
 	// If they asked for committee chairs we need to return committees:	
 	if (isset($positions) && $positions == "chair") {
 		$returncommittee = "Committees".'|';
 		$returnpositions = "";
 		$positionsurl = "";
+	}
+	
+	// If a topic has been selected we need to search by it
+	if(isset($_GET["topic"])) {
+		$topic=$_GET["topic"];
+		$topicurl='|'.'biographyinterest='.$topic;
+	} else {
+		$topicurl = "";
 	}
 		
 	// Which sort function to use prior to rendering
@@ -146,7 +155,7 @@ $xmlDoc=new DOMDocument();
 	// Now load things
 	if (isset($house) && $house !== "" ) {
 		if(!isset($url)){
-			$url = "http://data.parliament.uk/membersdataplatform/services/mnis/members/query/IsEligible=true".$houseurl.$partyurl.$genderurl.$positionsurl.$committeeurl.$joinedurl."/".$returnpositions.$returncommittee."BiographyEntries";
+			$url = "http://data.parliament.uk/membersdataplatform/services/mnis/members/query/IsEligible=true".$houseurl.$partyurl.$genderurl.$positionsurl.$committeeurl.$topicurl.$joinedurl."/".$returnpositions.$returncommittee."BiographyEntries";
 		}
 	echo '<!-- '.$url.'-->';
 	if(!isset($department)){

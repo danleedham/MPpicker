@@ -57,6 +57,9 @@ function loadresults(){
    var department = document.getElementById("department-input").value;
    		if(department) { var departmenturl = '&department='+encodeURI(department); }
    		else { var departmenturl = ""; }
+   var topic = document.getElementById("topic-input").value;
+   		if(topic) { var topicurl = '&topic='+encodeURI(topic); }
+   		else { var topicurl = ""; }
    var photos = document.getElementById("photos-input").value;
    		if(photos) { var photosurl = '&photos='+encodeURI(photos); }
    		else { var photosurl = ""; }
@@ -66,8 +69,8 @@ function loadresults(){
    var sortby = document.getElementById("sortby-input").value;
    		if(sortby) { var sortbyurl = '&sortby='+String(sortby); }
    		else { var sortbyurl = ""; }		
-   console.log('Loading List: '+houseurl+sexurl+partyurl+positionurl+committeeurl+departmenturl+photosurl+joinedurl);
-   $("#whoresults").load('template/wholist.php?'+houseurl+sexurl+partyurl+positionurl+committeeurl+departmenturl+photosurl+joinedurl+sortbyurl,function() {
+   console.log('Loading List: '+houseurl+sexurl+partyurl+positionurl+committeeurl+topicurl+departmenturl+photosurl+joinedurl);
+   $("#whoresults").load('template/wholist.php?'+houseurl+sexurl+partyurl+positionurl+committeeurl+topicurl+departmenturl+photosurl+joinedurl+sortbyurl,function() {
    		document.getElementById('loader').style.display = 'none';
    });
 }
@@ -146,14 +149,22 @@ function hidejobs(){
 				</select>
 				</div>
 			
-					<!-- departments -->
+				<!-- departments -->
 				<div class="list-group-item">
 				<select data-placeholder="Choose a Department..." class="chosen-select form-control custom-select mb-2 mr-sm-2 mb-sm-0" tabindex="2" id="department-input">
 					<option value=""></option>
 					<?php include("template/whodepartment.php"); ?>
 				</select>
 				</div>
-			
+				
+				<!-- departments -->
+				<div class="list-group-item">
+				<select data-placeholder="Choose a topic..." class="chosen-select form-control custom-select mb-2 mr-sm-2 mb-sm-0" tabindex="2" id="topic-input">
+					<option value=""></option>
+					<?php include("template/whointerests.php"); ?>
+				</select>
+				</div>
+		
 				<!-- Joined after -->
 				<div class="list-group-item">
 				<label for="joined-input">Joined After:</label>	

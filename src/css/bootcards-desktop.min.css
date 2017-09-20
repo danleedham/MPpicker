@@ -643,7 +643,6 @@ a.list-group-item.active:before {
 }
 .navbar-fixed-bottom {
     position: static;
-    padding-top: 20px;
     padding-bottom: 20px;
     background: 0 0
 }

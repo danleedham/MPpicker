@@ -81,6 +81,18 @@ function hidejobs(){
         elements[i].style.display = elements[i].style.display == 'block' ? 'none' : 'block';
     }
 }
+function hideconst(){
+	elements = document.getElementsByClassName("constituency");
+    for (var i = 0; i < elements.length; i++) {
+        elements[i].style.display = elements[i].style.display == 'block' ? 'none' : 'block';
+    }
+}
+function hideparty(){
+	elements = document.getElementsByClassName("party");
+    for (var i = 0; i < elements.length; i++) {
+        elements[i].style.display = elements[i].style.display == 'block' ? 'none' : 'block';
+    }
+}
 </script>
 
 </head>
@@ -200,12 +212,15 @@ function hidejobs(){
 				<div class="list-group-item">
 					<a href="#" onclick="loadresults();return false;" class="btn btn-success" role="button">Hit me up</a>
 					<a href="#" onclick="window.location.reload()" class="btn btn-danger" role="button">Reset</a>
-					<a href="#" onclick="hidejobs();return false;" class="btn btn-warning" role="button">Hide Jobs</a>
 				</div>
+				<div class="list-group-item">
+					Toggle:<br/>
+					<a href="#" onclick="hideparty();return false;" class="btn btn-warning" role="button">Party</a>
+					<a href="#" onclick="hideconst();return false;" class="btn btn-warning" role="button">Const</a>
+					<a href="#" onclick="hidejobs();return false;" class="btn btn-warning" role="button">Jobs</a>
+					
+				</div>	
             </div> <!--list group-->
-            <div class="panel-footer">
-							<small class="pull-left">Use Department in isolation to Position</small>
-					</div>
 
         </div><!--panel-->
 

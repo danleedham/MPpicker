@@ -302,21 +302,25 @@ $xmlDoc=new DOMDocument();
 				usort($whoarray, function($a, $b) {
 					return strcmp($b["StartDate"], $a["StartDate"]);
 				});
+				$showJoined = '';
 			}
 			if (isset($sortby) && $sortby == "joinedfirst") {
 				usort($whoarray, function($a, $b) {
 					return strcmp($a["StartDate"], $b["StartDate"]);
 				});
+				$showJoined = '';
 			}
 			if (isset($sortby) && $sortby == "oldest") {
 				usort($whoarray, function($a, $b) {
 					return strcmp($a["DateOfBirth"], $b["DateOfBirth"]);
 				});
+				$showDoB = '';
 			}	
 			if (isset($sortby) && $sortby == "youngest") {
 				usort($whoarray, function($a, $b) {
 					return strcmp($b["DateOfBirth"], $a["DateOfBirth"]);
 				});
+				$showDoB = '';
 			}
 			if (isset($sortby) && $sortby == "consta") {
 				usort($whoarray, function($a, $b) {
@@ -331,7 +335,14 @@ $xmlDoc=new DOMDocument();
 
 			// Generate the list of questions 	
 			for($j=0; $j < $length; $j++) {	
-		
+				
+				if(!isset($showJoined)) {
+					$showJoined = ' style="display:none;" ';
+				}
+				if(!isset($showDoB)) {
+					$showDoB = ' style="display:none;" ';
+				}
+				
 				if ($house == trim($whoarray[$j]["House"]) or $house == "both") {
 					$Govecho = "";
 					if($whoarray[$j]["GovenmentPosts"]){
@@ -394,16 +405,22 @@ $xmlDoc=new DOMDocument();
 											<h3 class="panel-title pull-left">'.$whoarray[$j]["DisplayAs"].'</h3>
 										</div>
 										<div class="list-group">
-											<div class="list-group-item">
-												<img src="'.$whoarray[$j]["imageurl"].'" class="img-rounded group-member-image'.$ifscreenshot.'">
+											<div class="list-group-item list-group-item-image">
+												<img src="'.$whoarray[$j]["imageurl"].'" class="group-member-image'.$ifscreenshot.'">
 											</div>
-											<div class="list-group-item" style="background-color:'.$whoarray[$j]["color"].'" id="constituency">
+											<div class="list-group-item party" style="background-color:'.$whoarray[$j]["color"].'" id="constituency">
 												<h4 class="list-group-item-heading">'.$whoarray[$j]["Party"].'</h4>
 											</div>
-											<div class="list-group-item">
+											<div class="list-group-item constituency">
 												<h4 class="list-group-item-heading">'.$whoarray[$j]["constituency"].'</h4>
 											</div>
 											'.$positionecho.'
+											<div class="list-group-item"'.$showJoined.'>
+												<h4 class="list-group-item-heading post">Started: '.date('Y-m-d',strtotime($whoarray[$j]["StartDate"])).'</h4>
+											</div>
+											<div class="list-group-item"'.$showDoB.'>
+												<h4 class="list-group-item-heading post">DOB: '.date('Y-m-d',strtotime($whoarray[$j]["DateOfBirth"])).'</h4>
+											</div>
 										</div>
 									</div>
 								</div><!--end contact card-->

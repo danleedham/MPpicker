@@ -821,3 +821,7 @@ h3.panel-title.pull-left {
 .stacker-contactCard {
 	margin-bottom: 70px !important;
 }
+
+.list-group-item-image {
+	padding: 0px 0px !important;
+}

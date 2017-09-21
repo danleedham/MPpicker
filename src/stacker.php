@@ -40,7 +40,7 @@
 			var searchby = "position";
 			reqdchars = 4;
 		}
-		// If the string is 3 characters or more then do a nice little search
+		// If the string is x characters or more then do a nice little search
 		if (str.length<=reqdchars) { 
 			document.getElementById("livesearchmember").innerHTML="";
 			document.getElementById("livesearchmember").style.border="0px";

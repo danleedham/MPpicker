@@ -15,27 +15,26 @@
 	//if a selected member is passed from URL set it
 	if(isset($_GET["mselected"])){$mselected=$_GET["mselected"];}
 
-	//
+	// Load the right XML file for whatever we're searching for
 	if ($searchby == "constituency") {
-			//Load all the members who are eligible to sit, then we will compare their constituencies later, as the query doesn't allow like constituency *
-			$filename = "http://data.parliament.uk/membersdataplatform/services/mnis/members/query/house=".$house."|IsEligible=true/";
-			$xmlDoc->load($filename);
-		} elseif ($searchby == "position") {
-			//Load all the members who are eligible to sit, then we will compare their constituencies later, as the query doesn't allow like constituency *
-			$filename = "http://data.parliament.uk/membersdataplatform/services/mnis/members/query/house=".$house."%7CIsEligible=true/GovernmentPosts%7COppositionPosts/";
-			$xmlDoc->load($filename);
+		//Load all the members who are eligible to sit, then we will compare their constituencies later, as the query doesn't allow like constituency *
+		$filename = "http://data.parliament.uk/membersdataplatform/services/mnis/members/query/house=".$house."|IsEligible=true/";
+		$xmlDoc->load($filename);
+		
+	} elseif ($searchby == "position") {
+		//Load all the members who are eligible to sit, then we will compare their constituencies later, as the query doesn't allow like constituency *
+		$filename = "http://data.parliament.uk/membersdataplatform/services/mnis/members/query/house=".$house."%7CIsEligible=true/GovernmentPosts%7COppositionPosts/";
+		$xmlDoc->load($filename);
 
-		} else { 
-			//Load the members who are eligible to sit and with names like the query
-			$xmlDoc->load("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/house=".$house."|IsEligible=true|name*".$q);
+	} else { 
+		//Load the members who are eligible to sit and with names like the query
+		$xmlDoc->load("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/house=".$house."|IsEligible=true|name*".$q);
 	}
 
 	// Get just the Member sub-elements of the XML File
 	$x=$xmlDoc->getElementsByTagName('Member');
 
 	//First, lets look for members by name
-
-	//lookup all links from the xml file if length of 2 or more
 	if ($searchby == "name") {
 		if(strlen($q)>1) {
 			$hint="";
@@ -63,7 +62,7 @@
 			}
 		}
 	} elseif ($searchby == "constituency"){
-	// Now for the case that it's search by cons
+		// Now for the case that it's search by constituency
 		if (strlen($q)>1) {
 			$hint="";
 			for($i=0; $i<($x->length); $i++) {
@@ -97,7 +96,6 @@
 	// Now for the case that it's search by position
 		if (strlen($q)>1) {
 			$hint="";
-			
 			for($i=0; $i<($x->length); $i++) {
 				$FullTitle=$x->item($i)->getElementsByTagName('FullTitle');
 				$KnownAs=$x->item($i)->getElementsByTagName('DisplayAs');

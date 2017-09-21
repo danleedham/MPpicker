@@ -19,6 +19,8 @@
 <!-- Here's the script that *should* get the relevant members from the search. Note search string must be greater than 2 -->		
 <script>
 	function showResult(str) {
+		document.getElementById('chooseposition-button').style.display = 'none';
+		document.getElementById('loader').style.display = 'inline';
 		// Check which house to search through	
 		if (!document.getElementById("choosehouse").checked){
 			var house = "Commons";
@@ -57,7 +59,9 @@
 		}
 			xmlhttp.open("GET","template/livesearch.php?house="+house+"&searchby="+searchby+"&q="+str,true);
 			xmlhttp.send();
-		}
+		document.getElementById('loader').style.display = 'none';	
+		document.getElementById('chooseposition-button').style.display = 'inline';
+	}
 
 		function load(id){
 			if (!document.getElementById("photos").checked){
@@ -91,9 +95,15 @@
 					<div class="form-group">
 					  <input type="text" name="q" form="mpsearch" class="form-control" placeholder="Start Typing..." size="10" onkeyup="showResult(this.value)">			
 					</div>
+					
 				</div>
 				<div class="col-sm-3" style="padding-left: 2px !important; padding-right: 2px !important;">
-					<input id="chooseposition" type="checkbox" value="position" name="house" data-toggle="toggle" data-onstyle="danger" data-offstyle="info" data-on="Position" data-off="Name">
+					<span id="loader" style="display:none;">
+						<i class="fa fa-refresh fa-spin" class="pull-right" style="font-size:20px"></i>
+					</span>
+					<div id="chooseposition-button">
+						<input id="chooseposition" type="checkbox" value="position" name="house" data-toggle="toggle" data-onstyle="danger" data-offstyle="info" data-on="Position" data-off="Name">
+					</div>
 				</div>
 				<div class="col-sm-4 input-toggle">	
 					<input id="choosehouse" type="checkbox" value="Lords" name="house" data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="Lords" data-off="Commons">

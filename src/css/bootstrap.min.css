@@ -3625,9 +3625,13 @@ select[multiple].input-group-sm>.form-control, select[multiple].input-group-sm>.
 }
 .navbar-fixed-bottom, .navbar-fixed-top {
 	position: fixed;
-	right: 0;
-	left: 0;
-	z-index: -1
+	z-index: 1030
+	display: flex;
+	justify-content: center;
+}
+.footer-container {
+	display: flex;
+	justify-content: center;
 }
 @media (min-width:768px) {
 	.navbar-fixed-bottom, .navbar-fixed-top {

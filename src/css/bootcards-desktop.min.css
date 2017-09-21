@@ -793,7 +793,16 @@ h3.panel-title.pull-left {
 	overflow: auto;
 }
 
+#livesearchmember { 
+	height: calc(100vh - 175px);  /* bad fix to make the questions scroll but not the image */
+	overflow: auto;
+}
+
 #livesearch::-webkit-scrollbar { 
+    display: none; 
+}
+
+#livesearchmember::-webkit-scrollbar { 
     display: none; 
 }
 
@@ -805,10 +814,10 @@ h3.panel-title.pull-left {
 	margin-bottom: 70px !important;
 }
 
-#contactCard {
-	margin-bottom: 15px !important;
+#whoresults { 
+	margin-bottom: 70px !important;
 }
 
-#whoresults { 
+.stacker-contactCard {
 	margin-bottom: 70px !important;
 }

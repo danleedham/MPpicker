@@ -1,4 +1,4 @@
-                <?php
+<?php
 	// If $m isn't already set in a require, get it from URL if it's passed
 	if(!isset($m) && isset($_GET['m'])) {$m=$_GET["m"];}
 	// If $m is not passed, set it as the Prime Minister (Hard-coded value)

@@ -153,7 +153,7 @@ a.list-group-item:hover {
 }
 a.list-group-item:before {
     font-family: FontAwesome;
-    content: '';
+    content: '';
     position: absolute;
     right: 15px;
     top: 50%;
@@ -177,7 +177,7 @@ a.list-group-item.bootcards-list-subheading {
 }
 a.list-group-item.bootcards-list-subheading:before {
     font-family: FontAwesome;
-    content: '';
+    content: '';
     position: absolute;
     left: 15px;
     top: 50%;
@@ -187,7 +187,7 @@ a.list-group-item.bootcards-list-subheading:before {
     color: #ccc
 }
 a.list-group-item.bootcards-list-subheading.collapsed:before {
-    content: ''
+    content: ''
 }
 .bootcards-az-picker {
     position: fixed;
@@ -417,10 +417,10 @@ a.list-group-item.bootcards-list-subheading.collapsed:before {
     font-weight: 400
 }
 .bootcards-calendar .fc-icon-left-single-arrow:after {
-    content: ''
+    content: ''
 }
 .bootcards-calendar .fc-icon-right-single-arrow:after {
-    content: ''
+    content: ''
 }
 .bootcards-calendar .fc-header .fc-button.fc-state-disabled {
     color: #AAA;
@@ -824,4 +824,8 @@ h3.panel-title.pull-left {
 
 .list-group-item-image {
 	padding: 0px 0px !important;
+}
+
+.chosen-container-single .chosen-search input[type="text"]{
+	color: #444 !important;
 }

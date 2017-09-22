@@ -142,7 +142,7 @@ $xmlMembers=new DOMDocument();
 					</a>
               	</div>
               	<div class="list-group">
-					<div class="list-group-item">
+					<div class="list-group-item list-group-item-image">
 					<?php 
 						$DodsId=$xml->Member[0]->attributes()->Dods_Id;
 						if ($photos !== "screenshot") {
@@ -167,7 +167,7 @@ $xmlMembers=new DOMDocument();
 						}											
 					?>
 				
-				<img src="<?php echo $imageurl; ?>" class="img-rounded main-question-image">
+				<img src="<?php echo $imageurl; ?>" class="main-question-image">
 				</div>	
                 <div class="list-group-item">
                   <label>Question <?php echo $qarray[0]["type"]; ?> <?php echo $qarray[0]["number"]; ?></label>

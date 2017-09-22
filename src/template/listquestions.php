@@ -1,8 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
 <?php
-$start = microtime(true);
 $xmlDoc=new DOMDocument();
 
 	//get parameters from URL
@@ -48,9 +44,13 @@ $xmlDoc=new DOMDocument();
 		$photos = "";
 	}
 	
+	// Load questions of the chosen date and of the chosen type
 	$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&AnswerDate='.$date.'&CommonsQuestionTime.QuestionType='.$qtype.'&_pageSize=500');
+	// Extract each question element (they're called 'items')
 	$x=$xmlDoc->getElementsByTagName('item');
 	$questionscount = $x->length;
+	
+	// Load XML file containing all current MP's data 
 	$qxml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/House=Commons%7CIsEligible=true/") or die("Can't load MPs");
 	$memberscount =  count($qxml);
 
@@ -63,15 +63,21 @@ $xmlDoc=new DOMDocument();
 				$groupssplit[] = explode(' ',$value);
 		}
 	}
+	if(!isset($howmanygroups)){
+		$howmanygroups = 0; 
+	}
 	
 	// Make the input withdrawn questions an array. Nicer for looping
 	if(strlen($withdrawn)>=2){
 		$withdrawnquestions = explode(' ', $withdrawn);
 		$howmanywithdrawn = count($withdrawnquestions); 
 	}	
-	$time_elapsed_postload = microtime(true) - $start; 	
-	// Arry with party ID and party color
+	
+	// Array with party ID and party color
 	require_once('colors.php');	
+	
+	// If there are no questions, an empty 'item' is presented. 
+	// If there are more than one questions there are 2+ items. 
 	if ($questionscount == 1) {
 			$hint = "";
 	} else {	
@@ -179,8 +185,47 @@ $xmlDoc=new DOMDocument();
 			$newarray[$i]["qref"] = $i;
 		}
 		
+		$SortedArray = array();
+		for($i=0; $i < $newlength; $i++) {
+			// Let's check if the current question in the beginning of a group
+			// If there are multiple groups, itterate over them
+			for($j=0; $j < $howmanygroups; $j++) {
+				if(in_array($qarray[$i]["number"],$groupssplit[$j])) {
+				
+				}
+			
+			}
+			
+			// If it is the beginning of the group, add it and all the rest of the gropued questsions to the list now
+			
+			// Now let's check to see if the question is already in the array
+			
+			// If it is, ignore it and move on
+			
+			// If we've got to this stage then we know we can just add the question to the array next
+			$SortedArray[] = $newarray[$i];
+		}
+		
 		$qarray = $newqarray;
 		
+		$NextPrevArray = array();
+		
+		for($i=0; $i < $newlength; $i++) {
+			// If it's the first question, don't let it try go previous
+			if ($i == 0) {
+				$NextPrevArray[$i]["prev"] = $qarray[$i]["uin"];
+			} else {
+				$NextPrevArray[$i]["prev"] = $qarray[$i-1]["uin"];
+			}
+			
+			// If it's the last question don't let it try go to the next one
+			if ($i == $newlength-1) {
+				$NextPrevArray[$i]["next"] = $qarray[$i]["uin"];
+			} else {
+				$NextPrevArray[$i]["next"] = $qarray[$i+1]["uin"];
+			}
+		}
+			
 		$hint = "";	
 		// Generate the list of questions 	
 		for($i=0; $i < $newlength; $i++) {

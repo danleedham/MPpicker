@@ -1,35 +1,36 @@
 # ![DPP|by PDS](https://cldup.com/YbN6rT2IVF.png) UK Parliamentary Stacker
 
 ## Introduction
-The Stacker is a browser based application that aids broadcast and journalistic coverage of Parliament by leveraging live data powered by Data.parliament (DDP). There is no database as part of the project as in previous incarnations, instead a minimal amount of bespoke data is stored in XML files. 
+The Stacker is a browser based application that aids broadcast and journalistic coverage of Parliament by leveraging live data powered by Data.parliament (DDP). There is no database as part of the project as in previous incarnations of the stacker, instead a minimal amount of bespoke data is stored in XML and image ("screenshot") files. 
 
 The Stacker consists of three sections:
-  - The Member Stacker
-  - Oral Questions
+  - Individual Member Finder
+  - Oral Questions Stacker
   - Guess Who?
 
-> The Member Stacker allows the user to search by name or constituency across both houses of parliament. Either stock or screenshot images are presented for each member along with details of the member. 
+> The Individual Member Finder allows the user to search by name, constituency or individual position across both houses of parliament. Either stock or screenshot images are presented for each member along with details of the member. If the member has Twitter, an optional toggle presents their latest Tweets.
 
-> Oral Questions displays the current days upcoming questions. The user selects the department and type of questions and the application loads the questions in their ballot order. Members due to ask questions are referred to by navigating through the list.  This brings up details of the question and a picture of the member, so the user can identify who will speak next quickly without having to search.
+> Oral Questions Stacker displays the current days upcoming questions. The user selects the department and type of questions, then the application loads the questions in their balloted order. Members due to ask questions are referred to by navigating through the list.  Navigating brings up details of the question and a picture of the member, so the user can identify who will speak next quickly without having to search. Functionality exists to withdraw questions and set groups.
 
-> Guess Who? helps for narrowing down potential members by the user selecting options including party, gender and committee membership. 
+> Guess Who? helps for narrowing down potential members by the user selecting options including party, gender, date joined since, department and committee membership. 
 
 ## External Projects Ustalised
-The stacker uses a number of open source projects to work:
-- [Bootstrap] - Used to build responsive, mobile-first projects on the web with the world's most popular front-end component library.
-- [Bootcards] - A cards-based UI with dual-pane capability for mobile and desktop, built on top of Bootstrap
-- [Bootstrap Toggle] - Bootstrap Toggle is a highly flexible Bootstrap plugin that converts checkboxes into toggles
+The stacker is built upon a number of open source projects:
+- [Bootstrap] - Used to build responsive, mobile-first projects on the web with the world's most popular front-end component library (ver  v3.3.7 with amendments)
+- [Bootcards] - A cards-based UI with dual-pane capability for mobile and desktop, built on top of Bootstrap (ver 1.1.2 with amendments)
+- [Bootstrap Toggle] - Bootstrap Toggle is a highly flexible Bootstrap plugin that converts checkboxes into toggles (ver v2.2.0)
 - [DPP] - Data.Parliament - platform that enables sharing of data within and outside of Parliament
-- [Chosen] - A jQuery Plugin by Harvest to Tame Unwieldy Select Boxes
-- [jQuery] - a lightweight, "write less, do more", JavaScript library
-- [XAMPP] -  an easy to install Apache distribution containing MariaDB, PHP, and Perl. The XAMPP open source package has been set up to be incredibly easy to install and to use.
+- [Chosen] - A jQuery Plugin by Harvest to Tame Unwieldy Select Boxes (ver 1.7.0)
+- [jQuery] - a lightweight, "write less, do more", JavaScript library (ver 2.1.1)
+### Optional External Projects
+- [XAMPP] -  an easy to install Apache distribution containing MariaDB, PHP, and Perl. The XAMPP open source package has been set up to be incredibly easy to install and to use. Developed for use with versions running PHP v7+
 
 ## Installation
-The Stacker requires a computer (Windows 2008, 2012, Vista, 7, 8, 10 (Important: XP or 2003 not supported)) with a web connection and [PHP v5+](http://www.php.net) enabled server to run. The application has been developed to work on both standard cloud-based web servers and XAMPP which is an easy to install Apache distribution containing MariaDB, PHP and Perl. 
+The Stacker requires either a webserver or a computer with a web connection and [PHP v7+](http://www.php.net) enabled server to run. The application has been developed to work on both standard cloud-based web servers and on personal computers using [XAMPP](https://www.apachefriends.org/index.html), which is an easy to install Apache distribution containing MariaDB, PHP and Perl. 
 
-For installation on a web server simply copy the contents of src to a folder of your choice and direct a browser to that folder. 
+For installation on a web server simply copy the contents of src to a folder of your choice and direct a browser to that folder folder. 
 
-The application can run on any screen size from 400px width, and has been developed with an optimal resolution of 1920x1080, used with the latest version of Google Chrome. Full-screen is suggested, but multiple windows can be run together. 
+The application can run on any screen size from 400px width, and has been developed with an optimal resolution of 1920x1080, used with the latest version of Google Chrome. Full-screen is suggested (F11 PC, Ctrl+Cmd+F on a Mac), but multiple windows can be run together. It's suggested if two windows are used, fullscreen mode is activated and use Ctrl+Tab to swap between them while keeping fullscreen.
 
 ### Example Installation using XAMPP
 1. Download XAMPP for the chosen operating system from [https://www.apachefriends.org](https://www.apachefriends.org). 
@@ -54,7 +55,7 @@ For PC:
 6. Within a Google Chrome browser open up MAC: the IP address of the server from above; PC: localhost/
 
 ## Application Usage
-### Launching Application
+### Launching the Application
 PC: Once installed to load the Stacker simply double click `stacker.bat`
 Mac: Once installed to start the Stacker use the Open Stacker application ensuring that the server address is correct
 
@@ -68,7 +69,7 @@ As these images are not part of any external dataset they are taken manually, so
 
 ### Beta Images 
 At the time of development these images are not part of an official external dataset API so the fancy new portraits have been included in this release as they were at the time of building. The images come in three types:
-- A 'high-resolution' image at 1920x1080 placed into the /images/stock/ directory at 80% quality
+- A 'high-resolution' image at 1000x667 placed into the /images/stock/ directory at 80% quality
 - A smaller square 500x500 Close Up version placed in the /images/stock/500 directory at 70% quality
 - A thumbnail 240x240 version in the /images/stock/thumbs/ directory at 60% quality
 
@@ -89,7 +90,7 @@ A php file that declares an array of colors for each party. The colors defined b
 
 ## To-Do
  - Make new portraits dynamic. There is an API that can be scraped but at the moment it takes about 2 seconds per image to load. 
- - Continue mobile site improvement
+ - Make screenshots dynamic. There is an API that presents screenshots whenever a member is tagged as speaking. At the minute you can't search by member so we'll have to be a little bit clever. 
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen.)
 

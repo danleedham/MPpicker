@@ -22,6 +22,13 @@ $xmlDoc=new DOMDocument();
 	if (!isset($date)) {
 		$date = date("Y-m-d");
 	}
+	
+	// Check if groups are to be grouped together
+	if(!isset($grouptogether) && isset($_GET["together"])){
+		$grouptogether=$_GET["together"];
+	} else {
+		$grouptogether = "together";
+	}
 		
 	// If groups aren't set above and they're passed in the URL, get them
 	if(!isset($groups) && isset($_GET["groups"])){
@@ -202,42 +209,47 @@ $xmlDoc=new DOMDocument();
 		
 		// Now let's replace the qref with the new question number 
 		for($i=0; $i < $newlength; $i++) {
-			$newqarray[$i]["qref"] = $i;
+			$newqarray[$i]["qref"] = $i+1;
 		}
+				
+		// If requested, build a new array with gropued together
+		if($grouptogether !== "dont") {
+			$SortedArray = array();
 		
-		
-		// Build a new array with the new questions
-		$SortedArray = array();
-		
-		for($i=0; $i < $newlength; $i++) {
-			// Let's check if the current question in the beginning of a group
-			// If there are multiple groups, itterate over them
-			for($j=0; $j < $howmanygroups; $j++) {
-			
-				// If it is the beginning of the group, add it and all the rest of the gropued questsions to the list now
-				if($newqarray[$i]["qref"] == $groupssplit[$j][0]) {
-					foreach ($groupssplit[$j] as $question) { 
-						echo $question."<br/>";
-					}
-				echo "end group <br />";	
+			// Go through each question in the 'old' array
+			for($i=0; $i < $newlength; $i++) {
+				// If there are multiple groups, itterate over them		
+				for($j=0; $j < $howmanygroups; $j++) {
+					// If the question is at the beginning of a group, add it and all the rest of the questions from that group to the list
+					if($newqarray[$i]["qref"] == $groupssplit[$j][0]) {
+						foreach ($groupssplit[$j] as $question) { 
+							$SortedArray[] = $newqarray[$question-1];
+						}
+					} 	
 				}
 			
-			}
+				$IsThisADuplicate = "";
+				for($j=0; $j < count($SortedArray); $j++){
+					if($SortedArray[$j]["qref"] == $newqarray[$i]["qref"]) {
+						$IsThisADuplicate = "Duplicate";
+					}
+				}
+				if (!$IsThisADuplicate == "Duplicate") {
+					$SortedArray[] = $newqarray[$i];
+				}
+			}				
 			
-						
-			// Now let's check to see if the question is already in the array
-			
-			// If it is, ignore it and move on
-			
-			// If we've got to this stage then we know we can just add the question to the array next
-			$SortedArray[] = $newqarray[$i];
-		}
+			//print_r($SortedArray);
+			$qarray = $SortedArray;
 		
-		$qarray = $newqarray;
+		} else { 
+			$qarray = $newqarray;
+		}
 		
 		// Build an array that contains all the next and previous questions for each question
 		$NextPrevArray = array();
 		
+		// Work out previous and next questions
 		for($i=0; $i < $newlength; $i++) {
 			// If it's the first question, don't let it try go previous
 			if ($i == 0) {
@@ -292,7 +304,7 @@ $xmlDoc=new DOMDocument();
 					if($qarray[$i]["type"] == "Substantive"){
 						// Iterate through each group
 						for($j=0; $j < $howmanygroups; $j++) {
-							if(in_array($qarray[$i]["number"],$groupssplit[$j])){								
+							if(in_array($qarray[$i]["qref"],$groupssplit[$j])){								
 								$groupvisual= implode("+",$groupssplit[$j]);
 								$ingroup = '<span class="ingroup"> '.$groupvisual.'</span>';
 								$groupnumber = $j;
@@ -313,7 +325,7 @@ $xmlDoc=new DOMDocument();
 				
 				$hint=$hint .'<a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$iswithdrawn.'" onclick="load('.$qarray[$i]["uin"].','.'\''.$date.'\');return false;"  href="#">
 				   <img src="'.$imageurl.'" class="img-rounded mini-member-image pull-left">
-				   <h4 class="list-group-item-heading">'.$ingroup.'<span class="partybox" style="background:'.$qarray[$i]["color"].'"></span>'.strtoupper($qarray[$i]["typeletter"]).($i+1).' '. $qarray[$i]["DisplayAs"].'</h4>
+				   <h4 class="list-group-item-heading">'.$ingroup.'<span class="partybox" style="background:'.$qarray[$i]["color"].'"></span>'.strtoupper($qarray[$i]["typeletter"]).$qarray[$i]["qref"].' '. $qarray[$i]["DisplayAs"].'</h4>
 				   <input type="hidden" id="next'.$qarray[$i]["uin"].'" value="'.$next.'"><input type="hidden" id="prev'.$qarray[$i]["uin"].'" value="'.$prev.'">
 				   <p class="list-group-item-text">'.$qarray[$i]["constituency"].' ('.$qarray[$i]["party"].')</p></a>';
 			   }

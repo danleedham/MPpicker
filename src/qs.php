@@ -41,13 +41,18 @@
 	}
 	function loadquestions(date,dept,type){
 		document.getElementById('loader').style.display = 'inline';
+		if (!document.getElementById("together-input").checked){
+			var together = "together";
+		} else {
+			var together = "dont";
+		}
 		var groups = document.getElementById("groups-input").value;
 		var withdrawn = document.getElementById("withdrawn-input").value;
-		console.log('Loading '+type+' questions to '+dept+' on '+date+' using groups: '+groups+' and withdrawing: '+withdrawn);
+		console.log('Loading '+type+' questions to '+dept+' on '+date+' using groups: '+groups+' and withdrawing: '+withdrawn+' grouped: '+together);
 		groups = groups.replace(/[\r\n]+/g,",");
 		groups = encodeURI(groups);
 		withdrawn = encodeURI(withdrawn);
-		$("#livesearch").load('template/listquestions.php?date='+date+'&type='+type+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn,function() {
+		$("#livesearch").load('template/listquestions.php?date='+date+'&type='+type+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&together='+together,function() {
    		document.getElementById('loader').style.display = 'none';
    		});
 	}
@@ -251,6 +256,7 @@ function checkKey(e) {
 									 <br />
 									 <a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-info" role="button">
 									 Set Groups & Withdrawn</a>
+									 <input id="together-input" style="float:right !important;" type="checkbox" value="grouped" name="together-input"  data-toggle="toggle" data-onstyle="danger" data-offstyle="warning" data-on="Don't Group" data-off="Grouped">
 								</div>
 							</div>
 						</div>

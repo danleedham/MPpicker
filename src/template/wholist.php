@@ -1,5 +1,6 @@
 <?php
 $xmlDoc=new DOMDocument();
+	
 	//get parameters from URL
 	if(!isset($house) && isset($_GET["house"])){
 		$house=$_GET["house"];
@@ -13,7 +14,7 @@ $xmlDoc=new DOMDocument();
 	if (isset($house) && $house == "both") { 
 		$houseurl = ""; 
 	}
-			
+
 	if(isset($_GET["sex"])){
 		$gender=$_GET["sex"];
 	}
@@ -75,6 +76,7 @@ $xmlDoc=new DOMDocument();
 	if(!isset($department) && isset($_GET["department"])){
 		$department=$_GET["department"];
 	}
+	// Annoyingly we have to load both government and opposition files apart. Then we'll add them together
 	if (isset($department)) { 
 		if ($positions == "cabinet" or $positions == "government") {
 			$url1 = 'http://data.parliament.uk/membersdataplatform/services/mnis/Department/'.$department.'/Government/Current/';
@@ -86,7 +88,8 @@ $xmlDoc=new DOMDocument();
 		}	
 		$doc1 = new DOMDocument();
 		$doc1->load($url1);
-
+	
+	// If both government and opposition urls are loaded then let's add them together
 		if(isset($url2)){
 			$doc2 = new DOMDocument();
 			$doc2->load($url2);
@@ -106,10 +109,12 @@ $xmlDoc=new DOMDocument();
 				$res1->appendChild($item1);
 			}	
 		}
+		
 	$xmlDoc=$doc1;	 
+	
 	}
 	
-	// Committees are easy as we can search by them
+	// Committees are easy as we can search directly by them (we only ever query by the full committee name)
 	if(!isset($committee) && isset($_GET["committee"])){
 		$committee=$_GET["committee"];
 	}
@@ -138,7 +143,7 @@ $xmlDoc=new DOMDocument();
 		$topicurl = "";
 	}
 		
-	// Which sort function to use prior to rendering
+	// Which sort function should we use prior to rendering the list out
 	if(!isset($sortby) && isset($_GET["sortby"])) {
 		$sortby=$_GET["sortby"];
 	}
@@ -152,7 +157,7 @@ $xmlDoc=new DOMDocument();
 		$joinedurl = "";
 	}
 	
-	// Now load things
+	// Now load everything we've agreed this far
 	if (isset($house) && $house !== "" ) {
 		if(!isset($url)){
 			$url = "http://data.parliament.uk/membersdataplatform/services/mnis/members/query/IsEligible=true".$houseurl.$partyurl.$genderurl.$positionsurl.$committeeurl.$topicurl.$joinedurl."/".$returnpositions.$returncommittee."BiographyEntries";

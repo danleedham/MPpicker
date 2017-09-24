@@ -17,6 +17,9 @@
 	if (!isset($date)) {
 		$date = date("Y-m-d");
 	}
+	if (isset($_GET["house"])){
+		$house = $_GET["house"];
+	}
 	?>
 
 <script>
@@ -47,6 +50,10 @@
 		$("#livesearch").load('template/listquestions.php?date='+date+'&type='+type+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn,function() {
    		document.getElementById('loader').style.display = 'none';
    		});
+	}
+	function loadlordsquestions(date){
+		$("#livesearch").load('template/listlordsquestions.php?date='+date,function() {
+		});
 	}
 	function loaddepts(date){
 	   $("#dept-input").load('template/questiondepts.php?date='+date);
@@ -171,6 +178,8 @@ function checkKey(e) {
 							<div class="form-inline" id="loadbuttons" style="padding-top:6px !important;">
 								<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-info" role="button">
 								Load Questions</a>
+								<a href="#" onclick="loadlordsquestions(document.getElementById('date-input').value);return false;" class="btn btn-info" role="button">
+								Lords</a>
 								<span id="loader" style="display:none;">
 									<i class="fa fa-refresh fa-spin" class="pull-right" style="font-size:20px"></i>
 								</span>

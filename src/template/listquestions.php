@@ -1,8 +1,8 @@
 <?php
 $xmlDoc=new DOMDocument();
 
-	//get parameters from URL
-	// If type isn't set above and it's passed in the URL get it, otherwise set it as Substantive
+	// Get parameters from URL
+	// If question type isn't set above and it's passed in the URL then get it, otherwise set it as Substantive
 	if(!isset($qtype) && isset($_GET["type"])){
 		$qtype=$_GET["type"];
 	}
@@ -10,12 +10,12 @@ $xmlDoc=new DOMDocument();
 		$qtype="Substantive";
 	}
 	
-	// If Department isn't set above and it's passed in the URL get it
+	// If Department isn't set above and it's passed in the URL then get it
 	if(!isset($qdept) && isset($_GET["dept"])){
 		$qdept=$_GET["dept"];
 	}
 	
-	// If the question date isn't set above and it's passed in the URL get it or set it to today
+	// If the question date isn't set above and it's passed in the URL, get it or set it to today
 	if(!isset($date) && isset($_GET["date"])){
 		$date=$_GET["date"];
 	}
@@ -26,14 +26,34 @@ $xmlDoc=new DOMDocument();
 	// If groups aren't set above and they're passed in the URL, get them
 	if(!isset($groups) && isset($_GET["groups"])){
 		$groups=$_GET["groups"];
-		}
+	}
 	
+	// Sort groups into a nice little 2D array
+	if(intval($groups) !==0) {	
+		$questiongroups = explode(',', $groups);
+		$howmanygroups = count($questiongroups);
+
+		foreach ($questiongroups as $value) {
+				$groupssplit[] = explode(' ',$value);
+		}
+	}
+	
+	if(!isset($howmanygroups)){
+		$howmanygroups = 0; 
+	}
+		
 	// If withdrawn questions aren't set above and they're passed in the URL, get them
 	if(!isset($withdrawn) && isset($_GET["withdrawn"])){
 		$withdrawn=strtolower($_GET["withdrawn"]);
+	}		
+		
+	// Make the input withdrawn questions an array. Nicer for looping
+	if(strlen($withdrawn)>=2){
+		$withdrawnquestions = explode(' ', $withdrawn);
+		$howmanywithdrawn = count($withdrawnquestions); 
 	}	
 	
-	// For now questions are only searchable for the commons. In future we'll extend this
+	// For now questions are only searchable for the Commons. In future we'll extend this to the Lords too
 	if(!isset($house)){
 		$house = "Commons";
 	}
@@ -46,41 +66,29 @@ $xmlDoc=new DOMDocument();
 	
 	// Load questions of the chosen date and of the chosen type
 	$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&AnswerDate='.$date.'&CommonsQuestionTime.QuestionType='.$qtype.'&_pageSize=500');
-	// Extract each question element (they're called 'items')
+	
+	// Extract each question element (they're called 'items' in the XML)
 	$x=$xmlDoc->getElementsByTagName('item');
+	
+	// Count how many question items we've loaded
 	$questionscount = $x->length;
 	
 	// Load XML file containing all current MP's data 
 	$qxml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/House=Commons%7CIsEligible=true/") or die("Can't load MPs");
+	
+	// Just in case let's count how many members we've just loaded above
 	$memberscount =  count($qxml);
 
-	//Sort groups into a nice little 2D array
-	if(intval($groups) !==0) {	
-		$questiongroups = explode(',', $groups);
-		$howmanygroups = count($questiongroups);
-
-		foreach ($questiongroups as $value) {
-				$groupssplit[] = explode(' ',$value);
-		}
-	}
-	if(!isset($howmanygroups)){
-		$howmanygroups = 0; 
-	}
-	
-	// Make the input withdrawn questions an array. Nicer for looping
-	if(strlen($withdrawn)>=2){
-		$withdrawnquestions = explode(' ', $withdrawn);
-		$howmanywithdrawn = count($withdrawnquestions); 
-	}	
-	
 	// Array with party ID and party color
 	require_once('colors.php');	
 	
 	// If there are no questions, an empty 'item' is presented. 
 	// If there are more than one questions there are 2+ items. 
+	$hint = "";
 	if ($questionscount == 1) {
 			$hint = "";
 	} else {	
+		
 		// If beta images are loaded prior to this then skip
 		if(!isset($feed)){
 			$feed = file_get_contents("../betaimages.xml");
@@ -88,13 +96,17 @@ $xmlDoc=new DOMDocument();
 			$imagescount = count($betaimages);
 		}
 
+		// Now let's go through each question and extract the helpful bits of information
 		for($i=0; $i<($x->length); $i++) {
+			
+			// If an item doesn't have the element questionText it's not actually a question
 			$QText=$x->item($i)->getElementsByTagName('questionText');
 			if (!isset($QText[0]->textContent)) {
-			}
-			else {
+			} else {
 				$QuestionID=$x->item($i)->getElementsByTagName('ID');
 				$uin=$x->item($i)->getElementsByTagName('uin');
+				
+				// Some elements are subnodes and require the textContent to be extracted then trimmed
 				$tablingMemberPrinted=$x->item($i)->getElementsByTagName('tablingMemberPrinted');
 					$CurrentQuestioner = trim($tablingMemberPrinted->item(0)->textContent);
 				$Const=$x->item($i)->getElementsByTagName('constituency');
@@ -107,6 +119,7 @@ $xmlDoc=new DOMDocument();
 					$Department=trim($Dept->item(0)->textContent);
 				$QuestionStatus=$x->item($i)->getElementsByTagName('QuestionStatus');	
 
+				// Let's now check each MP to find which MP asked the question 
 				for ($y = 0; $y < $memberscount; $y++){
 					$CurrentMP = trim($qxml->Member[$y]->ListAs);
 						if($CurrentQuestioner === $CurrentMP) { 
@@ -119,15 +132,17 @@ $xmlDoc=new DOMDocument();
 						}
 				}
 				
-			   if($QuestionType[0]->textContent == "Topical"){
-			   		$typeletter = 't';
-			   } else {
-			   		$typeletter = 's';
-			   }
-			   $typeballot = $BallotNo[0]->textContent;
-			   $qref = $typeletter.$typeballot;	
-				
-			   if($Department == $qdept) {			
+				if($QuestionType[0]->textContent == "Topical"){
+					$typeletter = 't';
+				} else {
+					$typeletter = 's';
+				}
+				$ballotnumber = $BallotNo[0]->textContent;
+				$qref = $typeletter.$ballotnumber;	
+
+				// Just a check to make sure our query got the questions from the right department
+				if($Department == $qdept) {	
+					// Now build an array with all the information we want	
 				   $qarray[] = array( 'number'=>$BallotNo[0]->textContent,
 									  'uin'=>$uin[0]->textContent,
 									  'dept'=>$Department,
@@ -142,9 +157,17 @@ $xmlDoc=new DOMDocument();
 									  'party'=>$party,
 									  'color'=>$color,
 									  'qref'=>$qref,
-									  'QuestionStatus'=>$QuestionStatus[0]->textContent);
+									  'QuestionStatus'=>$QuestionStatus[0]->textContent
+								);
 				}
 			}
+		}
+		
+		// Count how many questions there are now after our checks (each question is an element in the array)
+		if(isset($qarray)){
+			$length = count($qarray);
+		} else {
+			$length = 0;
 		}
 		
 		// Function to sort questions by type then by number
@@ -154,19 +177,15 @@ $xmlDoc=new DOMDocument();
 				}
 				return strcmp($a['type'], $b['type']);
 		}
-		// Count how many questions there are
-		if(isset($qarray)){
-			$length = count($qarray);
-		} else {
-			$length = 0;
-		}
 	
-	// If there are questions, sort the questions & generate list
+	if(isset($groupsplit)) { print_r($groupssplit); }
+	// If there are questions, sort the questions & generate the list
 	if ($length !== 0) {
-			usort($qarray, 'compqs');
+		usort($qarray, 'compqs');
 		
-		// Let's remove any questions that have been withdrawn without notice
+		// Let's remove any questions that have been withdrawn without notice (ie removed before the order paper is printed)
 		$newqarray = array();
+		
 		for($i=0; $i < $length; $i++) {
 			if ($qarray[$i]['QuestionStatus'] == "Withdrawn Without Notice"){	
 			} else {
@@ -181,33 +200,42 @@ $xmlDoc=new DOMDocument();
 			$newlength = 0;
 		}
 		
+		// Now let's replace the qref with the new question number 
 		for($i=0; $i < $newlength; $i++) {
-			$newarray[$i]["qref"] = $i;
+			$newqarray[$i]["qref"] = $i;
 		}
 		
+		
+		// Build a new array with the new questions
 		$SortedArray = array();
+		
 		for($i=0; $i < $newlength; $i++) {
 			// Let's check if the current question in the beginning of a group
 			// If there are multiple groups, itterate over them
 			for($j=0; $j < $howmanygroups; $j++) {
-				if(in_array($qarray[$i]["number"],$groupssplit[$j])) {
-				
+			
+				// If it is the beginning of the group, add it and all the rest of the gropued questsions to the list now
+				if($newqarray[$i]["qref"] == $groupssplit[$j][0]) {
+					foreach ($groupssplit[$j] as $question) { 
+						echo $question."<br/>";
+					}
+				echo "end group <br />";	
 				}
 			
 			}
 			
-			// If it is the beginning of the group, add it and all the rest of the gropued questsions to the list now
-			
+						
 			// Now let's check to see if the question is already in the array
 			
 			// If it is, ignore it and move on
 			
 			// If we've got to this stage then we know we can just add the question to the array next
-			$SortedArray[] = $newarray[$i];
+			$SortedArray[] = $newqarray[$i];
 		}
 		
 		$qarray = $newqarray;
 		
+		// Build an array that contains all the next and previous questions for each question
 		$NextPrevArray = array();
 		
 		for($i=0; $i < $newlength; $i++) {

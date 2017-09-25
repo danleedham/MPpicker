@@ -4,8 +4,8 @@
 The Stacker is a browser based application that aids broadcast and journalistic coverage of Parliament by leveraging live data powered by Data.parliament (DDP). There is no database as part of the project as in previous incarnations of the stacker, instead a minimal amount of bespoke data is stored in XML and image ("screenshot") files. 
 
 The Stacker consists of three sections:
-  - Individual Member Finder
-  - Oral Questions Stacker
+  - Member's Database
+  - Questions Stacker
   - Guess Who?
 
 > The Individual Member Finder allows the user to search by name, constituency or individual position across both houses of parliament. Either stock or screenshot images are presented for each member along with details of the member. If the member has Twitter, an optional toggle presents their latest Tweets.

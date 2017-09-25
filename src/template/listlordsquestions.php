@@ -35,12 +35,12 @@
 	
 	// Now load the question text
 	$SplitOutQuestions = explode( '<div class="questionpanel">' , $content );
-	// Remove all the waffle at the beginning and end of the page
-	$SplitOutQuestions = array_slice($SplitOutQuestions,1,-1);
-	
+	// Remove all the waffle at the beginning of the page
+	$SplitOutQuestions = array_slice($SplitOutQuestions,1);
 	// Go through each question and pull out only the good stuff
 	for($i=0; $i<count($SplitOutQuestions); $i++) {
 		$SplitOutQuestions[$i] = str_replace("<br />","<p>",$SplitOutQuestions[$i]);	
+		$SplitOutQuestions[$i] = str_replace("</style>","<p>",$SplitOutQuestions[$i]);
 		$SplitOutQuestions[$i] = explode("<p>",$SplitOutQuestions[$i]);
 			for($j=0; $j<count($SplitOutQuestions[$i]); $j++){
 				$SplitOutQuestions[$i][$j] = explode(" to ask ", $SplitOutQuestions[$i][$j]);

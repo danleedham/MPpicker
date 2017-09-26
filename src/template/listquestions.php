@@ -45,6 +45,7 @@ $xmlDoc=new DOMDocument();
 		}
 	}
 	
+	// If there aren't any groups make sure the application knows
 	if(!isset($howmanygroups)){
 		$howmanygroups = 0; 
 	}
@@ -244,26 +245,6 @@ $xmlDoc=new DOMDocument();
 		
 		} else { 
 			$qarray = $newqarray;
-		}
-		
-		// Build an array that contains all the next and previous questions for each question
-		$NextPrevArray = array();
-		
-		// Work out previous and next questions
-		for($i=0; $i < $newlength; $i++) {
-			// If it's the first question, don't let it try go previous
-			if ($i == 0) {
-				$NextPrevArray[$i]["prev"] = $qarray[$i]["uin"];
-			} else {
-				$NextPrevArray[$i]["prev"] = $qarray[$i-1]["uin"];
-			}
-			
-			// If it's the last question don't let it try go to the next one
-			if ($i == $newlength-1) {
-				$NextPrevArray[$i]["next"] = $qarray[$i]["uin"];
-			} else {
-				$NextPrevArray[$i]["next"] = $qarray[$i+1]["uin"];
-			}
 		}
 			
 		$hint = "";	

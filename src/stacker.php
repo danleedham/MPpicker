@@ -31,14 +31,17 @@
 		if (!document.getElementById("searchby").checked){
 			var searchby = "name";
 			reqdchars = 2;
+			var url = "livesearch.php";
 		} else {
 			var searchby = "constituency";
 			reqdchars = 3;
+			var url = "livesearch.php";
 		} 
 		// If they want to search by position, overwrite previous choice
 		if (document.getElementById("chooseposition").checked) {
 			var searchby = "position";
 			reqdchars = 4;
+			var url = "livesearchpositions.php";
 		}
 		// If the string is x characters or more then do a nice little search
 		if (str.length<=reqdchars) { 
@@ -57,7 +60,7 @@
 				document.getElementById("livesearchmember").innerHTML=this.responseText;
 			}
 		}
-			xmlhttp.open("GET","template/livesearch.php?house="+house+"&searchby="+searchby+"&q="+str,true);
+			xmlhttp.open("GET","template/"+url+"?house="+house+"&searchby="+searchby+"&q="+str,true);
 			xmlhttp.send();
 		document.getElementById('loader').style.display = 'none';	
 		document.getElementById('chooseposition-button').style.display = 'inline';

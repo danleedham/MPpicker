@@ -39,6 +39,20 @@
 		$('.active').removeClass('active');
 		$('#q'+num).addClass("active");
 	}
+	function loadlords(id){
+		document.getElementById('loader').style.display = 'inline';
+		if (!document.getElementById("photos-input").checked){
+			var photos = 'Stock';
+		} else {
+			var photos = "screenshot";
+		}
+		console.log('Loading Lords Member: '+id);
+		$("#contactCard").load('template/member.php?m='+id,function() {
+			document.getElementById('loader').style.display = 'none';
+		});
+		$('.active').removeClass('active');
+		$('#q'+id).addClass("active");
+	}
 	function loadquestions(date,dept,type){
 		document.getElementById('loader').style.display = 'inline';
 		if (!document.getElementById("together-input").checked){
@@ -99,49 +113,48 @@
 		list.style.display = list.style.display === 'block' ? '' : 'block';
 	}
 	
-document.onkeydown = checkKey;
-function checkKey(e) {
-	e = e || window.event;
-	if (e.keyCode == '37') {
-		$('.active').removeClass('active');
-       	document.getElementById('loader').style.display = 'inline';
-		if (!document.getElementById("photos-input").checked){
-			var photos = 'Stock';
-		} else {
-			var photos = "screenshot";
+	document.onkeydown = checkKey;
+	function checkKey(e) {
+		e = e || window.event;
+		if (e.keyCode == '37') {
+			$('.active').removeClass('active');
+			document.getElementById('loader').style.display = 'inline';
+			if (!document.getElementById("photos-input").checked){
+				var photos = 'Stock';
+			} else {
+				var photos = "screenshot";
+			}
+			var num = document.getElementById("currentuin").value;
+			var thisprev = document.getElementById("currentprev").value;
+			var date = document.getElementById("date-input").value;
+			var next = document.getElementById('next'+thisprev).value	;
+			var prev = document.getElementById('prev'+thisprev).value;
+			console.log('Loading question: '+thisprev+' next: '+next+' prev: '+prev);
+			$("#contactCard").load('template/questioner.php?uin='+thisprev+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
+				document.getElementById('loader').style.display = 'none';
+			});
+			$('#q'+thisprev).addClass("active");
 		}
-		var num = document.getElementById("currentuin").value;
-		var thisprev = document.getElementById("currentprev").value;
-		var date = document.getElementById("date-input").value;
-		var next = document.getElementById('next'+thisprev).value	;
-		var prev = document.getElementById('prev'+thisprev).value;
-		console.log('Loading question: '+thisprev+' next: '+next+' prev: '+prev);
-		$("#contactCard").load('template/questioner.php?uin='+thisprev+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
-			document.getElementById('loader').style.display = 'none';
-		});
-		$('#q'+thisprev).addClass("active");
-    }
-    else if (e.keyCode == '39') {
-    	$('.active').removeClass('active');
-        document.getElementById('loader').style.display = 'inline';
-		if (!document.getElementById("photos-input").checked){
-			var photos = 'Stock';
-		} else {
-			var photos = "screenshot";
-		}
-		var num = document.getElementById("currentuin").value;
-		var thisnext = document.getElementById("currentnext").value;
-		var date = document.getElementById("date-input").value;
-		var next = document.getElementById('next'+thisnext).value;
-		var prev = document.getElementById('prev'+thisnext).value;
-		console.log('Loading question: '+thisnext+' next: '+next+' prev: '+prev);
-		$("#contactCard").load('template/questioner.php?uin='+thisnext+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
-			document.getElementById('loader').style.display = 'none';
-		});
-		$('#q'+thisnext).addClass("active");
-   }
-
-}
+		else if (e.keyCode == '39') {
+			$('.active').removeClass('active');
+			document.getElementById('loader').style.display = 'inline';
+			if (!document.getElementById("photos-input").checked){
+				var photos = 'Stock';
+			} else {
+				var photos = "screenshot";
+			}
+			var num = document.getElementById("currentuin").value;
+			var thisnext = document.getElementById("currentnext").value;
+			var date = document.getElementById("date-input").value;
+			var next = document.getElementById('next'+thisnext).value;
+			var prev = document.getElementById('prev'+thisnext).value;
+			console.log('Loading question: '+thisnext+' next: '+next+' prev: '+prev);
+			$("#contactCard").load('template/questioner.php?uin='+thisnext+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
+				document.getElementById('loader').style.display = 'none';
+			});
+			$('#q'+thisnext).addClass("active");
+	   }
+	}
 </script>
 
 </head>
@@ -181,14 +194,14 @@ function checkKey(e) {
 								</div>
 							</div>
 							<div class="form-inline" id="loadbuttons" style="padding-top:6px !important;">
-								<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-info" role="button">
-								Load Questions</a>
-								<a href="#" onclick="loadlordsquestions(document.getElementById('date-input').value);return false;" class="btn btn-info" role="button">
+								<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-success" role="button">
+								Commons</a>
+								<a href="#" onclick="loadlordsquestions(document.getElementById('date-input').value);return false;" class="btn btn-danger" role="button">
 								Lords</a>
 								<span id="loader" style="display:none;">
 									<i class="fa fa-refresh fa-spin" class="pull-right" style="font-size:20px"></i>
 								</span>
-								<a href="#" onclick="togglemenu();return false;" class="btn btn-danger hidemobile" style="float:right !important;" role="button">
+								<a href="#" onclick="togglemenu();return false;" class="btn btn-info hidemobile" style="float:right !important;" role="button">
 								Toggle Search</a>
 							</div>
 						</div><!--panel body-->

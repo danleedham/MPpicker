@@ -26,11 +26,11 @@ The stacker is built upon a number of open source projects:
 - [XAMPP] -  an easy to install Apache distribution containing MariaDB, PHP, and Perl. The XAMPP open source package has been set up to be incredibly easy to install and to use. Developed for use with versions running PHP v7+
 
 ## Installation
-The Stacker requires either a webserver or a computer with a web connection and [PHP v7+](http://www.php.net) enabled server to run. The application has been developed to work on both standard cloud-based web servers and on personal computers using [XAMPP](https://www.apachefriends.org/index.html), which is an easy to install Apache distribution containing MariaDB, PHP and Perl. 
+The Stacker requires either a webserver or a computer with a web connection and [PHP v7+](http://www.php.net) enabled server to run. The application has been developed to work on both standard web servers and on personal computers using [XAMPP](https://www.apachefriends.org/index.html), which is an easy to install Apache distribution containing MariaDB, PHP and Perl. 
 
-For installation on a web server simply copy the contents of src to a folder of your choice and direct a browser to that folder folder. 
+For installation on a web server simply copy the contents of `src` to a folder of your choice and direct a browser to that folder. 
 
-The application can run on any screen size from 400px width, and has been developed with an optimal resolution of 1920x1080, used with the latest version of Google Chrome. Full-screen is suggested (F11 PC, Ctrl+Cmd+F on a Mac), but multiple windows can be run together. It's suggested if two windows are used, fullscreen mode is activated and use Ctrl+Tab to swap between them while keeping fullscreen.
+The application can run on any screen size from 400px width, and has been developed with an __optimal resolution of 1920x1080__, used with the latest version of __Google Chrome__. Full-screen is suggested (F11 PC, Ctrl+Cmd+F on a Mac), but multiple windows can be run together. It's suggested if two windows are used, fullscreen mode is activated and use Ctrl+Tab to swap between them while keeping fullscreen.
 
 ### Example Installation using XAMPP
 1. Download XAMPP for the chosen operating system from [https://www.apachefriends.org](https://www.apachefriends.org). 
@@ -56,6 +56,7 @@ For PC:
 
 ## Application Usage
 ### Launching the Application
+Web: Once the files are moved onto the web server point a Google Chrome browser to the URL or IP address of the server
 PC: Once installed to load the Stacker simply double click `stacker.bat`
 Mac: Once installed to start the Stacker use the Open Stacker application ensuring that the server address is correct
 
@@ -65,17 +66,19 @@ As these images are not part of any external dataset they are taken manually, so
 - A 'full-resolution' at 1920x1080 placed into the /images/screenshot directory
 - A smaller 960x540 version in the /images/screenshot/thumbs/ directory. 
 - Each of the images is named by the Members DodsId and is in jpg format with 60% quality. 
-- In future there is a possibility of pulling the swearing in section of the video stream from each parliament by using the AV Live Logging dataset found at http://www.data.parliament.uk/dataset/avlivelogging.
+- In future there is a possibility of pulling in a section screen shots of the video stream from each parliament by using the AV Live Logging dataset found at http://www.data.parliament.uk/dataset/avlivelogging.
 
 ### Beta Images 
-At the time of development these images are not part of an official external dataset API so the fancy new portraits have been included in this release as they were at the time of building. The images come in three types:
+At the time of development these images are part of Parliament's unfinished new API. The IDs for each member are yet to be static and the server isn't optimized for rendering large numbers of images on demand. As such the fancy new portraits have been included in this release, as they were at the time of building. Once the new API is static, the new member images will be pulled in on the fly, which will keep them up to date and add any new members should there be by-elections, or indeed another genreal election. 
+
+The images come in three types:
 - A 'high-resolution' image at 1000x667 placed into the /images/stock/ directory at 80% quality
 - A smaller square 500x500 Close Up version placed in the /images/stock/500 directory at 70% quality
 - A thumbnail 240x240 version in the /images/stock/thumbs/ directory at 60% quality
 
 ### Static Data Files
 __/betaimages.xml__
-An XML file that has elements that define each Member's new Parliament Beta imageid so that the images can be pulled from the new API. It is XML so that once a full public dataset of the ImageID values is released the transition in code will be minimal. 
+An XML file that has elements defining each Member's Beta imageid is stored with the application. It is XML so that once a full public dataset of the ImageID values is released the transition in code will be minimal. Each member with a new image has an element: 
 ```xml
   <member>
     <KnownAs>Maria Eagle</KnownAs>
@@ -89,7 +92,7 @@ A php file that declares an array of colors for each party. The colors defined b
 ```
 
 ## To-Do
- - Make new portraits dynamic. There is an API that can be scraped but at the moment it takes about 2 seconds per image to load. 
+ - Make new portraits dynamic. There is an API that can be scraped but at the moment the data within it is not static
  - Make screenshots dynamic. There is an API that presents screenshots whenever a member is tagged as speaking. At the minute you can't search by member so we'll have to be a little bit clever. 
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen.)
@@ -100,4 +103,4 @@ A php file that declares an array of colors for each party. The colors defined b
    [DPP]: <http://www.data.parliament.uk/>
    [Chosen]: <https://harvesthq.github.io/chosen/>
    [jQuery]: <http://jquery.com>
-   [XAMPP]: <https://www.apachefriends.org/index.html>  
+[XAMPP]: <https://www.apachefriends.org/index.html>      

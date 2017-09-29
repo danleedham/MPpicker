@@ -276,7 +276,7 @@ $xmlDoc=new DOMDocument();
 			if ($qarray[$i]["dept"] == $qdept) {		
 				$iswithdrawn = '';
 				$ingroup = '';
-				if(isset($withdrawnquestions) && in_array($qarray[$i]["qref"],$withdrawnquestions)){
+				if(isset($withdrawnquestions) && in_array($qarray[$i]["typeletter"].$qarray[$i]["qref"],$withdrawnquestions)){
 					$iswithdrawn = ' withdrawn';
 				}
 				// If there are groups then...

@@ -22,15 +22,15 @@
 				  <div class="panel-body">
 					<div class="row">
 					  <div class="col-xs-6 col-sm-4">
-						<a class="bootcards-summary-item" href="stacker.php">
+						<a class="bootcards-summary-item" href="search.php">
 						  <img src="favicons/android-chrome-192x192.png" height="64" width="64">
-						  <h4>Stacker <span class="label label-info">650</span></h4>
+						  <h4>Member Search <span class="label label-info">650</span></h4>
 						</a>
 					  </div>
 					  <div class="col-xs-6 col-sm-4">
 						<a class="bootcards-summary-item" href="qs.php">
 						  <img src="favicons/android-chrome-192x192.png" height="64" width="64">
-						  <h4>Questions <span class="label label-danger"><?php echo date("Y-m-d");?></span></h4>
+						  <h4>Question Stacker <span class="label label-danger"><?php echo date("Y-m-d");?></span></h4>
 						</a>
 					  </div>
 					  <div class="col-xs-6 col-sm-4">

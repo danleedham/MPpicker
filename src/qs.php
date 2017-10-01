@@ -110,7 +110,7 @@
 	}
 	function togglemobilelist(){
 		var list = document.getElementById("list");
-		list.style.display = list.style.display === 'block' ? '' : 'block';
+		list.style.display = list.style.display === 'none' ? 'block' : 'none';
 	}
 	
 	document.onkeydown = checkKey;
@@ -163,14 +163,10 @@
 	<div class="container-fluid bootcards-container push-right">
 		<div class="row">
 			<!-- Mobile Menu -->	
-				<div class="col-sm-4 bootcards-list" id="mobilemenu" data-title="Mobile Menu">
-					<div class="panel panel-default">
-						<div class="panel-body">
-							<a href="#" onclick="togglemobilelist();return false;" class="btn btn-warning" role="button">
-							Toggle List</a>
-						</div><!--panel body-->
-					</div><!--panel-->
-				</div><!--list-->
+				<div class="panel-body" id="mobilemenu">
+					<a href="#" onclick="togglemobilelist();return false;" class="btn btn-warning" role="button">
+					Toggle List</a>
+				</div><!--panel body-->
 			<!-- left list column -->
 				<div class="col-sm-4 bootcards-list" id="list" data-title="Contacts">
 					<div class="panel panel-default">
@@ -178,7 +174,9 @@
 							<div class="search-form" id="menu">
 								<div class="form-inline">
 									<input id="date-input" type="date" class="input-sm form-control" onchange="loaddepts(this.value)" value="<?php echo $date ?>" name="date" >
-									<input id="photos-input" style="float:right !important;" type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-off="Stock">
+									<div class="questions-options"">	
+										<input id="photos-input" style="float:right !important;" type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-off="Stock">
+									</div>
 								</div>
 								<div class="form-inline" style="padding-top:6px !important;">
 									<label for="dept-input">Department:</label><br />

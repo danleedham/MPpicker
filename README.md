@@ -77,7 +77,7 @@ The images come in three types:
 - A thumbnail 240x240 version in the /images/stock/thumbs/ directory at 60% quality
 
 ### Static Data Files
-__/betaimages.xml__
+__/template/betaimages.xml__
 An XML file that has elements defining each Member's Beta imageid is stored with the application. It is XML so that once a full public dataset of the ImageID values is released the transition in code will be minimal. Each member with a new image has an element: 
 ```xml
   <member>

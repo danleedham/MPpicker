@@ -11,7 +11,7 @@
   <?php include 'template/headinc.php';
   	
 		$xml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id=8/FullBiog");
-		$feed = file_get_contents("betaimages.xml");
+		$feed = file_get_contents("template/betaimages.xml");
 		$betaimages = simplexml_load_string($feed);
 	    $imagescount =  count($betaimages);
 ?>

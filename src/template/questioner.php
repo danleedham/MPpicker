@@ -35,7 +35,7 @@ $xmlMembers=new DOMDocument();
 	$questionscount = $xQuestions->length;
 	
 	//Load xml with codes for new Parliament Beta images
-	$feed = file_get_contents("../betaimages.xml");
+	$feed = file_get_contents("betaimages.xml");
 	$betaimages = simplexml_load_string($feed) or die("Can't load Beta Images");
 	$imagescount =  count($betaimages);
 	// Arry with party ID and party colors

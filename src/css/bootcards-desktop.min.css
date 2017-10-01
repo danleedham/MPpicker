@@ -561,15 +561,33 @@ a.list-group-item.bootcards-list-subheading.collapsed:before {
     .modal-dialog.modal-sm {
         margin: 15px
     }
-    #list {
-    	display: none;
-    }
     .hidemobile {
     	display: none;
     }
     #navbar {
     	display: none;
-    }	
+    }
+    .membersearch-options {
+    	padding-bottom: 6px !important;
+    }
+    
+    .questions-options {
+    	padding-top: 6px !important;
+    }
+    
+    body {
+    	padding-top: 4px !important;
+    	margin-top: 0px !important;
+    	margin-left: 0px !important;
+    	margin-right: 0px !important;
+    	margin-bottom: 0px !important;
+    }
+    
+    .panel-body {
+    	padding-top: 2px !important;
+		padding-bottom: 2px !important;
+    }
+    	
 }
 @media (min-width: 768px) {
     .modal-dialog.modal-sm {

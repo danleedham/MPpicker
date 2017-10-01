@@ -78,19 +78,19 @@ function loadresults(){
 function hidejobs(){
 	elements = document.getElementsByClassName("joblist");
     for (var i = 0; i < elements.length; i++) {
-        elements[i].style.display = elements[i].style.display == 'block' ? 'none' : 'block';
+        elements[i].style.display = elements[i].style.display == 'none' ? 'block' : 'none';
     }
 }
 function hideconst(){
 	elements = document.getElementsByClassName("constituency");
     for (var i = 0; i < elements.length; i++) {
-        elements[i].style.display = elements[i].style.display == 'block' ? 'none' : 'block';
+        elements[i].style.display = elements[i].style.display == 'none' ? 'block' : 'none';
     }
 }
 function hideparty(){
 	elements = document.getElementsByClassName("party");
     for (var i = 0; i < elements.length; i++) {
-        elements[i].style.display = elements[i].style.display == 'block' ? 'none' : 'block';
+        elements[i].style.display = elements[i].style.display == 'none' ? 'block' : 'none';
     }
 }
 </script>

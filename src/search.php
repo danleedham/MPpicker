@@ -79,6 +79,11 @@
 		$('.active').removeClass('active');
 		$('#m'+id).addClass("active");
 	}
+	
+	function togglemobilelist(){
+		var list = document.getElementById("list");
+		list.style.display = list.style.display === 'none' ? 'block' : 'none';
+	}
 </script>
 						
 </head>
@@ -88,7 +93,13 @@
    <div class="container-fluid bootcards-container push-right">
 
     <div class="row">
-
+  <!--panel body-->
+	<div id="mobilemenu">
+		<div class="panel-body">
+			<a href="#" onclick="togglemobilelist();return false;" class="btn btn-warning" role="button">
+			Toggle Search</a>
+		</div><!--panel body-->
+	</div><!--panel-->
       <!-- left list column -->
       <div class="col-sm-4 bootcards-list" id="list" data-title="Contacts">
         <div class="panel panel-default">       
@@ -100,7 +111,7 @@
 					</div>
 					
 				</div>
-				<div class="col-sm-3" style="padding-left: 2px !important; padding-right: 2px !important;">
+				<div class="col-sm-3 membersearch-options" style="padding-left: 2px !important; padding-right: 2px !important;">
 					<span id="loader" style="display:none;">
 						<i class="fa fa-refresh fa-spin" class="pull-right" style="font-size:20px"></i>
 					</span>
@@ -108,17 +119,17 @@
 						<input id="chooseposition" type="checkbox" value="position" name="house" data-toggle="toggle" data-onstyle="danger" data-offstyle="info" data-on="Position" data-off="Name">
 					</div>
 				</div>
-				<div class="col-sm-4 input-toggle">	
+				<div class="col-sm-4 membersearch-options input-toggle">	
 					<input id="choosehouse" type="checkbox" value="Lords" name="house" data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="Lords" data-off="Commons">
 				</div>
-				<div class="col-sm-4 input-toggle">		
+				<div class="col-sm-4 membersearch-options input-toggle">		
 					<input id="searchby" type="checkbox" value="constituency" name="searchby" data-toggle="toggle" data-onstyle="warning" data-offstyle="primary" data-on="Constit" data-off="Name">
 				</div>
-				<div class="col-sm-4 input-toggle" >		
+				<div class="col-sm-4 membersearch-options input-toggle" >		
 					<input id="photos" type="checkbox" value="screenshot" name="photos" data-toggle="toggle" data-onstyle="warning" data-offstyle="primary" data-on="ScreenShot" data-off="Stock">
 				</div>
-            </div>
-	          </div><!--panel body-->
+			   </div>
+	          </div>
 
           <div class="list-group" id="livesearchmember">
 		

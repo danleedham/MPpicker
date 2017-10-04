@@ -43,7 +43,7 @@ if(isset($deptarray)){
 	}
 }	
 if((isset($deptscount) and $deptscount == 0) or !isset($deptarray)) {
-	echo '<option value="None to display" disabled>None to dispaly</option>';
+	echo '<option value="" disabled>None to dispaly</option>';
 }	
 
 				

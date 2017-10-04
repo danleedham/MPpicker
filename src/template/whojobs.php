@@ -1,4 +1,12 @@
 <?php
+
+/* whojobs.php 
+*  Version 1.0 
+*  04/10/2017 
+*  This file generates the list of currently held jobs in the chosen house.
+*  Output is a list of option HTML tags
+*/
+
 	if(!isset($house) && isset($_GET['house'])){
 		$house = $_GET["house"];
 	}
@@ -8,15 +16,23 @@
 	if(isset($house) && ($house == "Lords")){
 		$house = "Lords";
 	}
+	
+	// Side allows the file to only query 
 	if(!isset($side) && isset($_GET['side'])){
 		$side = $_GET["side"];
+	}
+	if(isset($side) && $side == "government") {
+		$sideURL = "GovernmentPosts";
+	} elseif (isset($side) && $side == "opposition") {
+		$sideURL = "OppositionPosts";
+	} else  {
+		$sideURL = "GovernmentPosts%7COppositionPosts";
 	}
 	if(!isset($side)){
 		$side = "both";
 	}
-	
-	
-	$url='http://data.parliament.uk/membersdataplatform/services/mnis/members/query/House='.$house.'%7CIsEligible=true/GovernmentPosts%7COppositionPosts/';
+		
+	$url='http://data.parliament.uk/membersdataplatform/services/mnis/members/query/House='.$house.'%7CIsEligible=true/'.$sideURL.'/';
 
 	$xmlDoc=new DOMDocument();
 		$xmlDoc->load($url);

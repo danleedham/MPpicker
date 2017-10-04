@@ -1,4 +1,13 @@
 <?php
+
+/* whosex.php 
+*  Version 1.0 
+*  04/10/2017 
+*  This file generates the list for member sexes from each house 
+*  and appends it with the number of members there are of that sex.
+*  Output is a list of option HTML tags
+*/
+
 if(!isset($house) && isset($_GET["house"])){
 	$house = $_GET["house"];
 }

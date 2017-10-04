@@ -1,4 +1,6 @@
-<?php $colors = array (
+<?php 
+	// Party Colors with key Party_ID and value the Hex color of the party
+	$colors = array (
 						"0"	  =>   "#000000", //
 						"3"   =>   "#020202", // Bishops
 						"4"	  =>   "#0087DC", // Conservative

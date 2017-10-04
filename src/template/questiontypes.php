@@ -52,8 +52,4 @@ if (isset($typearray) && count($typearray) !== 0) {
 	   }
 	} 
 }
-
-if(!isset($typearray)) {
-	echo '<option value="" disabled>None to dispaly</option>';
-}
 	?>

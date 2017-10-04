@@ -41,11 +41,6 @@ if(isset($deptarray)){
 	   echo '<option'.$isdept.' value="'. $value["dept"].'">'. $value["dept"].'</option>';
 	   }
 	}
-}	
-if((isset($deptscount) and $deptscount == 0) or !isset($deptarray)) {
-	echo '<option value="" disabled>None to dispaly</option>';
-}	
-
-				
+}					
 ?>
 						

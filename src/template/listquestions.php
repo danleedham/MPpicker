@@ -222,7 +222,7 @@ $xmlDoc=new DOMDocument();
 				// If there are multiple groups, itterate over them		
 				for($j=0; $j < $howmanygroups; $j++) {
 					// If the question is at the beginning of a group, add it and all the rest of the questions from that group to the list
-					if($newqarray[$i]["qref"] == $groupssplit[$j][0]) {
+					if($newqarray[$i]["qref"] == $groupssplit[$j][0] && $newqarray[$i]["type"] !== 'Topical') {
 						foreach ($groupssplit[$j] as $question) { 
 							$SortedArray[] = $newqarray[$question-1];
 						}

@@ -12,10 +12,18 @@ if(!isset($house) && isset($_GET['house'])){
 	$house=$_GET["house"];
 }
 
+if(!isset($imagenumber) && isset($_GET['imagenumber'])){
+	$imagenumber=$_GET["imagenumber"];
+} else {
+	$imagenumber = 0;
+}
+
 if(!isset($count) && isset($_GET['count'])){
 	$count=$_GET["count"];
+} elseif (isset($count)) {
+
 } else {
-	$count = "1";
+	$count = strval($imagenumber+1);
 }
 	
 $xmlDoc=new DOMDocument();
@@ -31,13 +39,21 @@ if ($screenshotcount == 0) {
 	for($i=0; $i<($x->length); $i++) {
 			$thumbnailUrl = $x->item($i)->getAttribute('href');
 			$thumbnailUrl = str_replace("width=480","width=960",$thumbnailUrl);
-			$screenshotarray[] = array('url' => $thumbnailUrl);	
-	}
-	
-	sort($screenshotarray);	
-	foreach ($screenshotarray as $key => $value) {
-		$screenshotoutput[]= ($value["url"]);
-	}
+			$clipid = $x->item($i)->parentNode->getAttribute('href');
+			$clipref = explode("/",$clipid);
+			$clipid = $clipref[4].'-'.$clipref[6];			
+			$screenshotarray[] = array('url' => $thumbnailUrl,
+									   'clipid' => $clipid,
+									   'imagenumber' => $imagenumber);	
+	}	
 }
 
-?> 
+// As the main output just provide an array with the requested image
+$screenshotoutput = $screenshotarray[$imagenumber];
+
+?>
+<div id="data" style="display: none;">
+	<?php 
+		echo $screenshotoutput['url'].','.$screenshotoutput['imagenumber'];
+	?>
+</div>

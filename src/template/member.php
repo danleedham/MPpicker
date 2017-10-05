@@ -43,19 +43,21 @@
 				$imageurl = 'http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$m;
 			}
 
-			} else { 
-				// If the house selected isn't the house of Commons
-				$imageurl = 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg';
-			}
+		} else { 
+			// If the house selected isn't the house of Commons
+			$imageurl = 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg';
+		}
+	} else {
+		// If the user has asked for a screenshot then...
+		require("latestscreenshot.php");
+		if(isset($screenshotoutput)) {
+			$imageurl = $screenshotoutput['url'];
+			$screenshotused = true;
+			echo '<input type="hidden" value="'.$screenshotoutput['clipid'].'">';
 		} else {
-			// If the user has asked for a screenshot then...
-			require("latestscreenshot.php");
-			if(isset($screenshotoutput)) {
-				$imageurl = $screenshotoutput[0];
-			} else {
-				$imageurl = "";
-			}
-		}	
+			$imageurl = "";
+		}
+	}	
 	$PartyID = $xml->Member[0]->Party[0]->attributes()->Id;              	          	     
     	require_once('colors.php');															
 ?>

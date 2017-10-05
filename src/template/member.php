@@ -53,7 +53,8 @@
 		if(isset($screenshotoutput)) {
 			$imageurl = $screenshotoutput['url'];
 			$screenshotused = true;
-			echo '<input type="hidden" value="'.$screenshotoutput['clipid'].'">';
+			echo '<input id="current-photo" type="hidden" value="'.$screenshotoutput['imagenumber'].'">';
+			echo '<input id="m" type="hidden" value="'.$m.'">';
 		} else {
 			$imageurl = "";
 		}
@@ -72,7 +73,7 @@
     </div>
 	<div class="list-group">
 		<div class="list-group-item">					
-			<img src="<?php echo $imageurl; ?>" class="img-rounded pull-right main-member-image"">
+			<img id="questioner-img" src="<?php echo $imageurl; ?>" class="img-rounded pull-right main-member-image"">
 			<label>Name</label>
 			<h4 class="list-group-item-heading"><?php echo $xml->Member[0]->DisplayAs ?></h4>
 			<span stlye="padding-top: 4px !important;"><?php echo $xml->Member[0]->BasicDetails[0]->GivenForename ?> <?php echo $xml->Member[0]->BasicDetails[0]->GivenMiddleNames ?> <?php echo $xml->Member[0]->BasicDetails[0]->GivenSurname ?></span>
@@ -155,6 +156,12 @@
 				// If the member has twitter, offer the button
 				if(isset($twitter)): ?> 
 					<a href="#" onclick="twitter('<?php echo $twitter ?>');return false;" class="btn btn-info" role="button">Toggle Twitter</a> 
+			<?php endif; ?> 
+			
+			<?php 
+				// If screenshots show button to change it
+				if(isset($photos) && $photos == "screenshot" ): ?> 
+					<a href="#" onclick="anotherphoto(document.getElementById('current-photo').value,<?php echo $m ?>);return false;" class="btn btn-info pull-right" role="button">Another Screenshot Plz</a> 
 			<?php endif; ?> 
 		</div>
 		
@@ -287,3 +294,5 @@ function loadextras(){
 	yourUl.style.display = yourUl.style.display === 'none' ? '' : 'none';
 }
 </script>
+
+<script src="/js/functions.js"></script>

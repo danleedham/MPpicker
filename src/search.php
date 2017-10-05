@@ -172,5 +172,6 @@
 	</div>
 	<!--container-->
 	<?php include 'template/footer.php'; ?><?php include 'template/core.php'; ?>
+	
 </body>
 </html>

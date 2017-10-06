@@ -35,7 +35,7 @@ $xmlMembers=new DOMDocument();
 	$questionscount = $xQuestions->length;
 	
 	//Load xml with codes for new Parliament Beta images
-	$feed = file_get_contents("../betaimages.xml");
+	$feed = file_get_contents("betaimages.xml");
 	$betaimages = simplexml_load_string($feed) or die("Can't load Beta Images");
 	$imagescount =  count($betaimages);
 	// Arry with party ID and party colors
@@ -93,7 +93,7 @@ $xmlMembers=new DOMDocument();
 							  'color'=>$color);		
 		}
 	}
-	// print_r($qarray);
+	
 	// Function to sort questions by date
 	function compsortqs( $a, $b ) {
 		return strtotime($b["date"]) - strtotime($a["date"]);
@@ -115,69 +115,89 @@ $xmlMembers=new DOMDocument();
 	}
 	?>
 			
-           <div class="panel panel-default">
-            	<div class="panel-heading clearfix">
-					<h3 class="panel-title pull-left">
-					<?php 
-						if(isset($qarray)) : 
-						echo $xml->Member[0]->DisplayAs ?>
-						<span class="partybox-large" style="background:                  
-						<?php  $PartyID = $xml->Member[0]->Party[0]->attributes()->Id;              	          	     
-							 echo $colors[intval($PartyID)];
-						?>"></span>
-						<?php echo $xml->Member[0]->Party ?> 
-						(<?php echo $xml->Member[0]->MemberFrom ?>)
-						</h3>
-							<input type="hidden" id="currentuin" value="<?php echo $uin; ?>">
-							<input type="hidden" id="currentnext" value="<?php echo $next; ?>">
-							<input type="hidden" id="currentprev" value="<?php echo $prev; ?>">
-					<a class="btn btn-primary pull-right" onclick="load(<?php echo '\''.$next.'\',\''.$date.'\''; ?>);return false;" href="#" data-toggle="modal">
-					  <i class="fa fa-arrow-right"></i>Next
-					</a>
-					 <a class="btn btn-primary pull-right" onclick="load(<?php echo '\''.$prev.'\',\''.$date.'\''; ?>);return false;" data-toggle="modal">
-					  <i class="fa fa-arrow-left"></i>Previous
-					</a>
-					 <a class="btn btn-warning pull-right" style="margin-right: 6px;" onclick="gotopicals()">
-					  <i class="fa fa-refresh"></i>To Topicals
-					</a>
-              	</div>
-              	<div class="list-group">
-					<div class="list-group-item list-group-item-image">
-					<?php 
-						$DodsId=$xml->Member[0]->attributes()->Dods_Id;
-						if ($photos !== "screenshot") {
-							
-							if ($house === "Commons") {
-								for($ii=0; $ii < $imagescount; $ii++) {
-									if (trim($betaimages->member[$ii]->KnownAs) == trim($xml->Member[0]->DisplayAs)){
-										$BetaId = $betaimages->member[$ii]->imageid;
-									}
-								}
-								$imageurl = 'images/stock/'.$BetaId.'.jpeg';
-								if (isset($BetaId) && $BetaId == ""){
-									$imageurl = 'images/screenshot/'.$DodsId.'.jpg';
+	   <div class="panel panel-default">
+			<div class="panel-heading clearfix">
+				<h3 class="panel-title pull-left">
+				<?php 
+					if(isset($qarray)) : 
+					echo $xml->Member[0]->DisplayAs ?>
+					<span class="partybox-large" style="background:                  
+					<?php  $PartyID = $xml->Member[0]->Party[0]->attributes()->Id;              	          	     
+						 echo $colors[intval($PartyID)];
+					?>"></span>
+					<?php echo $xml->Member[0]->Party ?> 
+					(<?php echo $xml->Member[0]->MemberFrom ?>)
+					</h3>
+						<input type="hidden" id="currentuin" value="<?php echo $uin; ?>">
+						<input type="hidden" id="currentnext" value="<?php echo $next; ?>">
+						<input type="hidden" id="currentprev" value="<?php echo $prev; ?>">
+				<a class="btn btn-primary pull-right" onclick="load(<?php echo '\''.$next.'\',\''.$date.'\''; ?>);return false;" href="#" data-toggle="modal">
+				  <i class="fa fa-arrow-right"></i>Next
+				</a>
+				 <a class="btn btn-primary pull-right" onclick="load(<?php echo '\''.$prev.'\',\''.$date.'\''; ?>);return false;" data-toggle="modal">
+				  <i class="fa fa-arrow-left"></i>Previous
+				</a>
+				 <a class="btn btn-warning pull-right" style="margin-right: 6px;" onclick="gotopicals()">
+				  <i class="fa fa-refresh"></i>To Topicals
+				</a>
+			</div>
+			<div class="list-group">
+				<div class="list-group-item list-group-item-image">
+				<?php 
+					$DodsId=$xml->Member[0]->attributes()->Dods_Id;
+					$m=$xml->Member[0]->attributes()->Member_Id;
+					// If the user hasn't explicitly asked for screenshots	
+					if (!isset($photos) or $photos  !== "screenshot") {	
+						if ($house == "Commons") {
+							for($ii=0; $ii < $imagescount; $ii++) {
+								if (trim($betaimages->member[$ii]->KnownAs) == trim($xml->Member[0]->DisplayAs)){
+									$BetaId = $betaimages->member[$ii]->imageid;
 								}
 							}
-							else { 
-								$imageurl = 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg';
+							$imageurl = 'images/stock/'.$BetaId.'.jpeg';
+							// If the member doesn't yet have a nice new photo, use the MNDP image
+							if (isset($BetaId) && $BetaId == ""){
+								$imageurl = 'http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$m;
 							}
+
+						} else { 
+							// If the house selected isn't the house of Commons
+							$imageurl = 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg';
 						}
-						else {
+					} else {
+						// If the user has asked for a screenshot then...
+						$count = "1";
+						require("latestscreenshot.php");
+						if(isset($screenshotoutput)) {
+							$imageurl = $screenshotoutput['url'];
+							$screenshotused = true;
+							echo '<input id="current-photo" type="hidden" value="'.$screenshotoutput['imagenumber'].'">';
+							echo '<input id="m" type="hidden" value="'.$m.'">';
+						} else {
 							$imageurl = 'images/screenshot/'.$DodsId.'.jpg';
-						}											
-					?>
-				
-				<img src="<?php echo $imageurl; ?>" class="main-question-image">
-				</div>	
-                <div class="list-group-item">
-                  <label>Question <?php echo $qarray[0]["type"]; ?> <?php echo $qarray[0]["number"]; ?></label>
-                  <h4 class="list-group-item-heading"><?php echo $qarray[0]["text"]; ?></h4>
-                </div>
+						}
+					}	
+				?>
+				<img id="questioner-img" src="<?php echo $imageurl; ?>" class="main-question-image">
+			</div>
+			<div class="list-group-item">
+			<label>Question <?php echo $qarray[0]["type"]; ?> <?php echo $qarray[0]["number"]; ?></label>
+			<?php if(isset($screenshotused)): ?>
+					 <a href="#" onclick="anotherphoto(document.getElementById('current-photo').value,<?php echo $m ?>);return false;" class="btn btn-info pull-right" role="button">
+									 Get us another photo please</a>
+			<?php endif; ?>
+			
+			  
+			  <h4 class="list-group-item-heading"><?php echo $qarray[0]["text"]; ?></h4>
+			</div>
 
 	<?php 
-		else: 
-		echo 'Please use the search tools </h3> 
-		 </div>';
+		else:  
+	?>
+		<h3> Please use the search tools </h3> 
+		</div>
 			
-		endif; ?>
-
+	<?php 
+		endif;
+	?>
+	<script src="/js/functions.js"></script>

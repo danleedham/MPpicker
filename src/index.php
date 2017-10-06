@@ -43,6 +43,9 @@
 					<div class="row">
 					  <div class="col-xs-12 col-sm-6">
 					<?php 
+					
+					// Do checks to make sure the application can access the various API bits
+						// Can we get data from the membersdataplatform?
 					 	$xmlmember = @simplexml_load_file('http://data.parliament.uk/membersdataplatform/xml/BasicDetails.xml');
 						if (!$xmlmember) {
 							$members = "danger";
@@ -50,7 +53,8 @@
 							$members = "success";
 						}
 					?>
-					 <?php 
+					 <?php
+					 	// Can we get data from the Commons Oral Questions api?
 						$xmloral = @simplexml_load_file('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&AnswerDate=2017-07-12&&_pageSize=1');
 						if (!$xmloral) {
 							$oral = "danger";
@@ -59,7 +63,8 @@
 						}
 					?>
 					 <?php 
-					 	$imageurl = 'https://api20170418155059.azure-api.net/photo/S3bGSTqn.jpeg?crop=CU_1:1&width=186&quality=80';
+					 	// Can we access the new MP images api?
+					 	$imageurl = 'https://api-parliament-uk.azure-api.net/Live/photo/7xQEDGdb.jpeg?crop=CU_5:2&width=732&quality=80';
 						if (@getimagesize($imageurl)){
 							$beta = "success";
 						} else { 

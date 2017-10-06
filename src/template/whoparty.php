@@ -1,4 +1,13 @@
 <?php
+
+/* whoparty.php 
+*  Version 1.0 
+*  04/10/2017 
+*  This file generates the list of current political parties in the chosen house 
+*  Option to show who members there are in each party is dependent on the file query
+*  Output is a list of option HTML tags
+*/
+
 if(!isset($house) && isset($_GET['house'])){
 	$house = $_GET["house"];
 }

@@ -30,21 +30,22 @@
 		} else {
 			var photos = "screenshot";
 		}
-		if (!document.getElementById("removedupes-input").checked){
-			var dupes = 'keep';
-		} else {
-			var dupes = "remove";
-		}
 		console.log('Loading member: '+member);
-		$("#contactCard").load('template/member.php?m='+member+'&photos='+photos+'&keepdupes='+dupes,function() {
+		$("#contactCard").load('template/member.php?m='+member+'&photos='+photos,function() {
 			document.getElementById('loader').style.display = 'none';
 		});
 		$('.active').removeClass('active');
 		$('#m'+num).addClass("active");
 	}
 	function loadmembers(location,section){
+		document.getElementById('loader').style.display = 'inline';
 		console.log('Loading list for program '+location+' and section: '+section);
-		$("#livesearch").load('template/wrap-list.php?&location='+location+'&section='+section,function() {
+		if (!document.getElementById("removedupes-input").checked){
+			var dupes = 'remove';
+		} else {
+			var dupes = 'keep';
+		}
+		$("#livesearch").load('template/wrap-list.php?&location='+location+'&section='+section+'&keepdupes='+dupes,function() {
    		document.getElementById('loader').style.display = 'none';
    		});
 	}

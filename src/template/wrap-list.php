@@ -18,9 +18,7 @@ if(!isset($section) && isset($_GET["section"])){
 // expecting keep or remove
 if(!isset($keepdupes) && isset($_GET["keepdupes"])){
 	$keepdupes=$_GET["keepdupes"];
-} else {
-	$keepdupes = "remove";
-}
+} 
 
 /* Annoyingly the agenda doesn't have the time saved alongside it
 but one of the clips will have the same description
@@ -112,6 +110,24 @@ for($i=0; $i<($x->length); $i++) {
 
 }
 
+
+if(isset($keepdupes) && $keepdupes !== "keep") {
+	// Now rebuild the array and only keep a member if they've not spoken yet...
+	$newwraparray = array();
+	for ($i=0; $i < count($wraparray); $i++) {
+		$alreadyin = false;
+		foreach ($newwraparray as $key => $value) {
+			if(intval($wraparray[$i]['member']) == intval($value['member'])) {
+				$alreadyin = true;
+				break;
+			}
+		}
+		if(!isset($alreadyin) or !$alreadyin == true) {
+			$newwraparray[] = ($wraparray[$i]);
+		}
+	}
+	$wraparray = $newwraparray;
+}
 $hint = "";	
 if(isset($wraparray)){
 	$newlength = count($wraparray);

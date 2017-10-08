@@ -9,7 +9,7 @@ if(!isset($element) && isset($_GET["element"])){
 }
 if (!isset($element)) {
 	
-	echo '<option value="">Please pick a location</option>';
+	echo '<option value="">Please pick a location first</option>';
 		
 } else {
 

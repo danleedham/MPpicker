@@ -9,6 +9,9 @@
 			<a href="qs.php" class="btn btn-default <?php if ($_SERVER['REQUEST_URI'] === "/qs.php") { echo 'active'; } ?>">
 			<i class="fa fa-2x fa-users"></i>Questions
 			</a>
+			<a href="wrapups.php" class="btn btn-default <?php if ($_SERVER['REQUEST_URI'] === "/wrapups.php") { echo 'active'; } ?>">
+			<i class="fa fa-2x fa-list-alt "></i>Wrapups
+			</a>
 			<a href="who.php" class="btn btn-default <?php if ($_SERVER['REQUEST_URI'] === "/who.php") { echo 'active'; } ?> ">
 			<i class="fa fa-2x fa-dashboard"></i>Guess Who!
 			</a>

@@ -5,18 +5,28 @@ $xmlDoc=new DOMDocument();
 if(!isset($house) && isset($_GET["house"])){
 	$house=$_GET["house"];
 }
+// expecting integer
 if(!isset($location) && isset($_GET["location"])){
 	$location=$_GET["location"];
 	$episode="http://data.parliament.uk/resources/".$location;
 }
+// expecting integer
 if(!isset($section) && isset($_GET["section"])){
 	$section=$_GET["section"];
+}
+
+// expecting keep or remove
+if(!isset($keepdupes) && isset($_GET["keepdupes"])){
+	$keepdupes=$_GET["keepdupes"];
+} else {
+	$keepdupes = "remove";
 }
 
 /* Annoyingly the agenda doesn't have the time saved alongside it
 but one of the clips will have the same description
 Get description of chosen section so we can find the clip number of it
 $z is the name of the clip they've chosen */ 
+
 $zmlDocStart = new DOMDocument();
 $zmlDocStart->load('http://lda.data.parliament.uk/resources/'.$location.'/stackvideoitems/'.$section.'.xml?_view=basic&_properties=description');
 $zStart=trim($zmlDocStart->getElementsByTagName('description')->item(0)->textContent);
@@ -29,21 +39,34 @@ $starttime = $cliStartpxml->items->item->startDate;
 
 $sectionEnd = strval(intval($section)+1);
 $zmlDocEnd = new DOMDocument();
-$zmlDocEnd->load('http://lda.data.parliament.uk/resources/'.$location.'/stackvideoitems/'.$sectionEnd.'.xml?_view=basic&_properties=description');
-$zEnd=trim($zmlDocEnd->getElementsByTagName('description')->item(0)->textContent);
-$zurlEnd = urlencode($zEnd);
+$DocEndURL = 'http://lda.data.parliament.uk/resources/'.$location.'/stackvideoitems/'.$sectionEnd.'.xml?_view=basic&_properties=description';
 
-// Go get the clip that matches the question description and episode (location):
-$getEndtimeurl = 'http://lda.data.parliament.uk/tvclips.xml?_view=basic&description='.$zurlEnd.'&episode='.$episode.'&_properties=startDate&_sort=-startDate';
-$clipEndxml = simplexml_load_file($getEndtimeurl);
-$endtime = $clipEndxml->items->item->startDate;
+
+$file_headers = @get_headers($DocEndURL);
+if($file_headers[0] == 'HTTP/1.1 404 Not Found') {
+    $exists = false;
+}
+else {
+    $exists = true;
+}
+if(($exists)){
+	$zmlDocEnd->load($DocEndURL);
+	$zEnd=trim($zmlDocEnd->getElementsByTagName('description')->item(0)->textContent);
+	$zurlEnd = urlencode($zEnd);
+	// Go get the clip that matches the question description and episode (location):
+	$getEndtimeurl = 'http://lda.data.parliament.uk/tvclips.xml?_view=basic&description='.$zurlEnd.'&episode='.$episode.'&_properties=startDate&_sort=-startDate';
+	$clipEndxml = simplexml_load_file($getEndtimeurl);
+	$endtime = $clipEndxml->items->item->startDate;
+} else { 
+	$endtime = "";
+}
 
 $loadclips = 'http://lda.data.parliament.uk/tvclips.xml?_properties=member&_pageSize=500&_view=basic&_view=basic&max-startDate='.$endtime.'&min-startDate='.$starttime.'&episode='.$episode;
 $xmlDoc->load($loadclips);
 $x=$xmlDoc->getElementsByTagName('member');
 
 // Load XML file containing all current MP's data 
-$qxml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/House=Commons%7CIsEligible=true/") or die("Can't load MPs");
+$qxml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/IsEligible=true/") or die("Can't load MPs");
 
 $memberscount =  count($qxml);
 
@@ -88,31 +111,34 @@ for($i=0; $i<($x->length); $i++) {
 				);
 
 }
-$newlength = count($wraparray);
 
 $hint = "";	
-// Generate the list of questions 	
-for($i=0; $i < $newlength; $i++) {
-	for($ii=0; $ii < $imagescount; $ii++) {
-		if (trim($betaimages->member[$ii]->KnownAs) == $wraparray[$i]["DisplayAs"]){				$BetaId = $betaimages->member[$ii]->imageid;
+if(isset($wraparray)){
+	$newlength = count($wraparray);
+	// Generate the list of questions 	
+	for($i=0; $i < $newlength; $i++) {
+		for($ii=0; $ii < $imagescount; $ii++) {
+			if (trim($betaimages->member[$ii]->KnownAs) == $wraparray[$i]["DisplayAs"]){				
+			$BetaId = $betaimages->member[$ii]->imageid;
+			}
 		}
-	}
-	$imageurl = 'images/stock/thumbs/'.$BetaId.'.jpeg';
-	if (isset($BetaId) && $BetaId == ""){
-		$imageurl = 'http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$wraparray[$i]["MemberId"];
-	}
+		if (!isset($BetaId) or $BetaId == ""){
+			$imageurl = 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$wraparray[$i]["DodsId"].'.jpg.jpg';
+		} else {
+			$imageurl = 'images/stock/thumbs/'.$BetaId.'.jpeg'; 
+		}
 	
-	$hint=$hint .'<a class="list-group-item onclick="load('.$wraparray[$i]["member"].');return false;"  href="#">
-	   <img src="'.$imageurl.'" class="img-rounded mini-member-image pull-left">
-	   <h4 class="list-group-item-heading"><span class="partybox" style="background:'.$wraparray[$i]["color"].'"></span>'. $wraparray[$i]["DisplayAs"].'</h4>
-	   <p class="list-group-item-text">'.$wraparray[$i]["constituency"].' ('.$wraparray[$i]["party"].')</p></a>';
+		$hint=$hint .'<a id="m'.$wraparray[$i]["MemberId"].'" class="list-group-item" onclick="load('.$wraparray[$i]["MemberId"].') ;return false;"  href="#">
+		   <img src="'.$imageurl.'" class="img-rounded mini-member-image pull-left">
+		   <h4 class="list-group-item-heading"><span class="partybox" style="background:'.$wraparray[$i]["color"].'"></span>'. $wraparray[$i]["DisplayAs"].'</h4>
+		   <p class="list-group-item-text">'.$wraparray[$i]["constituency"].' ('.$wraparray[$i]["party"].')</p></a>';
+	}
 }
-
 // Set output if no questions were found or to the correct values
 if ($hint=="") {
 
   $response='<a class="list-group-item">
-			 <h4 class ="list-group-item-heading">No members for the chosen deets</h4></a>';
+			 <h4 class ="list-group-item-heading">No members logged for the chosen criteria, sorry. </h4></a>';
 } else {
 	// Otherwise respond with the information required 	
     $response=$hint;

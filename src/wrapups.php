@@ -24,16 +24,26 @@
 
 <script>
 	function load(member){
+		document.getElementById('loader').style.display = 'inline';
+		if (!document.getElementById("photos-input").checked){
+			var photos = 'Stock';
+		} else {
+			var photos = "screenshot";
+		}
+		if (!document.getElementById("removedupes-input").checked){
+			var dupes = 'keep';
+		} else {
+			var dupes = "remove";
+		}
 		console.log('Loading member: '+member);
-		$("#contactCard").load('template/member.php?m='+member,function() {
+		$("#contactCard").load('template/member.php?m='+member+'&photos='+photos+'&keepdupes='+dupes,function() {
 			document.getElementById('loader').style.display = 'none';
 		});
 		$('.active').removeClass('active');
-		$('#q'+num).addClass("active");
+		$('#m'+num).addClass("active");
 	}
 	function loadmembers(location,section){
-		document.getElementById('loader').style.display = 'inline';
-		console.log('Loading list for program'+location+' and section: '+section);
+		console.log('Loading list for program '+location+' and section: '+section);
 		$("#livesearch").load('template/wrap-list.php?&location='+location+'&section='+section,function() {
    		document.getElementById('loader').style.display = 'none';
    		});
@@ -124,6 +134,9 @@
 								<div class="form-inline">
 									<input id="date-input" type="date" class="input-sm form-control" onchange="loadlocs(this.value)" value="<?php echo $date ?>" name="date" >	
 									<input id="photos-input" style="float:right !important;" type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-off="Stock">
+								<span id="loader" style="display:none;">
+									<i class="fa fa-refresh fa-spin" class="pull-right" style="font-size:20px"></i>
+								</span>
 								</div>
 								<div class="form-inline" style="padding-top:6px !important;">
 									<label for="loc-input">Location:</label><br />
@@ -141,9 +154,7 @@
 							<div class="form-inline" id="loadbuttons" style="padding-top:6px !important;">
 								<a href="#" onclick="loadmembers(encodeURI(document.getElementById('loc-input').value),encodeURI(document.getElementById('sect-input').value));return false;" class="btn btn-success" role="button">
 								Get wrapups</a>
-								<span id="loader" style="display:none;">
-									<i class="fa fa-refresh fa-spin" class="pull-right" style="font-size:20px"></i>
-								</span>
+								<input id="removedupes-input" style="float:right !important;" type="checkbox" value="keep" name="photos"  data-toggle="toggle" data-onstyle="warning" data-offstyle="success" data-on="Keep Dupes" data-off="Bin Dupes">
 								<a href="#" onclick="togglemenu();return false;" class="btn btn-info hidemobile" style="float:right !important;" role="button">
 								Toggle Search</a>
 							</div>

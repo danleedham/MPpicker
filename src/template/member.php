@@ -30,8 +30,8 @@
 	$DodsId=$xml->Member[0]->attributes()->Dods_Id;
 	
 	// If the user hasn't explicitly asked for screenshots	
-	if (!isset($photos) or $photos  !== "screenshot") {	
-		if ($house == "Commons") {
+	if ($house == "Commons") {
+		if (!isset($photos) or $photos  !== "screenshot") {	
 			for($ii=0; $ii < $imagescount; $ii++) {
 				if (trim($betaimages->member[$ii]->KnownAs) == trim($xml->Member[0]->DisplayAs)){
 					$BetaId = $betaimages->member[$ii]->imageid;
@@ -42,12 +42,9 @@
 			if (isset($BetaId) && $BetaId == ""){
 				$imageurl = 'http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$m;
 			}
-
-		} else { 
-			// If the house selected isn't the house of Commons
-			$imageurl = 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg';
 		}
-	} else {
+	}
+	if(!isset($imageurl)) {
 		// If the user has asked for a screenshot then...
 		require("latestscreenshot.php");
 		if(isset($screenshotoutput)) {
@@ -58,7 +55,7 @@
 		} else {
 			$imageurl = "";
 		}
-	}	
+	}
 	$PartyID = $xml->Member[0]->Party[0]->attributes()->Id;              	          	     
     	require_once('colors.php');															
 ?>

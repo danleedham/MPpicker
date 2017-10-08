@@ -2561,7 +2561,8 @@ select[multiple].input-lg, textarea.input-lg {
 	.form-inline .form-control {
 		display: inline-block;
 		width: auto;
-		vertical-align: middle
+		vertical-align: middle;
+		max-width: 100%;
 	}
 	.form-inline .form-control-static {
 		display: inline-block

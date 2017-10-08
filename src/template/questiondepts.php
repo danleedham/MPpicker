@@ -4,14 +4,14 @@ $xmlDoc=new DOMDocument();
 if(!isset($date) && isset($_GET["date"])){
 	$date = $_GET["date"];
 }
-$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&AnswerDate='.$date.'&_pageSize=500');
+$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=basic&AnswerDate='.$date.'&_pageSize=500&_properties=AnsweringBody');
 $x=$xmlDoc->getElementsByTagName('item');
 $questionscount = $x->length;
 if ($questionscount == 1) {
 } else {	
 	for($i=0; $i<($x->length); $i++) {
-		$QText=$x->item($i)->getElementsByTagName('questionText');
-		if (!isset($QText[0]->textContent) or $QText[0]->textContent =="" ) {
+		$ABody=$x->item($i)->getElementsByTagName('AnsweringBody');
+		if (!isset($ABody[0]->textContent) or $ABody[0]->textContent =="" ) {
 		} else {
 			$Dept=$x->item($i)->getElementsByTagName('AnsweringBody');
 				$Department=trim($Dept->item(0)->textContent);

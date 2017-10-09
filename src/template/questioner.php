@@ -155,16 +155,13 @@ $xmlMembers=new DOMDocument();
 								}
 							}
 							$imageurl = 'images/stock/'.$BetaId.'.jpeg';
-							// If the member doesn't yet have a nice new photo, use the MNDP image
-							if (isset($BetaId) && $BetaId == ""){
-								$imageurl = 'http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$m;
-							}
-
 						} else { 
 							// If the house selected isn't the house of Commons
 							$imageurl = 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg';
 						}
-					} else {
+					}
+					// Fallback on screenshots please
+					if((isset($BetaId) && $BetaId == "") or !isset($imageurl)) {
 						// If the user has asked for a screenshot then...
 						$count = "1";
 						require("latestscreenshot.php");

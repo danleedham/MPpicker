@@ -2,12 +2,12 @@
 	// Party Colors with key Party_ID and value the Hex color of the party
 	$colors = array (
 						"0"	  =>   "#000000", //
-						"3"   =>   "#020202", // Bishops
+						"3"   =>   "#4d4d4d", // Bishops
 						"4"	  =>   "#0087DC", // Conservative
-						"6"   =>   "#020202", // Crossbench
+						"6"   =>   "#4d4d4d", // Crossbench
 						"7"   =>   "#D46A4C", // DUP
 						"8"   =>   "#000000", // Independent
-						"10"  =>   "#020202", // Independent Labour
+						"10"  =>   "#4d4d4d", // Independent Labour
 						"15"  =>   "#DC241f", // Labour
 						"17"  =>   "#FAA61A", // Liberal Democrats
 						"22"  =>   "#008142", // Plaid Cymru 
@@ -16,9 +16,9 @@
 						"35"  =>   "#70147A", // UK Independence Party
 						"38"  =>   "#9999FF", // Ulster Unionist Party
 						"44"  =>   "#6AB023", // Green Party
-						"47"  =>   "#020202", // Speaker
-						"49"  =>   "#020202", // Non-affiliated
-						"52"  =>   "#020202", // Independent Ulster Unionist
-						"53"  =>   "#020202" // Independent Social Democrat
+						"47"  =>   "#4d4d4d", // Speaker
+						"49"  =>   "#4d4d4d", // Non-affiliated
+						"52"  =>   "#4d4d4d", // Independent Ulster Unionist
+						"53"  =>   "#4d4d4d" // Independent Social Democrat
 					);
 ?>

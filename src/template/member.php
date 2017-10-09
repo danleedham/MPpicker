@@ -192,7 +192,10 @@
 				if(isset($xml->Member[0]->BasicDetails[0]->TownOfBirth)){
 					$TownOfBirth = trim($xml->Member[0]->BasicDetails[0]->TownOfBirth);
 				}
-				if(isset($TownOfBirth)): ?>
+				if(isset($xml->Member[0]->BasicDetails[0]->CountryOfBirth)){
+					$CountryOfBirth = trim($xml->Member[0]->BasicDetails[0]->CountryOfBirth);
+				}
+				if(isset($TownOfBirth) && $TownOfBirth !== "" && isset($CountryOfBirth) && $CountryOfBirth !== ""): ?>
 					<h4>Born In</h4>
 					<?php echo trim($xml->Member[0]->BasicDetails[0]->TownOfBirth).', '.trim($xml->Member[0]->BasicDetails[0]->CountryOfBirth);
 				endif;

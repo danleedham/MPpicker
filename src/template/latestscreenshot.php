@@ -27,7 +27,7 @@ if(!isset($count) && isset($_GET['count'])){
 }
 	
 $xmlDoc=new DOMDocument();
-$xmlDoc->load('http://lda.data.parliament.uk/tvclips.xml?_view=basic&member=http://data.parliament.uk/members/'.$m.'&_properties=thumbnailUrl&_sort=-startDate&_pageSize='.$count);
+$xmlDoc->load('http://lda.data.parliament.uk/tvclips.xml?_view=basic&member=http://data.parliament.uk/members/'.$m.'&_properties=thumbnailUrl&_sort=-startDate&exists-thumbnailUrl=true&_pageSize='.$count);
 $x=$xmlDoc->getElementsByTagName('thumbnailUrl');
 
 $screenshotoutput = array();

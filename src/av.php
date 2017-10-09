@@ -44,7 +44,7 @@
 	$dateInLocal = date("Y-m-d H:i:s", $time);
 
 	// Get the list of new member images until their new API is working
-	$feed = file_get_contents("betaimages.xml");
+	$feed = file_get_contents("template/betaimages.xml");
 	$betaimages = simplexml_load_string($feed);
 	$imagescount =  count($betaimages);
 

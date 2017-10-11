@@ -253,7 +253,7 @@
 					<form id="groups">
 						<div class="search-form">
 							<div class="form-group">	
-							<label for="date-input" class="col-2 col-form-label">Enter groups on seperate lines with questions space delimited</label>
+							<label for="date-input" class="col-2 col-form-label">Enter groups on separate lines with questions space delimited</label>
 								<div class="col-10">
 									 <textarea class="form-control" rows="3" id="groups-input" form="groups"></textarea>
 								</div>

@@ -37,7 +37,7 @@
 		$('.active').removeClass('active');
 		$('#m'+num).addClass("active");
 	}
-	function loadmembers(location,section){
+	function loadmembers(eventid,section){
 		document.getElementById('loader').style.display = 'inline';
 		console.log('Loading list for program '+location+' and section: '+section);
 		if (!document.getElementById("removedupes-input").checked){
@@ -45,20 +45,20 @@
 		} else {
 			var dupes = 'keep';
 		}
-		$("#livesearch").load('template/wrap-list.php?&location='+location+'&section='+section+'&keepdupes='+dupes,function() {
+		$("#livesearch").load('template/wind-list.php?&event='+eventid+'&section='+section+'&keepdupes='+dupes,function() {
    		document.getElementById('loader').style.display = 'none';
    		});
 	}
-	function loadlocs(date){
-	   $("#loc-input").load('template/wrap-location.php?date='+date);
-	   $("#sect-input").load('template/wrap-sections.php?date='+date);
-	   console.log('Loading locations for: '+date);
+	function loadevents(date){
+	   $("#event-input").load('template/wind-events.php?date='+date);
+	   $("#sect-input").load('template/wind-chapters.php?date='+date);
+	   console.log('Loading events for: '+date);
 	}
 	function loadsections(){
 	   var date = document.getElementById("date-input").value;
-	   var element = encodeURI(document.getElementById("loc-input").value);
-	   $("#sect-input").load('template/wrap-sections.php?date='+date+'&element='+element);
-	   console.log('Loading locations for: '+date+' to '+element);
+	   var event = encodeURI(document.getElementById("event-input").value);
+	   $("#sect-input").load('template/wind-chapters.php?date='+date+'&event='+event);
+	   console.log('Loading events for: '+date+' to '+event);
 	}
 	function togglemenu(){
 		var menu = document.getElementById("menu");
@@ -133,27 +133,27 @@
 						<div class="panel-body">
 							<div class="search-form" id="menu">
 								<div class="form-inline">
-									<input id="date-input" type="date" class="input-sm form-control" onchange="loadlocs(this.value)" value="<?php echo $date ?>" name="date" >	
+									<input id="date-input" type="date" class="input-sm form-control" onchange="loadevents(this.value)" value="<?php echo $date ?>" name="date" >	
 									<input id="photos-input" style="float:right !important;" type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-off="Stock">
 								<span id="loader" style="display:none;">
 									<i class="fa fa-refresh fa-spin" class="pull-right" style="font-size:20px"></i>
 								</span>
 								</div>
 								<div class="form-inline" style="padding-top:6px !important;">
-									<label for="loc-input">Location:</label><br />
-									<select id="loc-input" onchange="loadsections()" name="type" class="form-control">
-										<?php include 'template/wrap-location.php' ?>
+									<label for="event-input">Event:</label><br />
+									<select id="event-input" onchange="loadsections()" name="type" class="form-control">
+										<?php include 'template/wind-events.php' ?>
 									</select>			
 								</div>
 								<div class="form-inline" style="padding-top:6px !important;">
 									<label for="sect-input">Section:</label><br />
 									<select id="sect-input" name="type" class="form-control">
-										<?php include 'template/wrap-sections.php' ?>
+										<?php include 'template/wind-chapters.php' ?>
 									</select>			
 								</div>
 							</div>
 							<div class="form-inline" id="loadbuttons" style="padding-top:6px !important;">
-								<a href="#" onclick="loadmembers(encodeURI(document.getElementById('loc-input').value),encodeURI(document.getElementById('sect-input').value));return false;" class="btn btn-success" role="button">
+								<a href="#" onclick="loadmembers(encodeURI(document.getElementById('event-input').value),encodeURI(document.getElementById('sect-input').value));return false;" class="btn btn-success" role="button">
 								Get wrapups</a>
 								<input id="removedupes-input" style="float:right !important;" type="checkbox" value="keep" name="photos"  data-toggle="toggle" data-onstyle="warning" data-offstyle="success" data-on="Keep Dupes" data-off="Bin Dupes">
 								<a href="#" onclick="togglemenu();return false;" class="btn btn-info hidemobile" style="float:right !important;" role="button">

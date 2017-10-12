@@ -847,3 +847,7 @@ h3.panel-title.pull-left {
 .chosen-container-single .chosen-search input[type="text"]{
 	color: #444 !important;
 }
+
+.whonamelink {
+	color: #fff !important;
+}

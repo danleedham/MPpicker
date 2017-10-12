@@ -407,7 +407,7 @@ $xmlDoc=new DOMDocument();
 								<div id="contactCard" class="guesswho">
 									<div class="panel panel-default">
 										<div class="panel-heading clearfix">
-											<h3 class="panel-title pull-left">'.$whoarray[$j]["DisplayAs"].'</h3>
+											<a href="search.php?m='.$whoarray[$j]["MemberId"].'" class="whonamelink"><h3 class="panel-title pull-left">'.$whoarray[$j]["DisplayAs"].'</h3></a href>
 										</div>
 										<div class="list-group">
 											<div class="list-group-item list-group-item-image">

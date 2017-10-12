@@ -7,31 +7,37 @@ if(!isset($section) && isset($_GET["section"])){
 	$section = $_GET["section"];
 }
 
-// First get the arrays of clips and events
-include 'wind-getclips.php';
-	
-	
-// Find which section we want to get. Should match 'time' element
-if(isset($section)) {
-	for($i=0; $i<count($Events); $i++) {
-		if($section == $Events[$i]['time']) {
-			$Sectioni= $i;
+// expecting keep or remove
+if(!isset($keepdupes) && isset($_GET["keepdupes"])){
+	$keepdupes=$_GET["keepdupes"];
+} 
+
+if(!isset($Events)) {
+// If we don't know where we're looking from get the arrays of clips and events
+	include 'wind-getclips.php';	
+	// Find which section we want to get. Should match 'time' element
+	if(isset($section)) {
+		for($i=0; $i<count($Events); $i++) {
+			if($section == $Events[$i]['time']) {
+				$Sectioni= $i;
+			}
 		}
 	}
-}
-
-// Remove all clips that aren't after the time set
-$NewClips = array();
+	// Remove all clips that aren't after the time set
+	$NewClips = array();
  
-for ($i=0; $i<count($Clips); $i++) {
-	$EventTime = strtotime($Events[$Sectioni]['time']);
-	$ClipTime = strtotime($Clips[$i]['time']);
-	if($ClipTime >= $EventTime) {
-		$NewClips[] = $Clips[$i];
+	for ($i=0; $i<count($Clips); $i++) {
+		$EventTime = strtotime($Events[$Sectioni]['time']);
+		$ClipTime = strtotime($Clips[$i]['time']);
+		if($ClipTime >= $EventTime) {
+			$NewClips[] = $Clips[$i];
+		}
 	}
+$Clips = $NewClips;
+} else {
+	
 }
 
-$Clips = $NewClips;
 
 // Load XML file containing all current MP's data 
 $qxml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/IsEligible=true/") or die("Can't load members");
@@ -45,6 +51,25 @@ if(!isset($feed)){
 	$feed = file_get_contents("betaimages.xml");
 	$betaimages = simplexml_load_string($feed) or die("Can't load Beta Images");
 	$imagescount = count($betaimages);
+}
+
+// Area to remove duplicates
+if(isset($keepdupes) && $keepdupes !== "keep") {
+	// Now rebuild the array and only keep a member if they've not spoken yet...
+	$NewClipsArray = array();
+	for ($i=0; $i < count($Clips); $i++) {
+		$alreadyin = false;
+		foreach ($NewClipsArray as $key => $value) {
+			if($Clips[$i]['name'] == $value['name']) {
+				$alreadyin = true;
+				break;
+			}
+		}
+		if(!isset($alreadyin) or !$alreadyin == true) {
+			$NewClipsArray[] = ($Clips[$i]);
+		}
+	}
+	$Clips = $NewClipsArray;
 }
 
 // Now let's go through each clip and extract the helpful bits of information

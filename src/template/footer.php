@@ -4,16 +4,16 @@
 		<div class="bootcards-desktop-footer clearfix">
 			<div class="btn-group">
 			<a href="search.php" class="btn btn-default <?php if ($_SERVER['REQUEST_URI'] === "/search.php") { echo 'active'; } ?>">
-			<i class="fa fa-2x fa-font"></i>Member Picker
+			<i class="fa fa-2x fa-vcard-o"></i>Member Picker
 			</a>
 			<a href="qs.php" class="btn btn-default <?php if ($_SERVER['REQUEST_URI'] === "/qs.php") { echo 'active'; } ?>">
 			<i class="fa fa-2x fa-users"></i>Questions
 			</a>
-			<a href="wrapups.php" class="btn btn-default <?php if ($_SERVER['REQUEST_URI'] === "/wrapups.php") { echo 'active'; } ?>">
-			<i class="fa fa-2x fa-list-alt "></i>Wrapups
+			<a href="windups.php" class="btn btn-default <?php if ($_SERVER['REQUEST_URI'] === "/windups.php") { echo 'active'; } ?>">
+			<i class="fa fa-2x fa-list-alt "></i>Windups
 			</a>
 			<a href="who.php" class="btn btn-default <?php if ($_SERVER['REQUEST_URI'] === "/who.php") { echo 'active'; } ?> ">
-			<i class="fa fa-2x fa-dashboard"></i>Guess Who!
+			<i class="fa fa-2x fa-address-book-o"></i>Guess Who!
 			</a>
 			</div>
 		</div>

@@ -40,7 +40,7 @@
 						</a>
 					  </div>
 					   <div class="col-xs-6 col-md-3">
-						<a class="bootcards-summary-item" href="wrapups.php">
+						<a class="bootcards-summary-item" href="windups.php">
 						  <img src="favicons/android-chrome-192x192.png" height="64" width="64">
 						  <h4>Wind ups <span class="label label-success">650</span></h4>
 						</a>

@@ -21,7 +21,7 @@
 	}
 ?>
 <!-- Font Awesome, the iconic font and CSS framework. --> 
-<link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
 
 <!-- Bootstrap Toggle includes -->
 <link href="css/bootstrap-toggle.min.css" rel="stylesheet">

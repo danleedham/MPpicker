@@ -62,11 +62,12 @@
 		}
 		var groups = document.getElementById("groups-input").value;
 		var withdrawn = document.getElementById("withdrawn-input").value;
-		console.log('Loading '+type+' questions to '+dept+' on '+date+' using groups: '+groups+' and withdrawing: '+withdrawn+' grouped: '+together);
+		var withoutnotice = document.getElementById("withoutnotice-input").value;
+		console.log('Loading '+type+' questions to '+dept+' on '+date+' using groups: '+groups+' and withdrawing (day): '+withdrawn+' withdrawing (before): '+withoutnotice+' grouped: '+together);
 		groups = groups.replace(/[\r\n]+/g,",");
 		groups = encodeURI(groups);
 		withdrawn = encodeURI(withdrawn);
-		$("#livesearch").load('template/listquestions.php?date='+date+'&type='+type+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&together='+together,function() {
+		$("#livesearch").load('template/listquestions.php?date='+date+'&type='+type+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice+'&together='+together,function() {
    		document.getElementById('loader').style.display = 'none';
    		});
 	}
@@ -257,9 +258,12 @@
 								</div>
 							</div>
 							<div class="form-group">	
-							<label for="date-input" class="col-2 col-form-label">Withdrawn on the day (s1 t1) seperated by spaces</label>
 								<div class="col-10">
+									<label for="withdrawn-input" class="col-2 col-form-label">Withdrawn <strong>on the day</strong> (s1 t1) seperated by spaces</label>
 									 <input type="text" class="form-control" id="withdrawn-input" form="withdrawn"></input>
+									 <br />
+									 <label for="withoutnotice-input" class="col-2 col-form-label">Withdrawn <strong>Before Order Paper Printed</strong> (s1 t1) seperated by spaces</label>
+									 <input type="text" class="form-control" id="withoutnotice-input" form="withoutnotice"></input>
 									 <br />
 									 <a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-info" role="button">
 									 Set Groups & Withdrawn</a>

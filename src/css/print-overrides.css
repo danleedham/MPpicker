@@ -38,7 +38,7 @@ a.list-group-item:before {
 }
 
 @media print {
-    list-group-item {
+    .list-group-item {
         page-break-inside: avoid;
     }
 }

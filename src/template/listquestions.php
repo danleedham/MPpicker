@@ -61,6 +61,17 @@ $xmlDoc=new DOMDocument();
 		$howmanywithdrawn = count($withdrawnquestions); 
 	}	
 	
+	// If without notice questions aren't set above and they're passed in the URL, get them
+	if(!isset($withoutnotice) && isset($_GET["withoutnotice"])){
+		$withoutnotice=strtolower($_GET["withoutnotice"]);
+	}		
+		
+	// Make the input withdrawn questions an array. Nicer for looping
+	if(strlen($withoutnotice)>=1){
+		$withoutnoticequestions = explode(' ', $withoutnotice);
+		$howmanywithoutnotice = count($withoutnoticequestions); 
+	}	
+	
 	// For now questions are only searchable for the Commons. In future we'll extend this to the Lords too
 	if(!isset($house)){
 		$house = "Commons";
@@ -185,7 +196,6 @@ $xmlDoc=new DOMDocument();
 				}
 				return strcmp($a['type'], $b['type']);
 		}
-	
 	if(isset($groupsplit)) { print_r($groupssplit); }
 	// If there are questions, sort the questions & generate the list
 	if ($length !== 0) {
@@ -197,8 +207,12 @@ $xmlDoc=new DOMDocument();
 		for($i=0; $i < $length; $i++) {
 			if ($qarray[$i]['QuestionStatus'] == "Withdrawn Without Notice"){	
 			} else {
-				// If the question status isn't withdrawn without notice add it to the list
-				$newqarray[] = $qarray[$i];
+				if(isset($withoutnoticequestions) && in_array($qarray[$i]["qref"],$withoutnoticequestions)){
+					// Remove the question
+				} else {
+					// If the question status isn't withdrawn without notice add it to the list
+					$newqarray[] = $qarray[$i];
+				}
 			}				
 		}
 		

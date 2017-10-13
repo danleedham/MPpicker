@@ -703,6 +703,15 @@ a.list-group-item.active:before {
     position: relative;
     margin-right: 0px !important;
 }
+
+.main-member-screenshot {
+	height: 60% !important;
+    width: 60% !important;
+    z-index: 3;
+    position: relative;
+    margin-right: 0px !important;
+}
+
 .main-question-image {
     height: 100% !important;
     width: 100% !important;

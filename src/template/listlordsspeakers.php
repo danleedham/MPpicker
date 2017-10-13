@@ -4,23 +4,15 @@
 	} else {
 		$date = date('Y-m-d');
 	}
+	
+	if(isset($_GET["chosenBusiness"])){
+		$chosenBusiness = $_GET["chosenBusiness"];
+	}
 
-
-	// Load URL and pull the divs "questionpanel"
 	//$LordsUrl = "http://www.lordswhips.org.uk/todays-lists/";
 	// Development URL:
 	$LordsUrl = "http://leedhammedia.com/todays-lists/";
 	$content = file_get_contents($LordsUrl);
-	
-	// Get the 
-	// The list of speakers starts with the list
-	$SplitOutBusiness = explode( '<p><em>Main Business</em></p>', $content );
-	// Remove the waffle at the beginning of the page
-	$SplitOutBusiness = array_slice($SplitOutBusiness,1);
-	$MainBusiness = explode('</p>',$SplitOutBusiness[0]);
-	$MainBusiness = trim(html_entity_decode(str_replace('<p style="margin-left:36.0pt">',"",$MainBusiness[0])));
-	
-	print_r($MainBusiness);
 	
 	// The list of speakers starts with the list
 	$SplitOutSpeakers = explode( '<em>Speakers</em>:' , $content );
@@ -29,35 +21,50 @@
 	// Remove the waffle at the end of the page
 	$KeepGoodStuff = explode('<em>Notes:</em>',$SplitOutSpeakers[count($SplitOutSpeakers)-1]);
 	$SplitOutSpeakers[count($SplitOutSpeakers)-1] = $KeepGoodStuff[0];
-
 	
+	$NewSpeakers = array();
 	// For each set of speakers clean up
 	for($i=0; $i<count($SplitOutSpeakers); $i++) {
 		$SplitOutSpeakers[$i] = str_replace("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;","",$SplitOutSpeakers[$i]);
 		$SplitOutSpeakers[$i] = str_replace("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;","",$SplitOutSpeakers[$i]);
-		$SplitOutSpeakers[$i] = str_replace('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',"",$SplitOutSpeakers[$i]);		
-		$SplitOutSpeakers[$i] = str_replace(' style="margin-left:70.9pt">',">",$SplitOutSpeakers[$i]);
-		$SplitOutSpeakers[$i] = str_replace(' style="margin-left:36.0pt">',">",$SplitOutSpeakers[$i]);
+		$SplitOutSpeakers[$i] = str_replace('&nbsp;&nbsp;',"",$SplitOutSpeakers[$i]);		
+		$SplitOutSpeakers[$i] = str_replace('style="margin-left:70.9pt">',">",$SplitOutSpeakers[$i]);
+		$SplitOutSpeakers[$i] = str_replace('<p style="margin-left:70.9pt;">','',$SplitOutSpeakers[$i]);
+		$SplitOutSpeakers[$i] = str_replace('style="margin-left:36.0pt">',">",$SplitOutSpeakers[$i]);
 		$SplitOutSpeakers[$i] = str_replace('<p>&nbsp;</p>',"",$SplitOutSpeakers[$i]);
-	}
-	//print_r($SplitOutSpeakers);
-
-	for($i=0; $i<count($SplitOutQuestions); $i++) {
-		$SplitOutQuestions[$i] = str_replace("<br />","<p>",$SplitOutQuestions[$i]);	
-		$SplitOutQuestions[$i] = str_replace("</style>","<p>",$SplitOutQuestions[$i]);
-		$SplitOutQuestions[$i] = explode("<p>",$SplitOutQuestions[$i]);
-			for($j=0; $j<count($SplitOutQuestions[$i]); $j++){
-				$SplitOutQuestions[$i][$j] = explode(" to ask ", $SplitOutQuestions[$i][$j]);
-				$SplitOutQuestions[$i][$j] = trim(array_shift($SplitOutQuestions[$i][$j]));
+		$SplitOutSpeakers[$i] = str_replace('<em>(Maiden speech)</em>','',$SplitOutSpeakers[$i]);
+		$SplitOutSpeakers[$i] = preg_replace('/[0-9]+/', '', $SplitOutSpeakers[$i]);
+		$SplitOutSpeakers[$i] = str_replace('L ','L&nbsp;',$SplitOutSpeakers[$i]);
+		$SplitOutSpeakers[$i] = str_replace('&nbsp;','. ',$SplitOutSpeakers[$i]);
+		$SplitOutSpeakers[$i] = explode('</p>',$SplitOutSpeakers[$i]);
+		for ($j=0; $j<count($SplitOutSpeakers[$i]); $j++) {
+			$SplitOutSpeakers[$i][$j] = str_replace('<p>','',$SplitOutSpeakers[$i][$j]);
+			$SplitOutSpeakers[$i][$j] = str_replace("\n",'', $SplitOutSpeakers[$i][$j]);
+			$SplitOutSpeakers[$i][$j] = explode('. ',$SplitOutSpeakers[$i][$j]);
+			if(count($SplitOutSpeakers[$i][$j]) < 2 ) { 
+			} else {
+				$SplitOutSpeakers[$i][$j] = trim($SplitOutSpeakers[$i][$j][1]).', '.trim($SplitOutSpeakers[$i][$j][0]).'.';
+			}	
+			if(!is_array($SplitOutSpeakers[$i][$j])) {
+				if(!strpos($SplitOutSpeakers[$i][$j],'<em>')) {
+					$NewSpeakers[$i][$j] = $SplitOutSpeakers[$i][$j];
+				}
 			}
-	$SplitOutQuestions[$i] = array_filter($SplitOutQuestions[$i]);
+		}
 	}
 	
-	for($i=0; $i<count($SplitOutSpeakers); $i++) {
-		$LordsQuestions[$i] = array("lord" => trim($SplitOutSpeakers[$i])
-									);
+	print_r($NewSpeakers);
+	// Reindex 
+	for($i=0; $i<count($NewSpeakers); $i++) {
+		$NewSpeakers[$i] = array_values($NewSpeakers[$i]);
+	}			
+		
+	$LordsQuestions = $NewSpeakers;	
+	
+	if(!isset($chosenBusiness)){
+		$chosenBusiness = 0;
 	}
-
+	
 	// Load XML file containing all current Lords's data 
 	$qxml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/House=Lords%7CIsEligible=true/") or die("Can't load Peers");
 	
@@ -66,30 +73,29 @@
 	
 	// Array with party ID and party color
 	require_once('colors.php');	
-
-		for($i=0; $i<count($LordsQuestions[$chosendate]['questions']); $i++) {
-			$CurrentQuestioner = trim($LordsQuestions[$chosendate]['questions'][$i]);	
-			// Let's now check each Lord to find which Lord asked the question 
-			for ($y=0; $y < $memberscount; $y++){
-				$CurrentLord = trim($qxml->Member[$y]->DisplayAs);
-				if($CurrentQuestioner == $CurrentLord) { 
-					$DodsId=$qxml->Member[$y]->attributes()->Dods_Id;
-					$MemberId=$qxml->Member[$y]->attributes()->Member_Id;
-					$DisplayAs=$qxml->Member[$y]->DisplayAs;
-					$party=$qxml->Member[$y]->Party;
-					$PartyID =$qxml->Member[$y]->Party[0]->attributes()->Id;              	          	          	     
-					$color = $colors[intval($PartyID)];
-				
-				   // Now build an array with all the information we want	
-				   $qarray[] = array( 'DisplayAs'=>$DisplayAs,
-									  'DodsId'=>$DodsId,
-									  'MemberId'=>intval($MemberId),
-									  'party'=>$party,
-									  'color'=>$color
-									);
-				}	
+	
+	for($i=0; $i<count($LordsQuestions[$chosenBusiness]); $i++) {
+		$CurrentSpeaker = trim($LordsQuestions[$chosenBusiness][$i]);
+		// Let's now check each Lord to find which Lord asked the question 
+		for ($y=0; $y < $memberscount; $y++){
+			$CurrentLord = trim($qxml->Member[$y]->ListAs);
+			if($CurrentSpeaker == $CurrentLord) { 
+				$DodsId=$qxml->Member[$y]->attributes()->Dods_Id;
+				$MemberId=$qxml->Member[$y]->attributes()->Member_Id;
+				$DisplayAs=$qxml->Member[$y]->DisplayAs;
+				$party=$qxml->Member[$y]->Party;
+				$PartyID =$qxml->Member[$y]->Party[0]->attributes()->Id;              	          	          	     
+				$color = $colors[intval($PartyID)];
+			
+			   // Now build an array with all the information we want	
+			   $qarray[] = array( 'DisplayAs'=>$DisplayAs,
+								  'DodsId'=>$DodsId,
+								  'MemberId'=>intval($MemberId),
+								  'party'=>$party,
+								  'color'=>$color
+								);
 			}	
-					
+		}	
 		$hint = "";	
 	
 		// Generate the list of questions 	
@@ -99,9 +105,7 @@
 			   <img src="'.$imageurl.'" class="img-rounded mini-member-image pull-left">
 			   <h4 class="list-group-item-heading"><span class="partybox" style="background:'.$qarray[$i]["color"].'"></span>'.$qarray[$i]["DisplayAs"].'</h4>
 			   <p class="list-group-item-text">'.$qarray[$i]["party"].'</p></a>';
-		}
-	
-		echo $hint;
+		}		
 	}
-	
+	echo $hint;
 ?>

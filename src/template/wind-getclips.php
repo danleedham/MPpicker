@@ -9,11 +9,12 @@
 	if(!isset($event) && isset($_GET["event"])){
 		$event = $_GET["event"];
 	}
+	
+	
 	// Only go searching if we've been set an event, otherwise it's a fools errand. 
 	if(isset($event)) {
 		$logsURL = 'http://parliamentlive.tv/Event/Logs/'.$event;
 		$content = file_get_contents($logsURL);
-	
 
 		$SplitOutClips = explode( '<header class="stack-item">', $content );
 		$SplitOutClips = array_slice($SplitOutClips,1);	

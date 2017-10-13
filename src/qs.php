@@ -170,7 +170,7 @@
 			<!-- left list column -->
 				<div class="col-sm-4 bootcards-list" id="list" data-title="Contacts">
 					<div class="panel panel-default">
-						<div class="panel-body">
+						<div class="panel-body" id="list-inputs">
 							<div class="search-form" id="menu">
 								<div class="form-inline">
 									<input id="date-input" type="date" class="input-sm form-control" onchange="loaddepts(this.value)" value="<?php echo $date ?>" name="date" >	
@@ -206,7 +206,7 @@
 						
 						</div><!--list-group-->
 
-						<div class="panel-footer">
+						<div class="panel-footer" id="list-footer">
 							<small class="pull-left">This section auto-populates by magic (and php).</small>
 							<a class="btn btn-link btn-xs pull-right" href="http://data.parliament.uk/membersdataplatform/">Live Data</a>
 						</div>
@@ -215,7 +215,7 @@
 				</div><!--list-->
 
 			<!--list details column-->
-			<div class="col-sm-8 bootcards-cards">
+			<div class="col-sm-8 bootcards-cards" id="bootcards-cards">
 
           <!--contact details -->
           <div id="contactCard">
@@ -230,15 +230,13 @@
 							<div class="col-12">
 								<p>Use the search tools on the left and MP details will appear here. </p>
 								<p><a href="https://www.parliament.uk/documents/commons-table-office/Oral-questions-rota.pdf">Click here to view the Oral Questions Rota (external).</a href></p>
+								<a href="#" onclick="printQuestions();return false;" class="btn btn-danger" role="button">Print Questions as listed</a>
 							</div>
 						</div>
 					</div>
                 </div>
               </div>
-		 	  <div class="panel-footer">
-                  <small>Data from UK Parliament - <a href="http://data.parliament.uk/membersdataplatform/">Members' Names Data Platform</a></small>
-                </div>
-              </div>
+           </div>
 		</div>
 	
           <!-- Group details -->
@@ -259,7 +257,7 @@
 								</div>
 							</div>
 							<div class="form-group">	
-							<label for="date-input" class="col-2 col-form-label">Enter withdrawn questions (s1 t1) seperated by spaces</label>
+							<label for="date-input" class="col-2 col-form-label">Withdrawn on the day (s1 t1) seperated by spaces</label>
 								<div class="col-10">
 									 <input type="text" class="form-control" id="withdrawn-input" form="withdrawn"></input>
 									 <br />

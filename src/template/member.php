@@ -69,8 +69,9 @@
     	</h3>
     </div>
 	<div class="list-group">
-		<div class="list-group-item">					
-			<img id="questioner-img" src="<?php echo $imageurl; ?>" class="img-rounded pull-right main-member-image"">
+		<div class="list-group-item">	
+		<img id="questioner-img" src="<?php echo $imageurl; ?>" class="img-rounded pull-right <?php if($screenshotused == true) { echo 'main-member-screenshot';} else { echo 'main-member-image' ;} ?>"">
+						
 			<label>Name</label>
 			<h4 class="list-group-item-heading"><?php echo $xml->Member[0]->DisplayAs ?></h4>
 			<span stlye="padding-top: 4px !important;"><?php echo $xml->Member[0]->BasicDetails[0]->GivenForename ?> <?php echo $xml->Member[0]->BasicDetails[0]->GivenMiddleNames ?> <?php echo $xml->Member[0]->BasicDetails[0]->GivenSurname ?></span>

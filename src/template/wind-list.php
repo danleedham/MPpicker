@@ -27,17 +27,18 @@ if(!isset($Events)) {
 	$NewClips = array();
  
 	for ($i=0; $i<count($Clips); $i++) {
-		$EventTime = strtotime($Events[$Sectioni]['time']);
+		if(!isset($section)) {
+			$EventTime = strtotime($Events[$Sectioni]['time']);
+		} else {
+			$EventTime = strtotime($section);
+		}
 		$ClipTime = strtotime($Clips[$i]['time']);
 		if($ClipTime >= $EventTime) {
 			$NewClips[] = $Clips[$i];
 		}
 	}
 $Clips = $NewClips;
-} else {
-	
 }
-
 
 // Load XML file containing all current MP's data 
 $qxml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/IsEligible=true/") or die("Can't load members");
@@ -105,23 +106,7 @@ for($i=0; $i<(count($Clips)); $i++) {
 
 }
 
-	if(isset($keepdupes) && $keepdupes !== "keep") {
-	// Now rebuild the array and only keep a member if they've not spoken yet...
-	$newwraparray = array();
-	for ($i=0; $i < count($wraparray); $i++) {
-		$alreadyin = false;
-		foreach ($newwraparray as $key => $value) {
-			if(intval($wraparray[$i]['member']) == intval($value['member'])) {
-				$alreadyin = true;
-				break;
-			}
-		}
-		if(!isset($alreadyin) or !$alreadyin == true) {
-			$newwraparray[] = ($wraparray[$i]);
-		}
-	}
-	$wraparray = $newwraparray;
-}
+
 $hint = "";	
 if(isset($wraparray)){
 	$newlength = count($wraparray);

@@ -36,3 +36,9 @@ a.list-group-item:before {
 .group-text-details {
 	padding-top: 15px;
 }
+
+@media print {
+    list-group-item {
+        page-break-inside: avoid;
+    }
+}

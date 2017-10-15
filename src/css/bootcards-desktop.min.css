@@ -868,4 +868,10 @@ select#dept-input.form-control, select#type-input.form-control {
 input#date-input.input-sm.form-control {
 	width: 100% !important;
 }
+div#date-div.col-sm-6 {
+	padding-right: 15px !important;
+}
 
+div#search-toggle-div.col-sm-4 {
+	padding-right: 0px !important;
+}

@@ -67,12 +67,13 @@
 	require_once('colors.php');	
 	
 	// Find which question array is the current date
-	for($i=0; $i<count($LordsQuestions); $i++) {
-		if($date == $LordsQuestions[$i]['date']){
-			$chosendate = $i;
+	if(isset($LordsQuestions)) {
+		for($i=0; $i<count($LordsQuestions); $i++) {
+			if($date == $LordsQuestions[$i]['date']){
+				$chosendate = $i;
+			}
 		}
 	}
-	
 	if(!isset($chosendate)){
 		echo '<a class="list-group-item">
 			 <h4 class ="list-group-item-heading">No Lords questions on '.$date.'</h4></a>';

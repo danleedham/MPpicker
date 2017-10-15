@@ -24,6 +24,7 @@
 
 <script>
 	function load(num,date){
+		document.getElementById('togglemenu').style.display = 'none';
 		document.getElementById('loader').style.display = 'inline';
 		if (!document.getElementById("photos-input").checked){
 			var photos = 'Stock';
@@ -35,11 +36,13 @@
 		console.log('Loading question: '+num+' next: '+next+' prev: '+prev);
 		$("#contactCard").load('template/questioner.php?uin='+num+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
 			document.getElementById('loader').style.display = 'none';
+			document.getElementById('togglemenu').style.display = 'inline';
 		});
 		$('.active').removeClass('active');
 		$('#q'+num).addClass("active");
 	}
 	function loadlords(id){
+		document.getElementById('togglemenu').style.display = 'none';
 		document.getElementById('loader').style.display = 'inline';
 		if (!document.getElementById("photos-input").checked){
 			var photos = 'Stock';
@@ -49,11 +52,13 @@
 		console.log('Loading Lords Member: '+id);
 		$("#contactCard").load('template/member.php?m='+id,function() {
 			document.getElementById('loader').style.display = 'none';
+			document.getElementById('togglemenu').style.display = 'inline';
 		});
 		$('.active').removeClass('active');
 		$('#q'+id).addClass("active");
 	}
 	function loadquestions(date,dept,type){
+		document.getElementById('togglemenu').style.display = 'none';
 		document.getElementById('loader').style.display = 'inline';
 		if (!document.getElementById("together-input").checked){
 			var together = "together";
@@ -68,12 +73,18 @@
 		groups = encodeURI(groups);
 		withdrawn = encodeURI(withdrawn);
 		$("#livesearch").load('template/listquestions.php?date='+date+'&type='+type+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice+'&together='+together,function() {
-   		document.getElementById('loader').style.display = 'none';
+			document.getElementById('loader').style.display = 'none';
+			document.getElementById('togglemenu').style.display = 'inline';
    		});
 	}
 	function loadlordsquestions(date){
+		document.getElementById('togglemenu').style.display = 'none';
+		document.getElementById('loader').style.display = 'inline';
 		$("#livesearch").load('template/listlordsquestions.php?date='+date,function() {
+			document.getElementById('loader').style.display = 'none';
+			document.getElementById('togglemenu').style.display = 'inline';
 		});
+		
 	}
 	function loaddepts(date){
 	   $("#dept-input").load('template/questiondepts.php?date='+date);
@@ -194,16 +205,22 @@
 								</select>
 								</div>
 							</div>
-							<div class="form-inline" id="loadbuttons" style="padding-top:6px !important;">
-								<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-success" role="button">
-								Commons</a>
-								<a href="#" onclick="loadlordsquestions(document.getElementById('date-input').value);return false;" class="btn btn-danger" role="button">
-								Lords</a>
-								<span id="loader" style="display:none;">
-									<i class="fa fa-refresh fa-spin" class="pull-right" style="font-size:20px"></i>
-								</span>
-								<a href="#" onclick="togglemenu();return false;" class="btn btn-info hidemobile" style="float:right !important;" role="button">
-								Toggle Search</a>
+							<div id="loadbuttons" style="padding-top:6px !important;">
+								<div class="col-sm-4" style="padding-left:0px !important; padding-right:6px !important;">
+									<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-success" role="button" style="width: 100% !important;">
+									Commons</a>
+								</div>
+								<div class="col-sm-4" style="padding-left:6px !important; padding-right:6px !important;">
+									<a href="#" onclick="loadlordsquestions(document.getElementById('date-input').value);return false;" class="btn btn-danger" style="width: 100% !important;" role="button">
+									Lords</a>
+								</div>
+								<div id="search-toggle-div" class="col-sm-4" style="padding-left:6px !important;">
+									<span id="loader" class="pull-right" style="display:none; padding-top: 6px !important; padding-bottom: 6px; !important">
+										<i class="fa fa-refresh fa-spin" class="pull-right" style="font-size:20px"></i>
+									</span>
+									<a href="#" id="togglemenu" onclick="togglemenu();return false;" class="btn btn-info hidemobile" style="display: inline; float:right !important; width: 100% !important;" role="button">
+									Toggle Top</a>
+								</div>
 							</div>
 						</div><!--panel body-->
 						

@@ -149,9 +149,8 @@
 
 					<div class="list-group">
 						<!-- start search form -->
+						
 						<!-- house -->
-
-
 						<div class="list-group-item">
 							<select class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" form="mpsearch" id="house-input" name="house" onchange="loadsex(); loadpartiesjusthouse();">
 								<option value="Commons">
@@ -167,9 +166,8 @@
 								</option>
 							</select>
 						</div>
+						
 						<!-- sex -->
-
-
 						<div class="list-group-item">
 							<select class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" form="mpsearch" id="sex-input" name="sex">
 								<option value="">

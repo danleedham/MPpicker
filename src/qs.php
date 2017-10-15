@@ -104,7 +104,7 @@
 		var menu = document.getElementById("menu");
 		menu.style.display = menu.style.display === 'none' ? '' : 'none';
 		var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-		var listsize = h - 165;
+		var listsize = h - 154;
 		console.log('Removing Menu and Resizing list to '+listsize);
 		document.getElementById("livesearch").setAttribute("style","height:"+listsize+"px");
 		
@@ -113,7 +113,7 @@
 		var list = document.getElementById("list");
 		list.style.display = list.style.display === 'none' ? 'block' : 'none';
 	}
-	
+
 	document.onkeydown = checkKey;
 	function checkKey(e) {
 		e = e || window.event;
@@ -175,7 +175,7 @@
 							<div class="search-form" id="menu">
 								<div class="form-inline">
 									<input id="date-input" type="date" class="input-sm form-control" onchange="loaddepts(this.value)" value="<?php echo $date ?>" name="date" >	
-									<input id="photos-input" style="float:right !important;" type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-off="Stock">
+									<input id="photos-input" class="pull-right" style="float:right !important;" type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-off="Stock">
 								</div>
 								<div class="form-inline" style="padding-top:6px !important;">
 									<label for="dept-input">Department:</label><br />
@@ -207,10 +207,10 @@
 						
 						</div><!--list-group-->
 
-						<div class="panel-footer" id="list-footer">
+					<!-- <div class="panel-footer" id="list-footer">
 							<small class="pull-left">This section auto-populates by magic (and php).</small>
 							<a class="btn btn-link btn-xs pull-right" href="http://data.parliament.uk/membersdataplatform/">Live Data</a>
-						</div>
+						</div> -->
 					</div><!--panel-->
 
 				</div><!--list-->

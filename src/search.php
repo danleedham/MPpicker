@@ -20,8 +20,6 @@
 	?><!-- Here's the script that *should* get the relevant members from the search. Note search string must be greater than 2 -->
 	<script>
 		function showResult(str) {
-			document.getElementById('chooseposition-button').style.display = 'none';
-			document.getElementById('loader').style.display = 'inline';
 			// Check which house to search through  
 			if (!document.getElementById("choosehouse").checked) {
 				var house = "Commons";
@@ -29,20 +27,16 @@
 				var house = "Lords";
 			}
 			// Check if the user wants to search by name or constituency 
-			if (!document.getElementById("searchby").checked) {
-				var searchby = "name";
+			var searchby = document.getElementById("searchby").value;
+			if (searchby == "name") {
 				reqdchars = 2;
 				var url = "livesearch.php";
-			} else {
-				var searchby = "constituency";
+			} else if (searchby == "constituency") {
 				reqdchars = 3;
 				var url = "livesearch.php";
-			}
-			// If they want to search by position, overwrite previous choice
-			if (document.getElementById("chooseposition").checked) {
-				var searchby = "position";
+			} else {
 				reqdchars = 4;
-				var url = "livesearchpositions.php";
+				var url = "livesearch.php";
 			}
 			// If the string is x characters or more then do a nice little search
 			if (str.length <= reqdchars) {
@@ -63,8 +57,6 @@
 			}
 			xmlhttp.open("GET", "template/" + url + "?house=" + house + "&searchby=" + searchby + "&q=" + str, true);
 			xmlhttp.send();
-			document.getElementById('loader').style.display = 'none';
-			document.getElementById('chooseposition-button').style.display = 'inline';
 		}
 
 		function load(id) {
@@ -108,38 +100,41 @@
 				<div class="panel panel-default">
 					<div class="panel-body">
 						<div class="search-form">
-							<div class="col-sm-9 input-toggle">
+							<div class="col-sm-12 input-toggle">
 								<div class="form-group">
-									<input class="form-control" form="mpsearch" name="q" onkeyup="showResult(this.value)" placeholder="Start Typing..." size="10" type="text">
+									<input class="form-control" form="mpsearch" name="q" onkeyup="showResult(this.value)" placeholder="Start Typing..." size="20" type="text">
 								</div>
 							</div>
+						</div>
+						<div class="search-form">	
+							<div class="col-sm-12 input-toggle">
+								<div class="form-group">
+									<select class="form-control custom-select" form="mpsearch" id="searchby" name="searchby">
+										<option value="name">
+											Name
+										</option>
 
+										<option value="constituency">
+											Constituency
+										</option>
 
-							<div class="col-sm-3 membersearch-options" style="padding-left: 2px !important; padding-right: 2px !important;">
-								<span id="loader" style="display:none;"><i class="pull-right" style="font-size:20px"></i></span>
-
-								<div id="chooseposition-button">
-									<input data-off="Name" data-offstyle="info" data-on="Position" data-onstyle="danger" data-toggle="toggle" id="chooseposition" name="house" type="checkbox" value="position">
+										<option value="position">
+											Position
+										</option>
+									</select>
 								</div>
+							</div>		
+						</div>
+						<div class="search-form" style="padding-top: 6px">	
+							<div class="col-sm-6 membersearch-options input-toggle">
+								<input data-off="Commons" data-offstyle="success" data-on="Lords" data-onstyle="danger" data-toggle="toggle" data-width="100%" id="choosehouse" name="house" type="checkbox" value="Lords">
 							</div>
 
-
-							<div class="col-sm-4 membersearch-options input-toggle">
-								<input data-off="Commons" data-offstyle="success" data-on="Lords" data-onstyle="danger" data-toggle="toggle" id="choosehouse" name="house" type="checkbox" value="Lords">
-							</div>
-
-
-							<div class="col-sm-4 membersearch-options input-toggle">
-								<input data-off="Name" data-offstyle="primary" data-on="Constit" data-onstyle="warning" data-toggle="toggle" id="searchby" name="searchby" type="checkbox" value="constituency">
-							</div>
-
-
-							<div class="col-sm-4 membersearch-options input-toggle">
-								<input data-off="Stock" data-offstyle="primary" data-on="ScreenShot" data-onstyle="warning" data-toggle="toggle" id="photos" name="photos" type="checkbox" value="screenshot">
+							<div class="col-sm-6 membersearch-options input-toggle">
+								<input data-off="Stock" data-offstyle="primary" data-on="ScreenShot" data-onstyle="warning" data-toggle="toggle" data-width="100%" id="photos" name="photos" type="checkbox" value="screenshot">
 							</div>
 						</div>
 					</div>
-
 
 					<div class="list-group" id="livesearchmember">
 						<?php require ("template/initiallist.php"); ?>

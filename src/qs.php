@@ -173,10 +173,14 @@
 					<div class="panel panel-default">
 						<div class="panel-body" id="list-inputs">
 							<div class="search-form" id="menu">
-								<div class="form-inline">
-									<input id="date-input" type="date" class="input-sm form-control" onchange="loaddepts(this.value)" value="<?php echo $date ?>" name="date" >	
-									<input id="photos-input" class="pull-right" style="float:right !important;" type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-off="Stock">
-								</div>
+								<div class="row">
+									<div id="date-div" class="col-sm-6">
+											<input id="date-input" type="date" class="input-sm form-control" onchange="loaddepts(this.value)" value="<?php echo $date ?>" name="date" >	
+									</div>
+									<div id="photos-div" class="col-sm-6">
+											<input id="photos-input" class="pull-right" style="float:right !important;" type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-width="100%" data-off="Stock">
+									</div>
+								</div>	
 								<div class="form-inline" style="padding-top:6px !important;">
 									<label for="dept-input">Department:</label><br />
 									<select id="dept-input" onchange="loadtypes()" name="type" class="form-control">

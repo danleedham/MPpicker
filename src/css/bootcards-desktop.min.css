@@ -860,3 +860,12 @@ h3.panel-title.pull-left {
 .whonamelink {
 	color: #fff !important;
 }
+
+select#dept-input.form-control, select#type-input.form-control {
+    width: 100% !important;
+}
+
+input#date-input.input-sm.form-control {
+	width: 100% !important;
+}
+

@@ -820,6 +820,11 @@ h3.panel-title.pull-left {
 	overflow: auto;
 }
 
+#wrapups { 
+	height: calc(100vh - 360px);  /* bad fix to make the questions scroll but not the image */
+	overflow: auto;
+}
+
 #livesearchmember { 
 	height: calc(100vh - 250px);  /* bad fix to make the members scroll but not the image */
 	overflow: auto;
@@ -874,4 +879,11 @@ div#date-div.col-sm-6 {
 
 div#search-toggle-div.col-sm-4 {
 	padding-right: 0px !important;
+}
+
+.toggle .btn {
+	padding: 6px 15px !important;
+}
+.btn .footer-btn {
+	padding: 6px 15px !important;
 }

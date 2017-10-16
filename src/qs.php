@@ -105,11 +105,27 @@
 	   dept = encodeURI(dept);
 	   var groups = document.getElementById("groups-input").value;
 	   var withdrawn = document.getElementById("withdrawn-input").value;
+	   var withoutnotice = document.getElementById("withoutnotice-input").value;
+	   console.log('Loading Topical questions to '+dept+' on '+date+' and withdrawing: '+withdrawn);
+	   groups = groups.replace(/[\r\n]+/g,",");
+	   groups = encodeURI(groups);
+	   withdrawn = encodeURI(withdrawn);
+	   $("#livesearch").load('template/listquestions.php?date='+date+'&type=Topical&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice);
+	}
+	function gotosubstantive(){
+	   document.getElementById("type-input").value = 'Substantive';
+	   var date = document.getElementById("date-input").value;
+	   date = date.toString();
+	   var dept = document.getElementById("dept-input").value;
+	   dept = encodeURI(dept);
+	   var groups = document.getElementById("groups-input").value;
+	   var withdrawn = document.getElementById("withdrawn-input").value;
+	   var withoutnotice = document.getElementById("withoutnotice-input").value;
 	   console.log('Loading Topical questions to '+dept+' on '+date+' using groups: '+groups+' and withdrawing: '+withdrawn);
 	   groups = groups.replace(/[\r\n]+/g,",");
 	   groups = encodeURI(groups);
 	   withdrawn = encodeURI(withdrawn);
-	   $("#livesearch").load('template/listquestions.php?date='+date+'&type=Topical&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn);
+	   $("#livesearch").load('template/listquestions.php?date='+date+'&type=Topical&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice);
 	}
 	function togglemenu(){
 		var menu = document.getElementById("menu");
@@ -130,6 +146,7 @@
 		e = e || window.event;
 		if (e.keyCode == '37') {
 			$('.active').removeClass('active');
+			document.getElementById('togglemenu').style.display = 'none';
 			document.getElementById('loader').style.display = 'inline';
 			if (!document.getElementById("photos-input").checked){
 				var photos = 'Stock';
@@ -146,8 +163,10 @@
 				document.getElementById('loader').style.display = 'none';
 			});
 			$('#q'+thisprev).addClass("active");
+			document.getElementById('togglemenu').style.display = 'inline';
 		}
 		else if (e.keyCode == '39') {
+			document.getElementById('togglemenu').style.display = 'none';
 			$('.active').removeClass('active');
 			document.getElementById('loader').style.display = 'inline';
 			if (!document.getElementById("photos-input").checked){
@@ -163,8 +182,10 @@
 			console.log('Loading question: '+thisnext+' next: '+next+' prev: '+prev);
 			$("#contactCard").load('template/questioner.php?uin='+thisnext+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
 				document.getElementById('loader').style.display = 'none';
+				document.getElementById('togglemenu').style.display = 'inline';
 			});
 			$('#q'+thisnext).addClass("active");
+			
 	   }
 	}
 </script>

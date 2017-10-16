@@ -12,6 +12,39 @@
 	<link rel="mask-icon" href="favicons/safari-pinned-tab.svg" color="#5bbad5">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   	<title>Parliamentary Stacker</title>
+  </head>
+  <body>	
+  <?php 				
+// Do checks to make sure the application can access the various API bits
+	// Can we get data from the membersdataplatform?
+	$xmlmember = @simplexml_load_file('http://data.parliament.uk/membersdataplatform/xml/BasicDetails.xml');
+	if (!$xmlmember) {
+		$members = "danger";
+	} else { 
+		$members = "success";
+	}
+	// Can we get data from the Commons Oral Questions api?
+	$xmloral = @simplexml_load_file('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=basic&_pageSize=1');
+	if (!$xmloral) {
+		$oral = "danger";
+	} else { 
+		$oral = "success";
+	}
+	// Can we get data from the AV Visual Live Logging api?
+	$xmlav = @simplexml_load_file('http://lda.data.parliament.uk/tvprogrammes.xml?_view=basic&_pageSize=1');
+	if (!$xmlav) {
+		$av = "danger";
+	} else { 
+		$av = "success";
+	}
+	// Can we access the new MP images api?
+	$imageurl = 'https://api-parliament-uk.azure-api.net/Live/photo/7xQEDGdb.jpeg?crop=CU_5:2&width=732&quality=80';
+	if (@getimagesize($imageurl)){
+		$beta = "success";
+	} else { 
+		$beta = "danger";
+	} 
+?>
 	<div class="container bootcards-container push-right">
 		<div class="row">
 			<div class="col-sm-12 bootcards-list" data-title="Mobile Menu">
@@ -48,44 +81,6 @@
 					 </div>
 					<div class="row">
 					  <div class="col-xs-12 col-sm-6">
-					<?php 
-					
-					// Do checks to make sure the application can access the various API bits
-						// Can we get data from the membersdataplatform?
-					 	$xmlmember = @simplexml_load_file('http://data.parliament.uk/membersdataplatform/xml/BasicDetails.xml');
-						if (!$xmlmember) {
-							$members = "danger";
-						} else { 
-							$members = "success";
-						}
-					?>
-					 <?php
-					 	// Can we get data from the Commons Oral Questions api?
-						$xmloral = @simplexml_load_file('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=basic&_pageSize=1');
-						if (!$xmloral) {
-							$oral = "danger";
-						} else { 
-							$oral = "success";
-						}
-					?>
-					<?php
-					 	// Can we get data from the AV Visual Live Logging api?
-						$xmlav = @simplexml_load_file('http://lda.data.parliament.uk/tvprogrammes.xml?_view=basic&_pageSize=1');
-						if (!$xmlav) {
-							$av = "danger";
-						} else { 
-							$av = "success";
-						}
-					?>
-					 <?php 
-					 	// Can we access the new MP images api?
-					 	$imageurl = 'https://api-parliament-uk.azure-api.net/Live/photo/7xQEDGdb.jpeg?crop=CU_5:2&width=732&quality=80';
-						if (@getimagesize($imageurl)){
-							$beta = "success";
-						} else { 
-							$beta = "danger";
-						} 
-					?>
 						  <h4><span class="label label-<?php echo $members; ?>">&nbsp</span> Members Data Platform</h4>
 						  <h4><span class="label label-<?php echo $oral; ?>">&nbsp</span> Commons Oral Questions</h4>
 						  <h4><span class="label label-<?php echo $av; ?>">&nbsp</span> Screenshots</h4>

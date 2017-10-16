@@ -43,6 +43,8 @@
 		$SplitOutQuestions[$i] = str_replace("</style>","<p>",$SplitOutQuestions[$i]);
 		$SplitOutQuestions[$i] = explode("<p>",$SplitOutQuestions[$i]);
 			for($j=0; $j<count($SplitOutQuestions[$i]); $j++){
+				$SplitOutQuestions[$i][$j] = str_replace("&nbsp; to ask "," to ask ",$SplitOutQuestions[$i][$j]); // Bodge
+				$SplitOutQuestions[$i][$j] = str_replace("&nbsp;to ask"," to ask",$SplitOutQuestions[$i][$j]); // Bodge
 				$SplitOutQuestions[$i][$j] = explode(" to ask ", $SplitOutQuestions[$i][$j]);
 				$SplitOutQuestions[$i][$j] = trim(array_shift($SplitOutQuestions[$i][$j]));
 			}
@@ -67,12 +69,13 @@
 	require_once('colors.php');	
 	
 	// Find which question array is the current date
-	for($i=0; $i<count($LordsQuestions); $i++) {
-		if($date == $LordsQuestions[$i]['date']){
-			$chosendate = $i;
+	if(isset($LordsQuestions)) {
+		for($i=0; $i<count($LordsQuestions); $i++) {
+			if($date == $LordsQuestions[$i]['date']){
+				$chosendate = $i;
+			}
 		}
 	}
-	
 	if(!isset($chosendate)){
 		echo '<a class="list-group-item">
 			 <h4 class ="list-group-item-heading">No Lords questions on '.$date.'</h4></a>';
@@ -83,7 +86,8 @@
 			// Let's now check each Lord to find which Lord asked the question 
 			for ($y=0; $y < $memberscount; $y++){
 				$CurrentLord = trim($qxml->Member[$y]->DisplayAs);
-				if($CurrentQuestioner == $CurrentLord) { 
+				$CurrentLordNoDash = str_replace("-"," ",$CurrentLord);
+				if($CurrentQuestioner == $CurrentLord or $CurrentQuestioner == $CurrentLordNoDash) { 
 					$DodsId=$qxml->Member[$y]->attributes()->Dods_Id;
 					$MemberId=$qxml->Member[$y]->attributes()->Member_Id;
 					$DisplayAs=$qxml->Member[$y]->DisplayAs;

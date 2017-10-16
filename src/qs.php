@@ -229,11 +229,10 @@
 							<div id="loadbuttons" style="padding-top:6px !important;">
 								<div class="col-sm-4" style="padding-left:0px !important; padding-right:6px !important;">
 									<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-success" role="button" style="width: 100% !important;">
-									Commons</a>
+									Load</a>
 								</div>
 								<div class="col-sm-4" style="padding-left:6px !important; padding-right:6px !important;">
-									<a href="#" onclick="loadlordsquestions(document.getElementById('date-input').value);return false;" class="btn btn-danger" style="width: 100% !important;" role="button">
-									Lords</a>
+									<button type="button" style="width: 100% !important;" class="btn btn-danger" data-toggle="modal" data-target="#groupCard">Set Groups</button>
 								</div>
 								<div id="search-toggle-div" class="col-sm-4" style="padding-left:6px !important;">
 									<span id="loader" class="pull-right" style="display:none; padding-top: 6px !important; padding-bottom: 6px; !important">
@@ -273,7 +272,8 @@
 							<div class="col-12">
 								<p>Use the search tools on the left and MP details will appear here. </p>
 								<p><a href="https://www.parliament.uk/documents/commons-table-office/Oral-questions-rota.pdf">Click here to view the Oral Questions Rota (external).</a href></p>
-								<a href="#" onclick="printQuestions();return false;" class="btn btn-danger" role="button">Print Questions as listed</a>
+								<a href="#" onclick="printQuestions();return false;" class="btn btn-info" role="button">Print Questions as listed</a>
+								<a href="#" onclick="loadlordsquestions(document.getElementById('date-input').value);return false;" class="btn btn-danger" role="button">Load Lords Questions for today</a>
 							</div>
 						</div>
 					</div>
@@ -281,57 +281,53 @@
               </div>
            </div>
 		</div>
+		</div><!--list-details-->
+	</div><!--row-->
+</div><!--container-->
 	
-          <!-- Group details -->
-          <div id="groupCard" stlye="margin-bottom: 60px !important;">
-
-            <div class="panel panel-default">
-              <div class="panel-heading clearfix">
-                <h3 class="panel-title pull-left">Grouped & Withdrawn Questions</h3>
-              </div>
-              <div class="list-group">
-                <div class="list-group-item">
-					<form id="groups">
-						<div class="search-form">
-							<div class="form-group">	
-							<label for="date-input" class="col-2 col-form-label">Enter groups on seperate lines with questions space delimited</label>
-								<div class="col-10">
-									 <textarea class="form-control" rows="3" id="groups-input" form="groups"></textarea>
+	<!-- Group details -->
+	<div id="groupCard" class="modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h3 class="modal-title">Grouped & Withdrawn Questions</h3>
+				</div>
+				<div class="modal-body">
+					<div class="list-group">
+						<div class="list-group-item">
+							<form id="groups">
+								<div class="search-form">
+									<div class="form-group">	
+										<label for="date-input" class="col-2 col-form-label">Enter groups on seperate lines with questions space delimited</label>
+										<div class="col-10">
+											<textarea class="form-control" rows="3" id="groups-input" form="groups"></textarea>
+										</div>
+									</div>
+									<div class="form-group">	
+										<div class="col-10">
+											<label for="withdrawn-input" class="col-2 col-form-label">Withdrawn <strong>on the day</strong> (s1 t1) seperated by spaces</label>
+											<input type="text" class="form-control" id="withdrawn-input" form="withdrawn"></input>
+											<br />
+											<label for="withoutnotice-input" class="col-2 col-form-label">Withdrawn <strong>Before Order Paper Printed</strong> (s1 t1) seperated by spaces</label>
+											<input type="text" class="form-control" id="withoutnotice-input" form="withoutnotice"></input>
+											<br />
+											<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-info" role="button">
+											Set Groups & Withdrawn</a>
+											<input id="together-input" style="float:right !important;" type="checkbox" value="grouped" name="together-input"  data-toggle="toggle" data-onstyle="danger" data-offstyle="warning" data-on="Don't Group" data-off="Grouped">
+										</div>
+									</div>
 								</div>
-							</div>
-							<div class="form-group">	
-								<div class="col-10">
-									<label for="withdrawn-input" class="col-2 col-form-label">Withdrawn <strong>on the day</strong> (s1 t1) seperated by spaces</label>
-									 <input type="text" class="form-control" id="withdrawn-input" form="withdrawn"></input>
-									 <br />
-									 <label for="withoutnotice-input" class="col-2 col-form-label">Withdrawn <strong>Before Order Paper Printed</strong> (s1 t1) seperated by spaces</label>
-									 <input type="text" class="form-control" id="withoutnotice-input" form="withoutnotice"></input>
-									 <br />
-									 <a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-info" role="button">
-									 Set Groups & Withdrawn</a>
-									 <input id="together-input" style="float:right !important;" type="checkbox" value="grouped" name="together-input"  data-toggle="toggle" data-onstyle="danger" data-offstyle="warning" data-on="Don't Group" data-off="Grouped">
-								</div>
-							</div>
-						</div>
-					</form>	
-                </div>        
-	          </div>
-              </div>
+							</form>	
+						</div>        
+					</div>
+				</div> <!-- Modal Body -->
+			</div><!-- Modal Content -->
+		</div><!-- Modal Dialog -->
+	</div><!--Group / withdrawn card-->
 
-            </div><!--Group / withdrawn card-->
-
-
-        </div><!--list-details-->
-
-    </div><!--row-->
-
-
-  </div><!--container-->
-
-	<?php include 'template/footer.php'; ?>
-
-  
-   <?php include 'template/core.php'; ?>
+	<?php include 'template/footer.php'; ?>  
+	<?php include 'template/core.php'; ?>
    
-  </body>
+</body>
 </html>

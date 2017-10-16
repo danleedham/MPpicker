@@ -887,3 +887,11 @@ div#search-toggle-div.col-sm-4 {
 .btn .footer-btn {
 	padding: 6px 15px !important;
 }
+
+.modal-body {
+	background-color: #1c1c1c;
+}
+
+.modal-header {
+	background-color: #37474F;
+}

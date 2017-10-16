@@ -4960,7 +4960,7 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:focus, a.list-g
 	font-size: 21px;
 	font-weight: bold;
 	line-height: 1;
-	color: #000;
+	color: #fff;
 	text-shadow: 0 1px 0 #fff;
 	filter: alpha(opacity=20);
 	opacity: .2
@@ -5037,7 +5037,6 @@ button.close {
 	bottom: 0;
 	left: 0;
 	z-index: 1040;
-	background-color: #000
 }
 .modal-backdrop.fade {
 	filter: alpha(opacity=0);
@@ -5049,14 +5048,14 @@ button.close {
 }
 .modal-header {
 	padding: 15px;
-	border-bottom: 1px solid #e5e5e5
+	/* border-bottom: 1px solid #e5e5e5 */
 }
 .modal-header .close {
 	margin-top: -2px
 }
 .modal-title {
 	margin: 0;
-	line-height: 1.42857143
+	line-height: 1.42857143;
 }
 .modal-body {
 	position: relative;
@@ -5782,3 +5781,7 @@ button.close {
 }
 
 /*# sourceMappingURL=bootstrap.min.css.map */
+
+div.modal-backdrop.in {
+	display: none !important;
+}

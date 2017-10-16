@@ -137,9 +137,15 @@ $xmlMembers=new DOMDocument();
 				 <a class="btn btn-primary pull-right" onclick="load(<?php echo '\''.$prev.'\',\''.$date.'\''; ?>);return false;" data-toggle="modal">
 				  <i class="fa fa-arrow-left"></i>Previous
 				</a>
-				 <a class="btn btn-warning pull-right" style="margin-right: 6px;" onclick="gotopicals()">
+				<?php if($qarray[0]["type"] == "Topical"):?>
+				 <a class="btn btn-warning pull-right" style="margin-right: 6px;" onclick="gosubstantive()">
+				  <i class="fa fa-refresh"></i>To Substantive
+				</a>
+				<?php else: ?>
+				<a class="btn btn-warning pull-right" style="margin-right: 6px;" onclick="gotopicals()">
 				  <i class="fa fa-refresh"></i>To Topicals
 				</a>
+				<?php endif; ?>
 			</div>
 			<div class="list-group">
 				<div class="list-group-item list-group-item-image">

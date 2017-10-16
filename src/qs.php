@@ -112,7 +112,7 @@
 	   withdrawn = encodeURI(withdrawn);
 	   $("#livesearch").load('template/listquestions.php?date='+date+'&type=Topical&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice);
 	}
-	function gotosubstantive(){
+	function gosubstantive(){
 	   document.getElementById("type-input").value = 'Substantive';
 	   var date = document.getElementById("date-input").value;
 	   date = date.toString();
@@ -121,11 +121,11 @@
 	   var groups = document.getElementById("groups-input").value;
 	   var withdrawn = document.getElementById("withdrawn-input").value;
 	   var withoutnotice = document.getElementById("withoutnotice-input").value;
-	   console.log('Loading Topical questions to '+dept+' on '+date+' using groups: '+groups+' and withdrawing: '+withdrawn);
+	   console.log('Loading Substantive questions to '+dept+' on '+date+' using groups: '+groups+' and withdrawing: '+withdrawn);
 	   groups = groups.replace(/[\r\n]+/g,",");
 	   groups = encodeURI(groups);
 	   withdrawn = encodeURI(withdrawn);
-	   $("#livesearch").load('template/listquestions.php?date='+date+'&type=Topical&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice);
+	   $("#livesearch").load('template/listquestions.php?date='+date+'&type=Substantive&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice);
 	}
 	function togglemenu(){
 		var menu = document.getElementById("menu");

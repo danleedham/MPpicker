@@ -20,6 +20,9 @@
 	if (isset($_GET["house"])){
 		$house = $_GET["house"];
 	}
+	if (!isset($house)) {
+		$house = "Commons";
+	}
 	?>
 
 <script>
@@ -44,11 +47,6 @@
 	function loadlords(id){
 		document.getElementById('togglemenu').style.display = 'none';
 		document.getElementById('loader').style.display = 'inline';
-		if (!document.getElementById("photos-input").checked){
-			var photos = 'Stock';
-		} else {
-			var photos = "screenshot";
-		}
 		console.log('Loading Lords Member: '+id);
 		$("#contactCard").load('template/member.php?m='+id,function() {
 			document.getElementById('loader').style.display = 'none';
@@ -77,14 +75,19 @@
 			document.getElementById('togglemenu').style.display = 'inline';
    		});
 	}
-	function loadlordsquestions(date){
+	function loadlordsquestions(){
 		document.getElementById('togglemenu').style.display = 'none';
 		document.getElementById('loader').style.display = 'inline';
-		$("#livesearch").load('template/listlordsquestions.php?date='+date,function() {
+		var chosenBusiness = document.getElementById("sect-input").value;
+		if(chosenBusiness == "questions") {
+			var urlend = "listlordsquestions.php";
+		} else {
+			var urlend = 'lordsspeakers.php?chosenBusiness='+chosenBusiness;
+		}
+		$("#livesearch").load('template/'+urlend,function() {
 			document.getElementById('loader').style.display = 'none';
 			document.getElementById('togglemenu').style.display = 'inline';
-		});
-		
+		});		
 	}
 	function loaddepts(date){
 	   $("#dept-input").load('template/questiondepts.php?date='+date);
@@ -205,6 +208,7 @@
 					<div class="panel panel-default">
 						<div class="panel-body" id="list-inputs">
 							<div class="search-form" id="menu">
+								<?php if($house !== "Lords"): ?>
 								<div class="row">
 									<div id="date-div" class="col-sm-6">
 											<input id="date-input" type="date" class="input-sm form-control" onchange="loaddepts(this.value)" value="<?php echo $date ?>" name="date" >	
@@ -213,33 +217,51 @@
 											<input id="photos-input" class="pull-right" style="float:right !important;" type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-width="100%" data-off="Stock">
 									</div>
 								</div>	
+								<?php endif; ?>
+								
 								<div class="form-inline" style="padding-top:6px !important;">
+									<?php if($house == "Lords"): ?>
+									<label for="sect-input">Section:</label><br />
+									<select id="sect-input" onchange="loadlordsquestions()" name="type" class="form-control">
+										<?php include 'template/lordsquestions-sections.php' ?>
+									</select>	
+									<?php else: ?>
 									<label for="dept-input">Department:</label><br />
 									<select id="dept-input" onchange="loadtypes()" name="type" class="form-control">
 										<?php include 'template/questiondepts.php' ?>
-									</select>			
+									</select>	
+									<?php endif; ?>
 								</div>
+								<?php if($house !== "Lords"): ?>
 								<div class="form-inline" style="padding-top:6px !important;">
 								   <label for="type-input">Type:</label><br />
-								<select id="type-input" name="type" class="form-control" onchange="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(this.value));return false;">
+									<select id="type-input" name="type" class="form-control" onchange="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(this.value));return false;">
 										Type: <?php include 'template/questiontypes.php' ?>
-								</select>
+									</select>
 								</div>
+								<?php endif; ?>
 							</div>
 							<div id="loadbuttons" style="padding-top:6px !important;">
 								<div class="col-sm-4" style="padding-left:0px !important; padding-right:6px !important;">
-									<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-success" role="button" style="width: 100% !important;">
+								<?php if($house == "Lords"): ?>
+								<a href="#" onclick="loadlordsquestions();return false;" class="btn btn-danger" role="button" style="width: 100% !important;">
 									Load</a>
+								<?php else: ?>
+								<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-success" role="button" style="width: 100% !important;">
+									Load</a>
+								<?php endif; ?>
 								</div>
+								<?php if($house !== "Lords"): ?>
 								<div class="col-sm-4" style="padding-left:6px !important; padding-right:6px !important;">
-									<button type="button" style="width: 100% !important;" class="btn btn-danger" data-toggle="modal" data-target="#groupCard">Set Groups</button>
+									<button type="button" style="width: 100% !important;" class="btn btn-warning" data-toggle="modal" data-target="#groupCard">Set Groups</button>
 								</div>
+								<?php endif; ?>
 								<div id="search-toggle-div" class="col-sm-4" style="padding-left:6px !important;">
 									<span id="loader" class="pull-right" style="display:none; padding-top: 6px !important; padding-bottom: 6px; !important">
 										<i class="fa fa-refresh fa-spin" class="pull-right" style="font-size:20px"></i>
 									</span>
 									<a href="#" id="togglemenu" onclick="togglemenu();return false;" class="btn btn-info hidemobile" style="display: inline; float:right !important; width: 100% !important;" role="button">
-									Toggle Top</a>
+									Toggle Input</a>
 								</div>
 							</div>
 						</div><!--panel body-->
@@ -273,7 +295,7 @@
 								<p>Use the search tools on the left and MP details will appear here. </p>
 								<p><a href="https://www.parliament.uk/documents/commons-table-office/Oral-questions-rota.pdf">Click here to view the Oral Questions Rota (external).</a href></p>
 								<a href="#" onclick="printQuestions();return false;" class="btn btn-info" role="button">Print Questions as listed</a>
-								<a href="#" onclick="loadlordsquestions(document.getElementById('date-input').value);return false;" class="btn btn-danger" role="button">Load Lords Questions for today</a>
+								<a href="?house=Lords" class="btn btn-danger" role="button">Switch to House of Lords</a>
 							</div>
 						</div>
 					</div>

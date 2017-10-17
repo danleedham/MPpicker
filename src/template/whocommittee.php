@@ -37,9 +37,7 @@ $xmlDoc->load('http://data.parliament.uk/membersdataplatform/services/mnis/Refer
 					}
 				}			
 		}
-	
-		sort($committeearray);	
-		   
+		sort($committeearray);			   
 		echo '<option value="">All Committees</option>';
 		foreach ($committeearray as $value) {
 		   echo '<option value="'. $value.'">'. $value.'</option>';

@@ -43,8 +43,11 @@
 		$SplitOutQuestions[$i] = str_replace("</style>","<p>",$SplitOutQuestions[$i]);
 		$SplitOutQuestions[$i] = explode("<p>",$SplitOutQuestions[$i]);
 			for($j=0; $j<count($SplitOutQuestions[$i]); $j++){
+				$SplitOutQuestions[$i][$j] = str_replace("&nbsp; to ask "," to ask ",$SplitOutQuestions[$i][$j]); // Bodge
+				$SplitOutQuestions[$i][$j] = str_replace("&nbsp;to ask"," to ask",$SplitOutQuestions[$i][$j]); // Bodge
 				$SplitOutQuestions[$i][$j] = explode(" to ask ", $SplitOutQuestions[$i][$j]);
 				$SplitOutQuestions[$i][$j] = trim(array_shift($SplitOutQuestions[$i][$j]));
+				$SplitOutQuestions[$i][$j] = str_replace("&nbsp;","",$SplitOutQuestions[$i][$j]); // Final bodge
 			}
 	$SplitOutQuestions[$i] = array_filter($SplitOutQuestions[$i]);
 	}
@@ -84,7 +87,8 @@
 			// Let's now check each Lord to find which Lord asked the question 
 			for ($y=0; $y < $memberscount; $y++){
 				$CurrentLord = trim($qxml->Member[$y]->DisplayAs);
-				if($CurrentQuestioner == $CurrentLord) { 
+				$CurrentLordNoDash = str_replace("-"," ",$CurrentLord);
+				if($CurrentQuestioner == $CurrentLord or $CurrentQuestioner == $CurrentLordNoDash) { 
 					$DodsId=$qxml->Member[$y]->attributes()->Dods_Id;
 					$MemberId=$qxml->Member[$y]->attributes()->Member_Id;
 					$DisplayAs=$qxml->Member[$y]->DisplayAs;

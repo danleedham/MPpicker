@@ -163,6 +163,7 @@ $xmlDoc=new DOMDocument();
 			$url = "http://data.parliament.uk/membersdataplatform/services/mnis/members/query/IsEligible=true".$houseurl.$partyurl.$genderurl.$positionsurl.$committeeurl.$topicurl.$joinedurl."/".$returnpositions.$returncommittee."BiographyEntries";
 		}
 	echo '<!-- '.$url.'-->';
+	// print_r($url);
 	if(!isset($department)){
 		$xmlDoc->load($url);
 	}
@@ -258,7 +259,7 @@ $xmlDoc=new DOMDocument();
 		for($ii = 0; $ii < $Committees->length; $ii ++) {
 			if (!strtotime($Committees->item($ii)->getElementsByTagName('EndDate')[0]->textContent) >= time()) {
 					$ischair = "";
-				if(isset($Committees->item($ii)->getElementsByTagName('ChairDates')[0]->ChairDate->StartDate[0]->textContent)){
+				if(isset($Committees->item($ii)->getElementsByTagName('ChairDates')[0]->getElementsByTagName('StartDate')[0]->textContent)){
 					$ischair = " - Chair ";
 				}	
 				$CommitteesList[] = $Committees->item($ii)->getElementsByTagName('Name')[0]->textContent.$ischair; 

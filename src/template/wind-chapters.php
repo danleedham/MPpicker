@@ -2,7 +2,7 @@
 	
 	if(isset($Events)){
 		foreach ($Events as $key => $value) {
-			if ($value["time"]){
+			if (isset($value["time"])){
 			echo '<option value="'. $value["time"].'">'. $value["name"].'</option>';
 			$hasevents = true;
 		   }

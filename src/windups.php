@@ -49,9 +49,10 @@
 			var dupes = 'keep';
 		}
 		$("#wrapups").load('template/wind-list.php?&event='+eventid+'&section='+section+'&keepdupes='+dupes,function() {
-   		document.getElementById('loader').style.display = 'none';
+   			document.getElementById('loader').style.display = 'none';
+   			document.getElementById('togglemenu').style.display = 'inline';
    		});
-   		document.getElementById('togglemenu').style.display = 'inline';
+   		
 	}
 	function loadevents(date){
 	   $("#event-input").load('template/wind-events.php?date='+date);
@@ -104,7 +105,8 @@
 								<div class="form-inline" style="padding-top:6px !important;">
 									<label for="event-input">Event:</label><br />
 									<select id="event-input" onchange="loadsections()" name="type" class="form-control">
-										<?php include 'template/wind-events.php' ?>
+										<?php include 'template/wind-events.php'; 
+											$event = $Events[0]['id']; ?>
 									</select>			
 								</div>
 								<div class="form-inline" style="padding-top:6px !important;">
@@ -116,13 +118,13 @@
 							</div>
 							<div class="form-inline" id="loadbuttons" style="padding-top:6px !important;">
 								<a href="#" onclick="loadmembers(encodeURI(document.getElementById('event-input').value),encodeURI(document.getElementById('sect-input').value));return false;" class="btn btn-success" role="button">
-								Get wrapups</a>
+								Get List</a>
 								<input id="removedupes-input" style="float:right !important;" type="checkbox" value="keep" name="photos"  data-toggle="toggle" data-onstyle="warning" data-offstyle="success" data-on="Keep Dupes" data-off="Bin Dupes">
 								<span id="loader" class="pull-right" style="display:none; padding-top: 6px !important; padding-bottom: 6px; !important">
 										<i class="fa fa-refresh fa-spin" class="pull-right" style="font-size:20px"></i>
 									</span>
-								<a href="#" id="togglemenu" onclick="togglemenu();return false;" class="btn btn-info hidemobile" style="float:right !important;" role="button">
-								Toggle Search</a>
+								<span id="togglemenu"><a href="#" onclick="togglemenu();return false;" class="btn btn-info hidemobile" style="display: inline;" role="button">
+								Toggle Search</a></span>
 							</div>
 						</div><!--panel body-->
 						

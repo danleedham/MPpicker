@@ -1,16 +1,19 @@
-# ![DPP|by PDS](https://cldup.com/YbN6rT2IVF.png) UK Parliamentary Stacker
+# ![DPP|by PDS](https://cldup.com/YbN6rT2IVF.png) UK Parliamentary Broadcast Assistant
 
 ## Introduction
-The Stacker is a browser based application that aids broadcast and journalistic coverage of Parliament by leveraging live data powered by Data.parliament (DDP). There is no database as part of the project as in previous incarnations of the stacker, instead a minimal amount of bespoke data is stored in XML and image ("screenshot") files. 
+_'The Stacker'_ is a browser based application that aids broadcast and journalistic coverage of the UK Parliament by leveraging live data powered by Data.parliament (DDP). There is no database as part of the project as in previous incarnations of the stacker. 
 
-The Stacker consists of three sections:
+The Stacker consists of four sections:
   - Member's Database
   - Questions Stacker
+  - Windups
   - Guess Who?
 
 > The Individual Member Finder allows the user to search by name, constituency or individual position across both houses of parliament. Either stock or screenshot images are presented for each member along with details of the member. If the member has Twitter, an optional toggle presents their latest Tweets.
 
 > Oral Questions Stacker displays the current days upcoming questions. The user selects the department and type of questions, then the application loads the questions in their balloted order. Members due to ask questions are referred to by navigating through the list.  Navigating brings up details of the question and a picture of the member, so the user can identify who will speak next quickly without having to search. Functionality exists to withdraw questions and set groups.
+
+> Windups generates lists of speakers in the current chosen session which is helpful for when the responding party thanks everyone who's taken part in the debate so far. Once the session has ended this simply displays a list of everyone who spoke during that debate. The user has the option to toggle between showing every speaker in the order they spoke or to remove instances of individuals speaking multiple times. 
 
 > Guess Who? helps for narrowing down potential members by the user selecting options including party, gender, date joined since, department and committee membership. 
 
@@ -22,8 +25,6 @@ The stacker is built upon a number of open source projects:
 - [DPP] - Data.Parliament - platform that enables sharing of data within and outside of Parliament
 - [Chosen] - A jQuery Plugin by Harvest to Tame Unwieldy Select Boxes (ver 1.7.0)
 - [jQuery] - a lightweight, "write less, do more", JavaScript library (ver 2.1.1)
-### Optional External Projects
-- [XAMPP] -  an easy to install Apache distribution containing MariaDB, PHP, and Perl. The XAMPP open source package has been set up to be incredibly easy to install and to use. Developed for use with versions running PHP v7+
 
 ## Installation
 The Stacker requires either a webserver or a computer with a web connection and [PHP v7+](http://www.php.net) enabled server to run. The application has been developed to work on both standard web servers and on personal computers using [XAMPP](https://www.apachefriends.org/index.html), which is an easy to install Apache distribution containing MariaDB, PHP and Perl. 
@@ -61,13 +62,6 @@ PC: Once installed to load the Stacker simply double click `stacker.bat`
 Mac: Once installed to start the Stacker use the Open Stacker application ensuring that the server address is correct
 
 ## Static Data
-### Screenshot Images 
-As these images are not part of any external dataset they are taken manually, sorted and added to the project directory:
-- A 'full-resolution' at 1920x1080 placed into the /images/screenshot directory
-- A smaller 960x540 version in the /images/screenshot/thumbs/ directory. 
-- Each of the images is named by the Members DodsId and is in jpg format with 60% quality. 
-- In future there is a possibility of pulling in a section screen shots of the video stream from each parliament by using the AV Live Logging dataset found at http://www.data.parliament.uk/dataset/avlivelogging.
-
 ### Beta Images 
 At the time of development these images are part of Parliament's unfinished new API. The IDs for each member are yet to be static and the server isn't optimized for rendering large numbers of images on demand. As such the fancy new portraits have been included in this release, as they were at the time of building. Once the new API is static, the new member images will be pulled in on the fly, which will keep them up to date and add any new members should there be by-elections, or indeed another genreal election. 
 
@@ -93,7 +87,6 @@ A php file that declares an array of colors for each party. The colors defined b
 
 ## To-Do
  - Make new portraits dynamic. There is an API that can be scraped but at the moment the data within it is not static
- - Make screenshots dynamic. There is an API that presents screenshots whenever a member is tagged as speaking. At the minute you can't search by member so we'll have to be a little bit clever. 
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen.)
 

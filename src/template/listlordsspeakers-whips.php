@@ -20,6 +20,7 @@
 		$SplitOutSpeakers[$i] = str_replace('<p style="margin-left:70.9pt;">',"",$SplitOutSpeakers[$i]);
 		$SplitOutSpeakers[$i] = str_replace('<em>(Maiden speech)</em>','',$SplitOutSpeakers[$i]);
 		$SplitOutSpeakers[$i] = str_replace('<em>(Maiden Speech)</em>','',$SplitOutSpeakers[$i]);
+		$SplitOutSpeakers[$i] = str_replace('&#39;','\'',$SplitOutSpeakers[$i]);
 		$SplitOutSpeakers[$i] = str_replace('<p>&nbsp;&nbsp;',"",$SplitOutSpeakers[$i]);
 		$SplitOutSpeakers[$i] = str_replace('&nbsp;&nbsp&nbsp;',"",$SplitOutSpeakers[$i]);		
 		$SplitOutSpeakers[$i] = str_replace('&nbsp;&nbsp;',"",$SplitOutSpeakers[$i]);	

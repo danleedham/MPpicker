@@ -96,7 +96,7 @@
 							<div class="search-form" id="menu">
 								<div class="row">
 									<div id="date-div" class="col-sm-6">
-											<input id="date-input" type="date" class="input-sm form-control" onchange="loaddepts(this.value)" value="<?php echo $date ?>" name="date" >	
+											<input id="date-input" type="date" class="input-sm form-control" onchange="loadevents(this.value)" value="<?php echo $date ?>" name="date" >	
 									</div>
 									<div id="photos-div" class="col-sm-6">
 											<input id="photos-input" class="pull-right" style="float:right !important;" type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-width="100%" data-off="Stock">

@@ -116,15 +116,21 @@
 									</select>			
 								</div>
 							</div>
-							<div class="form-inline" id="loadbuttons" style="padding-top:6px !important;">
-								<a href="#" onclick="loadmembers(encodeURI(document.getElementById('event-input').value),encodeURI(document.getElementById('sect-input').value));return false;" class="btn btn-success" role="button">
-								Get List</a>
-								<input id="removedupes-input" style="float:right !important;" type="checkbox" value="keep" name="photos"  data-toggle="toggle" data-onstyle="warning" data-offstyle="success" data-on="Keep Dupes" data-off="Bin Dupes">
-								<span id="loader" class="pull-right" style="display:none; padding-top: 6px !important; padding-bottom: 6px; !important">
-										<i class="fa fa-refresh fa-spin" class="pull-right" style="font-size:20px"></i>
-									</span>
-								<span id="togglemenu"><a href="#" onclick="togglemenu();return false;" class="btn btn-info hidemobile" style="display: inline;" role="button">
-								Toggle Search</a></span>
+							<div id="loadbuttons" style="padding-top:6px !important;">
+								<div class="col-sm-4" style="padding-left:0px !important; padding-right:6px !important;">
+									<a href="#" onclick="loadmembers(encodeURI(document.getElementById('event-input').value),encodeURI(document.getElementById('sect-input').value));return false;" class="btn btn-success" style="width:100%;" role="button">
+									Get List</a>
+								</div>
+								<div class="col-sm-4" style="padding-left:6px !important; padding-right:6px !important;">
+									<input id="removedupes-input" style="float:right !important;" type="checkbox" value="keep" name="photos"  data-toggle="toggle" data-onstyle="warning" data-offstyle="success" data-on="Keep" data-width="100%" data-off="Remove">
+								</div>
+								<div class="col-sm-4" style="padding-left:6px !important; padding-right: 0px !important;">
+									<span id="loader" class="pull-right" style="display:none; padding-top: 6px !important; padding-bottom: 6px; !important">
+											<i class="fa fa-refresh fa-spin" class="pull-right" style="font-size:20px"></i>
+										</span>
+									<span id="togglemenu"><a href="#" onclick="togglemenu();return false;" class="btn btn-info hidemobile" style="display: block;" role="button">
+									Toggle Search</a></span>
+								</div>	
 							</div>
 						</div><!--panel body-->
 						

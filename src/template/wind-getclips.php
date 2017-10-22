@@ -11,7 +11,7 @@
 	}
 	
 	// Only go searching if we've been set an event, otherwise it's a fools errand. 
-	if(isset($event)) {
+	if(isset($event) && $event !== "") {
 		$logsURL = 'http://parliamentlive.tv/Event/Logs/'.$event;
 		$content = file_get_contents($logsURL);
 

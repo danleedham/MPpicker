@@ -334,9 +334,14 @@
 											<label for="withoutnotice-input" class="col-2 col-form-label">Withdrawn <strong>Before Order Paper Printed</strong> (s1 t1) seperated by spaces</label>
 											<input type="text" class="form-control" id="withoutnotice-input" form="withoutnotice"></input>
 											<br />
-											<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-info" role="button">
-											Set Groups & Withdrawn</a>
-											<input id="together-input" style="float:right !important;" type="checkbox" value="grouped" name="together-input"  data-toggle="toggle" data-onstyle="danger" data-offstyle="warning" data-on="Don't Group" data-off="Grouped">
+											<div class="col-sm-6" style="padding-left: 0px !important;">
+												<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-info" role="button">
+												Set Groups & Withdrawn</a>
+											</div>
+											<div class="col-sm-6" style="padding-right: 0px !important;">
+												<input id="together-input" style="float:right !important;" type="checkbox" value="grouped" name="together-input"  data-toggle="toggle" data-onstyle="danger" data-offstyle="warning" data-width="100%" data-on="Don't reorders" data-off="Reorder by groups">
+											</div>
+											<br />
 										</div>
 									</div>
 								</div>

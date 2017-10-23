@@ -60,9 +60,10 @@
 		}
 	
 		// Reindex arrays
-		$Events = array_values($Events);
-		$Clips = array_values($Clips);
-
+		if(isset($Events) && $Events !== "") {
+			$Events = array_values($Events);
+			$Clips = array_values($Clips);
+		}
 	} else {
 		$hasevents = false;
 	}

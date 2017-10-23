@@ -46,7 +46,7 @@ if(!isset($Events)) {
 }
 
 // If there still aren't any events set hint to ""
-if(isset($NoEventsSet) && $NoEventSet == true) {
+if(isset($NoEventsSet) && $NoEventsSet == true) {
 	$hint = "";
 } else {
 	// Load XML file containing all current MP's data 

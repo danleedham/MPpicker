@@ -84,16 +84,26 @@ if(isset($NoEventsSet) && $NoEventSet == true) {
 
 	// Now let's go through each clip and extract the helpful bits of information
 	for($i=0; $i<(count($Clips)); $i++) {	
-	
-		// Get the MP's Full Title
-		$ClipMP = explode('MP', $Clips[$i]['name']);
-		$ClipMP = array_shift($ClipMP);
-		$ClipMP = $ClipMP.'MP';
-		$ClipMP = trim($ClipMP);
-	
-		// Let's now check each MP to find which MP asked the question 
+		if(isset($GetLocation) && $GetLocation == "Lords") {
+			$ClipMP = explode('(', $Clips[$i]['name']);
+			$ClipMP = array_shift($ClipMP);
+			$ClipMP = trim($ClipMP);
+
+		} else {
+			// Get the MP's Full Title
+			$ClipMP = explode('MP', $Clips[$i]['name']);
+			$ClipMP = array_shift($ClipMP);
+			$ClipMP = $ClipMP.'MP';
+			$ClipMP = trim($ClipMP);
+
+		}	
+		// Let's now check each Member to find which member asked the question (variables say MP but it can be any member)
 		for ($y = 0; $y < $memberscount; $y++){	
-			$CurrentMP = trim($qxml->Member[$y]->FullTitle);
+			if($GetLocation !== "Lords"){
+				$CurrentMP = trim($qxml->Member[$y]->FullTitle);
+			} else {
+				$CurrentMP = trim($qxml->Member[$y]->DisplayAs);
+			}
 				if($ClipMP == $CurrentMP) { 
 					$DodsId=$qxml->Member[$y]->attributes()->Dods_Id;
 					$MemberId=$qxml->Member[$y]->attributes()->Member_Id;
@@ -103,18 +113,18 @@ if(isset($NoEventsSet) && $NoEventSet == true) {
 					$color = $colors[intval($PartyID)];
 					$Constituency=$qxml->Member[$y]->MemberFrom;
 				}
+	 	}
+	 	if(isset($MemberId)) {
+		   $wraparray[] = array('member'=>$MemberId,
+								'DisplayAs'=>$DisplayAs,
+								'DodsId'=>$DodsId,
+								'MemberId'=>intval($MemberId),
+								'constituency'=>$Constituency,
+								'party'=>$party,
+								'color'=>$color
+						);
 		}
-	   $wraparray[] = array('member'=>$MemberId,
-							'DisplayAs'=>$DisplayAs,
-							'DodsId'=>$DodsId,
-							'MemberId'=>intval($MemberId),
-							'constituency'=>$Constituency,
-							'party'=>$party,
-							'color'=>$color
-					);
-
 	}
-
 
 	$hint = "";	
 	if(isset($wraparray)){

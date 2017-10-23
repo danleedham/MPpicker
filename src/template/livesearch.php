@@ -22,8 +22,26 @@
 		$xmlDoc->load($filename);
 		
 	} elseif ($searchby == "position") {
+		if(!isset($side) && isset($_GET['side'])){
+			$side = $_GET["side"];
+		}
+		if(!isset($side)){
+			$side = "both";
+		}
+				
+		if(isset($side) && $side !== "both") {
+			if($side == "opposition") {
+				$sideURL = "OppositionPosts";	
+			} else {
+				$sideURL = "GovernmentPosts";
+			}	
+
+		} else {
+			$side = "both";
+			$sideURL = "GovernmentPosts%7COppositionPosts";
+		}
 		//Load all the members who are eligible to sit, then we will compare their constituencies later, as the query doesn't allow like constituency *
-		$filename = "http://data.parliament.uk/membersdataplatform/services/mnis/members/query/house=".$house."%7CIsEligible=true/GovernmentPosts%7COppositionPosts/";
+		$filename = "http://data.parliament.uk/membersdataplatform/services/mnis/members/query/house=".$house."%7CIsEligible=true/".$sideURL."/";
 		$xmlDoc->load($filename);
 
 	} else { 

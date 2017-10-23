@@ -26,7 +26,7 @@
 			} else {
 				var house = "Lords";
 			}
-			// Check if the user wants to search by name or constituency 
+			// Check if the user wants to search by name, constituency or opsition
 			var searchby = document.getElementById("searchby").value;
 			if (searchby == "name") {
 				reqdchars = 2;
@@ -37,6 +37,13 @@
 			} else {
 				reqdchars = 4;
 				var url = "livesearch.php";
+			}
+			// If we want to search by position then 
+			if (searchby == "position"){
+				var positiontype = document.getElementById("positiontype").value;
+				var side = "&side=" + positiontype;
+			} else {
+				var side = "";
 			}
 			// If the string is x characters or more then do a nice little search
 			if (str.length <= reqdchars) {
@@ -55,7 +62,7 @@
 					document.getElementById("livesearchmember").innerHTML = this.responseText;
 				}
 			}
-			xmlhttp.open("GET", "template/" + url + "?house=" + house + "&searchby=" + searchby + "&q=" + str, true);
+			xmlhttp.open("GET", "template/" + url + "?house=" + house + "&searchby=" + searchby + "&q=" + str + side, true);
 			xmlhttp.send();
 		}
 
@@ -76,6 +83,16 @@
 		function togglemobilelist() {
 			var list = document.getElementById("list");
 			list.style.display = list.style.display === 'none' ? 'block' : 'none';
+		}
+		function changesearchby() {
+			var searchby = document.getElementById("searchby").value;
+			console.log('Searching by '+searchby);
+			var positiontype = document.getElementById("positiontypediv");
+			if (searchby == "position") {
+				positiontype.style.display = 'block';
+			} else {
+				 positiontype.style.display = 'none';
+			}
 		}
 	</script>
 </head>
@@ -109,7 +126,7 @@
 						<div class="search-form">	
 							<div class="col-sm-12 input-toggle">
 								<div class="form-group">
-									<select class="form-control custom-select" form="mpsearch" id="searchby" name="searchby">
+									<select class="form-control custom-select" form="mpsearch" id="searchby" name="searchby" onchange="changesearchby();">
 										<option value="name">
 											Name
 										</option>
@@ -123,7 +140,24 @@
 										</option>
 									</select>
 								</div>
-							</div>		
+							</div>
+							<div class="col-sm-12 input-toggle" id="positiontypediv" style="display: none";>
+								<div class="form-group">
+									<select class="form-control custom-select" form="mpsearch" id="positiontype" name="positiontype">
+										<option value="government">
+											Government
+										</option>
+
+										<option value="opposition">
+											Opposition
+										</option>
+
+										<option selected="selected" value="both">
+											All Parties
+										</option>
+									</select>
+								</div>
+							</div>			
 						</div>
 						<div class="search-form" style="padding-top: 6px">	
 							<div class="col-sm-6 membersearch-options input-toggle">

@@ -51,7 +51,10 @@
 
 	// Get just the Member sub-elements of the XML File
 	$x=$xmlDoc->getElementsByTagName('Member');
-
+	
+	// Array with party ID and party color
+	require_once('colors.php');	
+	
 	//First, lets look for members by name
 	if ($searchby == "name") {
 		if(strlen($q)>1) {
@@ -60,6 +63,8 @@
 				$FullTitle=$x->item($i)->getElementsByTagName('FullTitle');
 				$KnownAs=$x->item($i)->getElementsByTagName('DisplayAs');
 				$Party=$x->item($i)->getElementsByTagName('Party');
+				$PartyID=$x->item($i)->getElementsByTagName('Party')->item(0)->getAttribute('Id');
+				$color = $colors[intval($PartyID)];
 				$MemberId=$x->item($i)->getAttribute('Member_Id');
 				$DodsId=$x->item($i)->getAttribute('Dods_Id');
 				$Const=$x->item($i)->getElementsByTagName('MemberFrom');
@@ -72,7 +77,7 @@
 					if (stristr($FullTitle->item(0)->childNodes->item(0)->nodeValue,$q)) {
 						$hint = $hint .'<a id="m'.$MemberId.'" class="list-group-item'.$ifactive.'" onclick="load('.$MemberId.');return false;" href="#">
 						<img src="https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg" class="img-rounded mini-member-image pull-left">
-						<h4 class="list-group-item-heading"> '.$KnownAs->item(0)->childNodes->item(0)->nodeValue .'</h4>
+						<h4 class="list-group-item-heading"> <span class="partybox" style="background:'.$color.'!important"></span>'.$KnownAs->item(0)->childNodes->item(0)->nodeValue .'</h4>
 						<p class="list-group-item-text">'.
 						$Party->item(0)->childNodes->item(0)->nodeValue.' ('.$Const->item(0)->childNodes->item(0)->nodeValue.")</p></a>";
 					}
@@ -87,8 +92,11 @@
 				$FullTitle=$x->item($i)->getElementsByTagName('FullTitle');
 				$KnownAs=$x->item($i)->getElementsByTagName('DisplayAs');
 				$Party=$x->item($i)->getElementsByTagName('Party');
+				$PartyID=$x->item($i)->getElementsByTagName('Party')->item(0)->getAttribute('Id');
+				$color = $colors[intval($PartyID)];
 				$MemberId=$x->item($i)->getAttribute('Member_Id');
 				$DodsId=$x->item($i)->getAttribute('Dods_Id');
+				
 				if ($house == "Lords") {
 					$Const=$FullTitle; //fix to search for the Lords name for location as they don't have constituencies
 				} else {
@@ -103,7 +111,7 @@
 					if (stristr($Const->item(0)->childNodes->item(0)->nodeValue,$q)) {
 						$hint=$hint .'<a id="m'.$MemberId.'" class="list-group-item'.$ifactive.'" onclick="load('.$MemberId.');return false;" href="#">
 						<img src="https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg" class="img-rounded mini-member-image pull-left">
-						<h4 class="list-group-item-heading"> '.$KnownAs->item(0)->childNodes->item(0)->nodeValue .'</h4>
+						<h4 class="list-group-item-heading"><span class="partybox" style="background:'.$color.'!important"></span>'.$KnownAs->item(0)->childNodes->item(0)->nodeValue .'</h4>
 						<p class="list-group-item-text">'.
 						$Party->item(0)->childNodes->item(0)->nodeValue.' ('.$Const->item(0)->childNodes->item(0)->nodeValue.")</p></a>";
 					}
@@ -118,6 +126,8 @@
 				$FullTitle=$x->item($i)->getElementsByTagName('FullTitle');
 				$KnownAs=$x->item($i)->getElementsByTagName('DisplayAs');
 				$Party=$x->item($i)->getElementsByTagName('Party');
+				$PartyID=$x->item($i)->getElementsByTagName('Party')->item(0)->getAttribute('Id');
+				$color = $colors[intval($PartyID)];
 				$MemberId=$x->item($i)->getAttribute('Member_Id');
 				$DodsId=$x->item($i)->getAttribute('Dods_Id');
 				$Const=$x->item($i)->getElementsByTagName('MemberFrom');
@@ -141,7 +151,7 @@
 					if (strpos(strtolower(implode($Jobsarray)),strtolower($q))) {
 						$hint=$hint .'<a id="m'.$MemberId.'" class="list-group-item'.$ifactive.'" onclick="load('.$MemberId.');return false;" href="#">
 						<img src="https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg" class="img-rounded mini-member-image pull-left">
-						<h4 class="list-group-item-heading"> '.$JobsarrayForDisplay.'</h4>
+						<h4 class="list-group-item-heading"> <span class="partybox" style="background:'.$color.'!important"></span>'.$JobsarrayForDisplay.'</h4>
 						<p class="list-group-item-text">'.
 						$KnownAs->item(0)->childNodes->item(0)->nodeValue ." - ".$Party->item(0)->childNodes->item(0)->nodeValue."</p></a>";
 					}

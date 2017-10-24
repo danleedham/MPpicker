@@ -126,8 +126,9 @@ $xmlDoc=new DOMDocument();
 				$uin=$x->item($i)->getElementsByTagName('uin');
 				
 				// Some elements are subnodes and require the textContent to be extracted then trimmed
+				$MemberId=$x->item($i)->getElementsByTagName('tablingMember')->item(0)->getAttribute('href');
+					$CurrentQuestioner = intval(str_replace("http://data.parliament.uk/members/","",$MemberId));
 				$tablingMemberPrinted=$x->item($i)->getElementsByTagName('tablingMemberPrinted');
-					$CurrentQuestioner = trim($tablingMemberPrinted->item(0)->textContent);
 				$Const=$x->item($i)->getElementsByTagName('constituency');
 					$Constituency = trim($Const['prefLabel']->textContent);
 				$TabledDate=$x->item($i)->getElementsByTagName('TabledDate');
@@ -140,7 +141,7 @@ $xmlDoc=new DOMDocument();
 
 				// Let's now check each MP to find which MP asked the question 
 				for ($y = 0; $y < $memberscount; $y++){
-					$CurrentMP = trim($qxml->Member[$y]->ListAs);
+					$CurrentMP = intval($qxml->Member[$y]->attributes()->Member_Id);
 						if($CurrentQuestioner === $CurrentMP) { 
 							$DodsId=$qxml->Member[$y]->attributes()->Dods_Id;
 							$MemberId=$qxml->Member[$y]->attributes()->Member_Id;

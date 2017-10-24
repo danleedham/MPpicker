@@ -144,8 +144,8 @@ if(isset($NoEventsSet) && $NoEventsSet == true) {
 	
 			$hint=$hint .'<a id="m'.$wraparray[$i]["MemberId"].'" class="list-group-item" onclick="load('.$wraparray[$i]["MemberId"].') ;return false;"  href="#">
 			   <img src="'.$imageurl.'" class="img-rounded mini-member-image pull-left">
-			   <h4 class="list-group-item-heading"><span class="partybox" style="background:'.$wraparray[$i]["color"].'"></span>'. $wraparray[$i]["DisplayAs"].'</h4>
-			   <p class="list-group-item-text">'.$wraparray[$i]["constituency"].' ('.$wraparray[$i]["party"].')</p></a>';
+			   <h4 class="list-group-item-heading"><span class="partybox" style="background:'.$wraparray[$i]["color"].'"></span>'. $wraparray[$i]["constituency"].'</h4>
+			   <p class="list-group-item-text">'.$wraparray[$i]["DisplayAs"].' ('.$wraparray[$i]["party"].')</p></a>';
 		}
 	}
 }

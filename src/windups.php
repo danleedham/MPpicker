@@ -34,10 +34,11 @@
 		console.log('Loading member: '+member);
 		$("#contactCard").load('template/member.php?m='+member+'&photos='+photos,function() {
 			document.getElementById('loader').style.display = 'none';
+			document.getElementById('togglemenu').style.display = 'inline';
 		});
 		$('.active').removeClass('active');
 		$('#m'+num).addClass("active");
-		document.getElementById('togglemenu').style.display = 'inline';
+		
 	}
 	function loadmembers(eventid,section){
 		document.getElementById('togglemenu').style.display = 'none';

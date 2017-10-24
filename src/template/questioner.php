@@ -119,27 +119,33 @@ $xmlMembers=new DOMDocument();
 			<div class="panel-heading clearfix">
 				<h3 class="panel-title pull-left">
 				<?php 
-					if(isset($qarray)) : 
-					echo $xml->Member[0]->DisplayAs ?>
+					if(isset($qarray)) :  ?>
 					<span class="partybox-large" style="background:                  
 					<?php  $PartyID = $xml->Member[0]->Party[0]->attributes()->Id;              	          	     
 						 echo $colors[intval($PartyID)];
 					?>"></span>
-					<?php echo $xml->Member[0]->Party ?> 
-					(<?php echo $xml->Member[0]->MemberFrom ?>)
+					<?php echo $xml->Member[0]->DisplayAs;
+					echo ' - ';
+					echo $xml->Member[0]->MemberFrom ?>
 					</h3>
 						<input type="hidden" id="currentuin" value="<?php echo $uin; ?>">
 						<input type="hidden" id="currentnext" value="<?php echo $next; ?>">
 						<input type="hidden" id="currentprev" value="<?php echo $prev; ?>">
-				<a class="btn btn-primary pull-right" onclick="load(<?php echo '\''.$next.'\',\''.$date.'\''; ?>);return false;" href="#" data-toggle="modal">
+				<a class="btn btn-primary pull-right questioner-button" onclick="load(<?php echo '\''.$next.'\',\''.$date.'\''; ?>);return false;" href="#" data-toggle="modal">
 				  <i class="fa fa-arrow-right"></i>Next
 				</a>
-				 <a class="btn btn-primary pull-right" onclick="load(<?php echo '\''.$prev.'\',\''.$date.'\''; ?>);return false;" data-toggle="modal">
+				 <a class="btn btn-primary pull-right questioner-button" onclick="load(<?php echo '\''.$prev.'\',\''.$date.'\''; ?>);return false;" data-toggle="modal">
 				  <i class="fa fa-arrow-left"></i>Previous
 				</a>
-				 <a class="btn btn-warning pull-right" style="margin-right: 6px;" onclick="gotopicals()">
+				<?php if($qarray[0]["type"] == "Topical"):?>
+				 <a class="btn btn-warning pull-right questioner-button" style="margin-right: 6px;" onclick="gosubstantive()">
+				  <i class="fa fa-refresh"></i>To Substantive
+				</a>
+				<?php else: ?>
+				<a class="btn btn-warning pull-right questioner-button" style="margin-right: 6px;" onclick="gotopicals()">
 				  <i class="fa fa-refresh"></i>To Topicals
 				</a>
+				<?php endif; ?>
 			</div>
 			<div class="list-group">
 				<div class="list-group-item list-group-item-image">
@@ -178,7 +184,7 @@ $xmlMembers=new DOMDocument();
 				<img id="questioner-img" src="<?php echo $imageurl; ?>" class="main-question-image">
 			</div>
 			<div class="list-group-item">
-			<label>Question <?php echo $qarray[0]["type"]; ?> <?php echo $qarray[0]["number"]; ?></label>
+			<label><?php echo $qarray[0]["type"]; ?> Question</label>
 			<?php if(isset($screenshotused)): ?>
 					 <a href="#" onclick="anotherphoto(document.getElementById('current-photo').value,<?php echo $m ?>);return false;" class="btn btn-info pull-right" role="button">
 									 Get us another photo please</a>

@@ -20,10 +20,14 @@
 	if (isset($_GET["house"])){
 		$house = $_GET["house"];
 	}
+	if (!isset($house)) {
+		$house = "Commons";
+	}
 	?>
 
 <script>
 	function load(num,date){
+		document.getElementById('togglemenu').style.display = 'none';
 		document.getElementById('loader').style.display = 'inline';
 		if (!document.getElementById("photos-input").checked){
 			var photos = 'Stock';
@@ -35,25 +39,24 @@
 		console.log('Loading question: '+num+' next: '+next+' prev: '+prev);
 		$("#contactCard").load('template/questioner.php?uin='+num+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
 			document.getElementById('loader').style.display = 'none';
+			document.getElementById('togglemenu').style.display = 'inline';
 		});
 		$('.active').removeClass('active');
 		$('#q'+num).addClass("active");
 	}
 	function loadlords(id){
+		document.getElementById('togglemenu').style.display = 'none';
 		document.getElementById('loader').style.display = 'inline';
-		if (!document.getElementById("photos-input").checked){
-			var photos = 'Stock';
-		} else {
-			var photos = "screenshot";
-		}
 		console.log('Loading Lords Member: '+id);
 		$("#contactCard").load('template/member.php?m='+id,function() {
 			document.getElementById('loader').style.display = 'none';
+			document.getElementById('togglemenu').style.display = 'inline';
 		});
 		$('.active').removeClass('active');
 		$('#q'+id).addClass("active");
 	}
 	function loadquestions(date,dept,type){
+		document.getElementById('togglemenu').style.display = 'none';
 		document.getElementById('loader').style.display = 'inline';
 		if (!document.getElementById("together-input").checked){
 			var together = "together";
@@ -68,12 +71,23 @@
 		groups = encodeURI(groups);
 		withdrawn = encodeURI(withdrawn);
 		$("#livesearch").load('template/listquestions.php?date='+date+'&type='+type+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice+'&together='+together,function() {
-   		document.getElementById('loader').style.display = 'none';
+			document.getElementById('loader').style.display = 'none';
+			document.getElementById('togglemenu').style.display = 'inline';
    		});
 	}
-	function loadlordsquestions(date){
-		$("#livesearch").load('template/listlordsquestions.php?date='+date,function() {
-		});
+	function loadlordsquestions(){
+		document.getElementById('togglemenu').style.display = 'none';
+		document.getElementById('loader').style.display = 'inline';
+		var chosenBusiness = document.getElementById("sect-input").value;
+		if(chosenBusiness == "questions") {
+			var urlend = "listlordsquestions.php";
+		} else {
+			var urlend = 'lordsspeakers.php?chosenBusiness='+chosenBusiness;
+		}
+		$("#livesearch").load('template/'+urlend,function() {
+			document.getElementById('loader').style.display = 'none';
+			document.getElementById('togglemenu').style.display = 'inline';
+		});		
 	}
 	function loaddepts(date){
 	   $("#dept-input").load('template/questiondepts.php?date='+date);
@@ -94,17 +108,33 @@
 	   dept = encodeURI(dept);
 	   var groups = document.getElementById("groups-input").value;
 	   var withdrawn = document.getElementById("withdrawn-input").value;
-	   console.log('Loading Topical questions to '+dept+' on '+date+' using groups: '+groups+' and withdrawing: '+withdrawn);
+	   var withoutnotice = document.getElementById("withoutnotice-input").value;
+	   console.log('Loading Topical questions to '+dept+' on '+date+' and withdrawing: '+withdrawn);
 	   groups = groups.replace(/[\r\n]+/g,",");
 	   groups = encodeURI(groups);
 	   withdrawn = encodeURI(withdrawn);
-	   $("#livesearch").load('template/listquestions.php?date='+date+'&type=Topical&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn);
+	   $("#livesearch").load('template/listquestions.php?date='+date+'&type=Topical&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice);
+	}
+	function gosubstantive(){
+	   document.getElementById("type-input").value = 'Substantive';
+	   var date = document.getElementById("date-input").value;
+	   date = date.toString();
+	   var dept = document.getElementById("dept-input").value;
+	   dept = encodeURI(dept);
+	   var groups = document.getElementById("groups-input").value;
+	   var withdrawn = document.getElementById("withdrawn-input").value;
+	   var withoutnotice = document.getElementById("withoutnotice-input").value;
+	   console.log('Loading Substantive questions to '+dept+' on '+date+' using groups: '+groups+' and withdrawing: '+withdrawn);
+	   groups = groups.replace(/[\r\n]+/g,",");
+	   groups = encodeURI(groups);
+	   withdrawn = encodeURI(withdrawn);
+	   $("#livesearch").load('template/listquestions.php?date='+date+'&type=Substantive&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice);
 	}
 	function togglemenu(){
 		var menu = document.getElementById("menu");
 		menu.style.display = menu.style.display === 'none' ? '' : 'none';
 		var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-		var listsize = h - 165;
+		var listsize = h - 154;
 		console.log('Removing Menu and Resizing list to '+listsize);
 		document.getElementById("livesearch").setAttribute("style","height:"+listsize+"px");
 		
@@ -113,12 +143,13 @@
 		var list = document.getElementById("list");
 		list.style.display = list.style.display === 'none' ? 'block' : 'none';
 	}
-	
+
 	document.onkeydown = checkKey;
 	function checkKey(e) {
 		e = e || window.event;
 		if (e.keyCode == '37') {
 			$('.active').removeClass('active');
+			document.getElementById('togglemenu').style.display = 'none';
 			document.getElementById('loader').style.display = 'inline';
 			if (!document.getElementById("photos-input").checked){
 				var photos = 'Stock';
@@ -135,8 +166,10 @@
 				document.getElementById('loader').style.display = 'none';
 			});
 			$('#q'+thisprev).addClass("active");
+			document.getElementById('togglemenu').style.display = 'inline';
 		}
 		else if (e.keyCode == '39') {
+			document.getElementById('togglemenu').style.display = 'none';
 			$('.active').removeClass('active');
 			document.getElementById('loader').style.display = 'inline';
 			if (!document.getElementById("photos-input").checked){
@@ -152,8 +185,10 @@
 			console.log('Loading question: '+thisnext+' next: '+next+' prev: '+prev);
 			$("#contactCard").load('template/questioner.php?uin='+thisnext+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
 				document.getElementById('loader').style.display = 'none';
+				document.getElementById('togglemenu').style.display = 'inline';
 			});
 			$('#q'+thisnext).addClass("active");
+			
 	   }
 	}
 </script>
@@ -173,33 +208,61 @@
 					<div class="panel panel-default">
 						<div class="panel-body" id="list-inputs">
 							<div class="search-form" id="menu">
-								<div class="form-inline">
-									<input id="date-input" type="date" class="input-sm form-control" onchange="loaddepts(this.value)" value="<?php echo $date ?>" name="date" >	
-									<input id="photos-input" style="float:right !important;" type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-off="Stock">
-								</div>
+								<?php if($house !== "Lords"): ?>
+								<div class="row">
+									<div id="date-div" class="col-sm-6">
+											<input id="date-input" type="date" class="input-sm form-control" onchange="loaddepts(this.value)" value="<?php echo $date ?>" name="date" >	
+									</div>
+									<div id="photos-div" class="col-sm-6">
+											<input id="photos-input" class="pull-right" style="float:right !important;" type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-width="100%" data-off="Stock">
+									</div>
+								</div>	
+								<?php endif; ?>
+								
 								<div class="form-inline" style="padding-top:6px !important;">
+									<?php if($house == "Lords"): ?>
+									<label for="sect-input">Section:</label><br />
+									<select id="sect-input" onchange="loadlordsquestions()" name="type" class="form-control">
+										<?php include 'template/lordsquestions-sections.php' ?>
+									</select>	
+									<?php else: ?>
 									<label for="dept-input">Department:</label><br />
 									<select id="dept-input" onchange="loadtypes()" name="type" class="form-control">
 										<?php include 'template/questiondepts.php' ?>
-									</select>			
+									</select>	
+									<?php endif; ?>
 								</div>
+								<?php if($house !== "Lords"): ?>
 								<div class="form-inline" style="padding-top:6px !important;">
 								   <label for="type-input">Type:</label><br />
-								<select id="type-input" name="type" class="form-control" onchange="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(this.value));return false;">
+									<select id="type-input" name="type" class="form-control" onchange="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(this.value));return false;">
 										Type: <?php include 'template/questiontypes.php' ?>
-								</select>
+									</select>
 								</div>
+								<?php endif; ?>
 							</div>
-							<div class="form-inline" id="loadbuttons" style="padding-top:6px !important;">
-								<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-success" role="button">
-								Commons</a>
-								<a href="#" onclick="loadlordsquestions(document.getElementById('date-input').value);return false;" class="btn btn-danger" role="button">
-								Lords</a>
-								<span id="loader" style="display:none;">
-									<i class="fa fa-refresh fa-spin" class="pull-right" style="font-size:20px"></i>
-								</span>
-								<a href="#" onclick="togglemenu();return false;" class="btn btn-info hidemobile" style="float:right !important;" role="button">
-								Toggle Search</a>
+							<div id="loadbuttons" style="padding-top:6px !important;">
+								<div class="col-sm-4" style="padding-left:0px !important; padding-right:6px !important;">
+								<?php if($house == "Lords"): ?>
+								<a href="#" onclick="loadlordsquestions();return false;" class="btn btn-danger" role="button" style="width: 100% !important;">
+									Load</a>
+								<?php else: ?>
+								<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-success" role="button" style="width: 100% !important;">
+									Load</a>
+								<?php endif; ?>
+								</div>
+								<?php if($house !== "Lords"): ?>
+								<div class="col-sm-4" style="padding-left:6px !important; padding-right:6px !important;">
+									<button type="button" style="width: 100% !important;" class="btn btn-warning" data-toggle="modal" data-target="#groupCard">Set Groups</button>
+								</div>
+								<?php endif; ?>
+								<div id="search-toggle-div" class="col-sm-4" style="padding-left:6px !important;">
+									<span id="loader" class="pull-right" style="display:none; padding-top: 6px !important; padding-bottom: 6px; !important">
+										<i class="fa fa-refresh fa-spin" class="pull-right" style="font-size:20px"></i>
+									</span>
+									<a href="#" id="togglemenu" onclick="togglemenu();return false;" class="btn btn-info hidemobile" style="display: inline; float:right !important; width: 100% !important;" role="button">
+									Toggle Input</a>
+								</div>
 							</div>
 						</div><!--panel body-->
 						
@@ -207,10 +270,10 @@
 						
 						</div><!--list-group-->
 
-						<div class="panel-footer" id="list-footer">
+					<!-- <div class="panel-footer" id="list-footer">
 							<small class="pull-left">This section auto-populates by magic (and php).</small>
 							<a class="btn btn-link btn-xs pull-right" href="http://data.parliament.uk/membersdataplatform/">Live Data</a>
-						</div>
+						</div> -->
 					</div><!--panel-->
 
 				</div><!--list-->
@@ -231,7 +294,8 @@
 							<div class="col-12">
 								<p>Use the search tools on the left and MP details will appear here. </p>
 								<p><a href="https://www.parliament.uk/documents/commons-table-office/Oral-questions-rota.pdf">Click here to view the Oral Questions Rota (external).</a href></p>
-								<a href="#" onclick="printQuestions();return false;" class="btn btn-danger" role="button">Print Questions as listed</a>
+								<a href="#" onclick="printQuestions();return false;" class="btn btn-info" role="button">Print Questions as listed</a>
+								<a href="?house=Lords" class="btn btn-danger" role="button">Switch to House of Lords</a>
 							</div>
 						</div>
 					</div>
@@ -239,57 +303,58 @@
               </div>
            </div>
 		</div>
+		</div><!--list-details-->
+	</div><!--row-->
+</div><!--container-->
 	
-          <!-- Group details -->
-          <div id="groupCard" stlye="margin-bottom: 60px !important;">
-
-            <div class="panel panel-default">
-              <div class="panel-heading clearfix">
-                <h3 class="panel-title pull-left">Grouped & Withdrawn Questions</h3>
-              </div>
-              <div class="list-group">
-                <div class="list-group-item">
-					<form id="groups">
-						<div class="search-form">
-							<div class="form-group">	
-							<label for="date-input" class="col-2 col-form-label">Enter groups on seperate lines with questions space delimited</label>
-								<div class="col-10">
-									 <textarea class="form-control" rows="3" id="groups-input" form="groups"></textarea>
+	<!-- Group details -->
+	<div id="groupCard" class="modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h3 class="modal-title">Grouped & Withdrawn Questions</h3>
+				</div>
+				<div class="modal-body">
+					<div class="list-group">
+						<div class="list-group-item">
+							<form id="groups">
+								<div class="search-form">
+									<div class="form-group">	
+										<label for="date-input" class="col-2 col-form-label">Enter groups on seperate lines with questions space delimited</label>
+										<div class="col-10">
+											<textarea class="form-control" rows="3" id="groups-input" form="groups"></textarea>
+										</div>
+									</div>
+									<div class="form-group">	
+										<div class="col-10">
+											<label for="withdrawn-input" class="col-2 col-form-label">Withdrawn <strong>on the day</strong> (s1 t1) seperated by spaces</label>
+											<input type="text" class="form-control" id="withdrawn-input" form="withdrawn"></input>
+											<br />
+											<label for="withoutnotice-input" class="col-2 col-form-label">Withdrawn <strong>Before Order Paper Printed</strong> (s1 t1) seperated by spaces</label>
+											<input type="text" class="form-control" id="withoutnotice-input" form="withoutnotice"></input>
+											<br />
+											<div class="col-sm-6" style="padding-left: 0px !important;">
+												<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-info" role="button">
+												Set Groups & Withdrawn</a>
+											</div>
+											<div class="col-sm-6" style="padding-right: 0px !important;">
+												<input id="together-input" style="float:right !important;" type="checkbox" value="grouped" name="together-input"  data-toggle="toggle" data-onstyle="danger" data-offstyle="warning" data-width="100%" data-on="Don't reorders" data-off="Reorder by groups">
+											</div>
+											<br />
+										</div>
+									</div>
 								</div>
-							</div>
-							<div class="form-group">	
-								<div class="col-10">
-									<label for="withdrawn-input" class="col-2 col-form-label">Withdrawn <strong>on the day</strong> (s1 t1) seperated by spaces</label>
-									 <input type="text" class="form-control" id="withdrawn-input" form="withdrawn"></input>
-									 <br />
-									 <label for="withoutnotice-input" class="col-2 col-form-label">Withdrawn <strong>Before Order Paper Printed</strong> (s1 t1) seperated by spaces</label>
-									 <input type="text" class="form-control" id="withoutnotice-input" form="withoutnotice"></input>
-									 <br />
-									 <a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-info" role="button">
-									 Set Groups & Withdrawn</a>
-									 <input id="together-input" style="float:right !important;" type="checkbox" value="grouped" name="together-input"  data-toggle="toggle" data-onstyle="danger" data-offstyle="warning" data-on="Don't Group" data-off="Grouped">
-								</div>
-							</div>
-						</div>
-					</form>	
-                </div>        
-	          </div>
-              </div>
+							</form>	
+						</div>        
+					</div>
+				</div> <!-- Modal Body -->
+			</div><!-- Modal Content -->
+		</div><!-- Modal Dialog -->
+	</div><!--Group / withdrawn card-->
 
-            </div><!--Group / withdrawn card-->
-
-
-        </div><!--list-details-->
-
-    </div><!--row-->
-
-
-  </div><!--container-->
-
-	<?php include 'template/footer.php'; ?>
-
-  
-   <?php include 'template/core.php'; ?>
+	<?php include 'template/footer.php'; ?>  
+	<?php include 'template/core.php'; ?>
    
-  </body>
+</body>
 </html>

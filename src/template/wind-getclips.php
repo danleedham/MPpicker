@@ -10,12 +10,13 @@
 		$event = $_GET["event"];
 	}
 	
-	
 	// Only go searching if we've been set an event, otherwise it's a fools errand. 
-	if(isset($event)) {
+	if(isset($event) && $event !== "") {
+	
+		include('wind-geteventlocation.php');
 		$logsURL = 'http://parliamentlive.tv/Event/Logs/'.$event;
 		$content = file_get_contents($logsURL);
-
+	
 		$SplitOutClips = explode( '<header class="stack-item">', $content );
 		$SplitOutClips = array_slice($SplitOutClips,1);	
 		$GetClipTitles = $SplitOutClips;
@@ -34,7 +35,6 @@
 			$GetClipTimes[$i] = trim($GetClipTimes[$i][0]);
 
 		}
-
 		// Combine clip names and times please!
 		$Clips = array();
 		for ($i=0; $i<count($GetClipTimes); $i++){
@@ -43,11 +43,13 @@
 				$Clips[$i]['time'] = $GetClipTimes[$i];
 				$Clips[$i]['name'] = $GetClipTitles[$i];
 				$Clips[$i]['id'] = $i;
-			// For the Lords if the clip name doesn't have ( presume it's a title
-			} elseif (strpos($GetClipTitles[$i],"ajdlaksjdas")){
+			// For the Lords
+			} elseif (isset($GetLocation) && $GetLocation == "Lords" && strpos($GetClipTitles[$i],'(')){
 				$Clips[$i]['time'] = $GetClipTimes[$i];
 				$Clips[$i]['name'] = $GetClipTitles[$i];
 				$Clips[$i]['id'] = $i;
+			} elseif(strpos($GetClipTitles[$i],"Speaker")){
+				// If Mr Speaker is logged
 			} else {
 				if($GetClipTitles[$i] !== "") {
 					$Events[$i]['time'] = $GetClipTimes[$i];
@@ -58,11 +60,10 @@
 		}
 	
 		// Reindex arrays
-		$Events = array_values($Events);
-		$Clips = array_values($Clips);
-	
-		// print_r($Events);	
-
+		if(isset($Events) && $Events !== "") {
+			$Events = array_values($Events);
+			$Clips = array_values($Clips);
+		}
 	} else {
 		$hasevents = false;
 	}

@@ -153,7 +153,7 @@ a.list-group-item:hover {
 }
 a.list-group-item:before {
     font-family: FontAwesome;
-    content: '';
+    content: "\f054";
     position: absolute;
     right: 15px;
     top: 50%;
@@ -252,7 +252,7 @@ a.list-group-item.bootcards-list-subheading.collapsed:before {
 }
 .bootcards-list .search-form input,
 .bootcards-list form input {
-    padding-left: 32px
+   /* padding-left: 32px */
 }
 .bootcards-list .search-form i.fa-search,
 .bootcards-list form i.fa-search {
@@ -803,7 +803,7 @@ h3.panel-title.pull-left {
 
 .input-toggle {
 	padding-left: 2px !important;
-	padding-right 2px !important;
+	padding-right: 2px !important;
 }
 
 .fa-bars:hover {
@@ -820,8 +820,13 @@ h3.panel-title.pull-left {
 	overflow: auto;
 }
 
+#wrapups { 
+	height: calc(100vh - 360px);  /* bad fix to make the questions scroll but not the image */
+	overflow: auto;
+}
+
 #livesearchmember { 
-	height: calc(100vh - 175px);  /* bad fix to make the questions scroll but not the image */
+	height: calc(100vh - 250px);  /* bad fix to make the members scroll but not the image */
 	overflow: auto;
 }
 
@@ -859,4 +864,38 @@ h3.panel-title.pull-left {
 
 .whonamelink {
 	color: #fff !important;
+}
+
+select#dept-input.form-control, select#type-input.form-control {
+    width: 100% !important;
+}
+
+input#date-input.input-sm.form-control {
+	width: 100% !important;
+}
+div#date-div.col-sm-6 {
+	padding-right: 15px !important;
+}
+
+div#search-toggle-div.col-sm-4 {
+	padding-right: 0px !important;
+}
+
+.toggle .btn {
+	padding: 6px 15px !important;
+}
+.btn .footer-btn {
+	padding: 6px 15px !important;
+}
+
+.modal-body {
+	background-color: #1c1c1c;
+}
+
+.modal-header {
+	background-color: #37474F;
+}
+
+.questioner-button {
+	padding: 2px 12px !important;	
 }

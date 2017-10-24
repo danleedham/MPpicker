@@ -33,7 +33,7 @@
 	if ($house == "Commons") {
 		if (!isset($photos) or $photos  !== "screenshot") {	
 			for($ii=0; $ii < $imagescount; $ii++) {
-				if (trim($betaimages->member[$ii]->KnownAs) == trim($xml->Member[0]->DisplayAs)){
+				if (intval($betaimages->member[$ii]->memberid) == intval($xml->Member[0]->attributes()->Member_Id)){
 					$BetaId = $betaimages->member[$ii]->imageid;
 				}
 			}

@@ -141,11 +141,19 @@ if(isset($NoEventsSet) && $NoEventsSet == true) {
 			} else {
 				$imageurl = 'images/stock/thumbs/'.$BetaId.'.jpeg'; 
 			}
-	
+			
+			if (isset($GetLocation) && $GetLocation == "Lords") {
+				$footer = $wraparray[$i]["constituency"];
+				$header = $wraparray[$i]["DisplayAs"];
+			} else {
+				$header = $wraparray[$i]["constituency"];
+				$footer = $wraparray[$i]["DisplayAs"];
+			}
+			
 			$hint=$hint .'<a id="m'.$wraparray[$i]["MemberId"].'" class="list-group-item" onclick="load('.$wraparray[$i]["MemberId"].') ;return false;"  href="#">
 			   <img src="'.$imageurl.'" class="img-rounded mini-member-image pull-left">
-			   <h4 class="list-group-item-heading"><span class="partybox" style="background:'.$wraparray[$i]["color"].'"></span>'. $wraparray[$i]["constituency"].'</h4>
-			   <p class="list-group-item-text">'.$wraparray[$i]["DisplayAs"].' ('.$wraparray[$i]["party"].')</p></a>';
+			   <h4 class="list-group-item-heading"><span class="partybox" style="background:'.$wraparray[$i]["color"].'"></span>'. $header.'</h4>
+			   <p class="list-group-item-text">'.$footer.' ('.$wraparray[$i]["party"].')</p></a>';
 		}
 	}
 }

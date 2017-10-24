@@ -45,6 +45,9 @@
 				$Clips[$i]['id'] = $i;
 			// For the Lords
 			} elseif (isset($GetLocation) && $GetLocation == "Lords" && strpos($GetClipTitles[$i],'(')){
+				// Remove titles from ministers	
+				$GetClipTitles[$i] = explode(",",$GetClipTitles[$i]);
+				$GetClipTitles[$i] = $GetClipTitles[$i][0];
 				$Clips[$i]['time'] = $GetClipTimes[$i];
 				$Clips[$i]['name'] = $GetClipTitles[$i];
 				$Clips[$i]['id'] = $i;

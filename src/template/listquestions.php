@@ -310,7 +310,7 @@ $xmlDoc=new DOMDocument();
 				}
 				
 				for($ii=0; $ii < $imagescount; $ii++) {
-					if (trim($betaimages->member[$ii]->KnownAs) == $qarray[$i]["DisplayAs"]){
+					if (intval($betaimages->member[$ii]->memberid) == $qarray[$i]["MemberId"]){
 						$BetaId = $betaimages->member[$ii]->imageid;
 					}
 				}

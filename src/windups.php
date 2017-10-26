@@ -139,10 +139,6 @@
 						
 						</div><!--list-group-->
 
-						<div class="panel-footer">
-							<small class="pull-left">This section auto-populates by magic (and php).</small>
-							<a class="btn btn-link btn-xs pull-right" href="http://data.parliament.uk/membersdataplatform/">Live Data</a>
-						</div>
 					</div><!--panel-->
 
 				</div><!--list-->

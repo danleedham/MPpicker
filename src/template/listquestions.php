@@ -20,8 +20,15 @@ $xmlDoc=new DOMDocument();
 	// If Department isn't set above and it's passed in the URL then get it
 	if(!isset($qdept) && isset($_GET["dept"])){
 		$qdept=$_GET["dept"];
+		if($qdept == "all") {
+			$qdeptURL = "";
+		} else {
+			$qdeptURL = '&AnsweringBody='.str_replace(' ', '%20', $qdept);
+		}
+	} else {
+		$qdept = "";
 	}
-	
+
 	// If the question date isn't set above and it's passed in the URL, get it or set it to today
 	if(!isset($date) && isset($_GET["date"])){
 		$date=$_GET["date"];
@@ -91,8 +98,7 @@ $xmlDoc=new DOMDocument();
 	}
 	
 	// Load questions of the chosen date and of the chosen type
-	$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&AnswerDate='.$date.$qtypeURL.'&_pageSize=500');
-	
+	$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&AnswerDate='.$date.$qtypeURL.$qdeptURL.'&_pageSize=500');
 	// Extract each question element (they're called 'items' in the XML)
 	$x=$xmlDoc->getElementsByTagName('item');
 	
@@ -197,12 +203,15 @@ $xmlDoc=new DOMDocument();
 			$length = 0;
 		}
 		
-		// Function to sort questions by type then by number
+		// Function to sort questions by department type then by number
 		function compqs($a, $b) {
+		if ($a['dept'] == $b['dept']) {
 				if ($a['type'] == $b['type']) {
 					return $a['number'] - $b['number'];
 				}
 				return strcmp($a['type'], $b['type']);
+			}
+			return strcmp($a['dept'], $b['dept']);		
 		}
 	if(isset($groupsplit)) { print_r($groupssplit); }
 	// If there are questions, sort the questions & generate the list
@@ -232,20 +241,43 @@ $xmlDoc=new DOMDocument();
 		}
 		
 		// Now let's replace the qref with the new question number 
-		$s = 0;
-		$t = 0;
+		// First let's make an array of all the departments
+		$deptsArray = array();
 		for($i=0; $i < $newlength; $i++) {
-			if($newqarray[$i]["typeletter"] == "t") {
-				$t = $t+1;
-				$j = $t;
-			} else {
-				$s = $s+1;
-				$j = $s;
-			}
-			$newqarray[$i]["qref"] = $i+1;
-			$newqarray[$i]["typenumber"] = $j;						
+			$deptsArray[] = $newqarray[$i]["dept"];
 		}
-				
+		$deptsArray = array_unique($deptsArray);
+		$deptsArray = array_values($deptsArray);
+
+		$deptsArrayCounts = $deptsArray;
+		// Now for each question... 
+		for($i=0; $i < $newlength; $i++) {
+			// If it's topical make topicals add, if not, add substantive
+			if($newqarray[$i]["typeletter"] == "t") {
+				$t = 1;
+				$s = 0;
+			} else {
+				$t = 0;
+				$s = 1;
+			}	
+			// Find which element of the array we're editing...
+			$deptNo = array_search($newqarray[$i]["dept"],$deptsArray);
+			// If that element doesn't have any counts yet, lets set them both to zero
+			if(!isset($deptsArrayCounts[$deptNo]["t"])){
+				$deptsArrayCounts[$deptNo] = array("t" => 0,
+												   "s" => 0);
+			}
+			// Now let's add one to either topical or substantive for the given department
+			$deptsArrayCounts[$deptNo] = array("t" => intval($deptsArrayCounts[$deptNo]["t"])+$t,
+											   "s" => intval($deptsArrayCounts[$deptNo]["s"])+$s); 
+			// Generic counter
+			$newqarray[$i]["qref"] = $i+1;
+			// Assign the type number as the specific department and specific type
+			$newqarray[$i]["typenumber"] = $deptsArrayCounts[$deptNo][$newqarray[$i]["typeletter"]];							
+		}	
+		// Now breathe. 
+		
+		
 		// If requested, build a new array with gropued together
 		if($grouptogether !== "dont") {
 			$SortedArray = array();
@@ -337,7 +369,18 @@ $xmlDoc=new DOMDocument();
 					$imageurl = 'http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"];
 				}
 				
-				$hint=$hint .'
+				$DeptTitle="";
+				// If we're providing all the departments
+				if($qdept == "all") {
+					if($qarray[$i]["typenumber"] == 1) {
+						$DeptTitle = '
+						<div class="group-text-details">
+							<h4 class="list-group-item-heading">'.$qarray[$i]["dept"].'</h4>
+						</div>';
+					}
+				}
+				
+				$hint=$hint.$DeptTitle.'
 				    <a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$iswithdrawn.'" onclick="load('.$qarray[$i]["uin"].','.'\''.$date.'\');return false;"  href="#">
 						<img src="'.$imageurl.'" class="mini-member-image pull-left">
 						<div class="group-text-details">

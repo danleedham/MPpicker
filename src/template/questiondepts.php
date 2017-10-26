@@ -41,6 +41,7 @@ if(isset($deptarray)){
 	   echo '<option'.$isdept.' value="'. $value["dept"].'">'. $value["dept"].'</option>';
 	   }
 	}
+	echo '<option value="all">All Departments</option>';
 }					
 ?>
 						

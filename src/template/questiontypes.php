@@ -8,12 +8,16 @@ if(!isset($qdept) && isset($_GET["dept"])){
 	$qdept = $_GET["dept"];
 }
 if(isset($qdept)){
-	$depturl = str_replace(' ', '%20', $qdept);
+	if($qdept == "all") {
+		$depturl = "";
+	} else {
+		$depturl = '&AnsweringBody='.str_replace(' ', '%20', $qdept);
+	}
 } else {
 	$depturl ="";
 }	
 
-$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=basic&AnswerDate='.$date.'&_pageSize=100&AnsweringBody='.$depturl.'&_properties=CommonsQuestionTime.QuestionType,AnsweringBody');
+$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=basic&AnswerDate='.$date.'&_pageSize=100'.$depturl.'&_properties=CommonsQuestionTime.QuestionType,AnsweringBody');
 $x=$xmlDoc->getElementsByTagName('item');
 $questionscount = $x->length;		if ($questionscount == 1) {
 } else {	
@@ -44,12 +48,13 @@ if (isset($typearray) && count($typearray) !== 0) {
 		if ($qtype == $value["type"]) { $istype = ' selected="selected" ';}
 		else { $istype = "";}
 		// If no department was set, let's take the first department
-		if(!isset($qdept)) {
+		if(!isset($qdept) or $qdept == "all") {
 			$qdept = $value["dept"];
 		}
 		if($value["type"] and $value["dept"] == $qdept){
 			echo '<option'.$istype.' value="'. $value["type"].'">'. $value["type"].'</option>';	   	
 	   }
-	} 
+	}
+	echo '<option value="all">All Types</option>'; 
 }
 	?>

@@ -261,7 +261,7 @@
 										<i class="fa fa-refresh fa-spin" class="pull-right" style="font-size:20px"></i>
 									</span>
 									<a href="#" id="togglemenu" onclick="togglemenu();return false;" class="btn btn-info hidemobile" style="display: inline; float:right !important; width: 100% !important;" role="button">
-									Toggle Input</a>
+									Toggle</a>
 								</div>
 							</div>
 						</div><!--panel body-->
@@ -320,13 +320,19 @@
 						<div class="list-group-item">
 							<form id="groups">
 								<div class="search-form">
+									<div class="form-group">
+										<label for="dept-group-input">Department:</label><br />
+										<select id="dept-group-input" onchange="setgroups()" name="type" class="form-control">
+										<?php include 'template/questiondepts.php' ?>
+										</select>	
+									</div>
 									<div class="form-group">	
-										<label for="date-input" class="col-2 col-form-label">Enter groups on seperate lines with questions space delimited</label>
+										<label class="col-2 col-form-label">Enter groups on seperate lines with questions space delimited</label>
 										<div class="col-10">
 											<textarea class="form-control" rows="3" id="groups-input" form="groups"></textarea>
 										</div>
 									</div>
-									<div class="form-group">	
+									<div class="form-group">						
 										<div class="col-10">
 											<label for="withdrawn-input" class="col-2 col-form-label">Withdrawn <strong>on the day</strong> (s1 t1) seperated by spaces</label>
 											<input type="text" class="form-control" id="withdrawn-input" form="withdrawn"></input>

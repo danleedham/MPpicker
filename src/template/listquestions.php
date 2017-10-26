@@ -9,6 +9,13 @@ $xmlDoc=new DOMDocument();
 	if(!isset($qtype)){
 		$qtype="Substantive";
 	}
+	if(isset($qtype)){
+		if($qtype !=="all") {
+			$qtypeURL = "&CommonsQuestionTime.QuestionType=".$qtype;
+		} else {
+			$qtypeURL = "";
+		}
+	}
 	
 	// If Department isn't set above and it's passed in the URL then get it
 	if(!isset($qdept) && isset($_GET["dept"])){
@@ -84,7 +91,7 @@ $xmlDoc=new DOMDocument();
 	}
 	
 	// Load questions of the chosen date and of the chosen type
-	$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&AnswerDate='.$date.'&CommonsQuestionTime.QuestionType='.$qtype.'&_pageSize=500');
+	$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&AnswerDate='.$date.$qtypeURL.'&_pageSize=500');
 	
 	// Extract each question element (they're called 'items' in the XML)
 	$x=$xmlDoc->getElementsByTagName('item');
@@ -161,7 +168,7 @@ $xmlDoc=new DOMDocument();
 				$qref = $typeletter.$ballotnumber;	
 
 				// Just a check to make sure our query got the questions from the right department
-				if($Department == $qdept) {	
+				if($Department == $qdept or $qdept == "all") {	
 					// Now build an array with all the information we want	
 				   $qarray[] = array( 'number'=>$BallotNo[0]->textContent,
 									  'uin'=>$uin[0]->textContent,
@@ -203,6 +210,7 @@ $xmlDoc=new DOMDocument();
 		usort($qarray, 'compqs');
 		
 		// Let's remove any questions that have been withdrawn without notice (ie removed before the order paper is printed)
+		// Also remove questions that are passed as being withdrawn without notice
 		$newqarray = array();
 		
 		for($i=0; $i < $length; $i++) {
@@ -224,8 +232,18 @@ $xmlDoc=new DOMDocument();
 		}
 		
 		// Now let's replace the qref with the new question number 
+		$s = 0;
+		$t = 0;
 		for($i=0; $i < $newlength; $i++) {
+			if($newqarray[$i]["typeletter"] == "t") {
+				$t = $t+1;
+				$j = $t;
+			} else {
+				$s = $s+1;
+				$j = $s;
+			}
 			$newqarray[$i]["qref"] = $i+1;
+			$newqarray[$i]["typenumber"] = $j;						
 		}
 				
 		// If requested, build a new array with gropued together
@@ -288,7 +306,7 @@ $xmlDoc=new DOMDocument();
 			if (!isset($qdept) or $deptcount === 1) { 
 				$qdept = $qarray[0]["dept"]; 
 			}	
-			if ($qarray[$i]["dept"] == $qdept) {		
+			if ($qarray[$i]["dept"] == $qdept or $qdept == "all") {		
 				$iswithdrawn = '';
 				$ingroup = '';
 				if(isset($withdrawnquestions) && in_array($qarray[$i]["typeletter"].$qarray[$i]["qref"],$withdrawnquestions)){
@@ -323,7 +341,7 @@ $xmlDoc=new DOMDocument();
 				    <a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$iswithdrawn.'" onclick="load('.$qarray[$i]["uin"].','.'\''.$date.'\');return false;"  href="#">
 						<img src="'.$imageurl.'" class="mini-member-image pull-left">
 						<div class="group-text-details">
-							<h4 class="list-group-item-heading">'.$ingroup.'<span class="partybox" style="background:'.$qarray[$i]["color"].'!important"></span>'.strtoupper($qarray[$i]["typeletter"]).$qarray[$i]["qref"].' '. $qarray[$i]["DisplayAs"].'</h4>
+							<h4 class="list-group-item-heading">'.$ingroup.'<span class="partybox" style="background:'.$qarray[$i]["color"].'!important"></span>'.strtoupper($qarray[$i]["typeletter"]).$qarray[$i]["typenumber"].' '. $qarray[$i]["DisplayAs"].'</h4>
 							<input type="hidden" id="next'.$qarray[$i]["uin"].'" value="'.$next.'"><input type="hidden" id="prev'.$qarray[$i]["uin"].'" value="'.$prev.'">
 							<p class="list-group-item-text">'.$qarray[$i]["constituency"].' ('.$qarray[$i]["party"].')</p>
 						</div>

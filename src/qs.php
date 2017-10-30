@@ -70,6 +70,7 @@
 		groups = groups.replace(/[\r\n]+/g,",");
 		groups = encodeURI(groups);
 		withdrawn = encodeURI(withdrawn);
+		withoutnotice = encodeURI(withoutnotice);
 		$("#livesearch").load('template/listquestions.php?date='+date+'&type='+type+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice+'&together='+together,function() {
 			document.getElementById('loader').style.display = 'none';
 			document.getElementById('togglemenu').style.display = 'inline';

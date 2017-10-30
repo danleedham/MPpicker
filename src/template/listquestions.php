@@ -287,12 +287,12 @@ $xmlDoc=new DOMDocument();
 		
 		
 		// Let's reorder topical questions if requested
-		if($topicalsbyparty !== "dont" ) {
+		if($topicalsbyparty !== "dont" && $qdept !== "all") {
 			$TopicalsSorted = array();
 			$HouseOverview = simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/HouseOverview/Commons/".$date."/");
 			$GovernmentID = $HouseOverview->Party[0]->attributes()->Id;
 			for($i=0; $i < $newlength; $i++) {
-				if($qtype == "all" && $newqarray[$i]["typeletter"] == "s" && $qdept !== "all") {
+				if($qtype == "all" && $newqarray[$i]["typeletter"] == "s" && $qdept == "all") {
 					if($newqarray[$i]["dept"] !== "Prime Minister") {
 						$TopicalsSorted[] = $newqarray[$i];
 					}

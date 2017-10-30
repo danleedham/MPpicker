@@ -259,7 +259,7 @@
 								</div>
 								<?php if($house !== "Lords"): ?>
 								<div class="col-sm-4" style="padding-left:6px !important; padding-right:6px !important;">
-									<button type="button" style="width: 100% !important;" class="btn btn-warning" data-toggle="modal" data-target="#groupCard">Set Groups</button>
+									<button type="button" style="width: 100% !important;" class="btn btn-warning" data-toggle="modal" data-keyboard="true" data-target="#groupCard">Set Groups</button>
 								</div>
 								<?php endif; ?>
 								<div id="search-toggle-div" class="col-sm-4" style="padding-left:6px !important;">
@@ -314,7 +314,7 @@
 </div><!--container-->
 	
 	<!-- Group details -->
-	<div id="groupCard" class="modal">
+	<div id="groupCard" class="modal" tabindex='-1'>
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">

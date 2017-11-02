@@ -35,6 +35,15 @@
 		// For each speaker
 		for ($j=0; $j<count($SplitOutSpeakers[$i]); $j++) {
 			$SplitOutSpeakers[$i][$j] = str_replace('<p>','',$SplitOutSpeakers[$i][$j]);
+			// For the first speaker, if it doesn't have a full stop then space then give it one instead of the first space
+			if(!strpos($SplitOutSpeakers[$i][$j],". ")){
+				// Find the first space
+				$pos = strpos($SplitOutSpeakers[$i][$j], " ");
+				if ($pos !== false) {
+					$SplitOutSpeakers[$i][$j] = substr_replace($SplitOutSpeakers[$i][$j], ". ", $pos, strlen(" "));
+				}
+			}
+			
 			$SplitOutSpeakers[$i][$j] = trim($SplitOutSpeakers[$i][$j]);
 			$SplitOutSpeakers[$i][$j] = explode('. ',$SplitOutSpeakers[$i][$j]);
 			if(count($SplitOutSpeakers[$i][$j]) < 2 ) { 
@@ -54,7 +63,7 @@
 	for($i=0; $i<count($NewSpeakers); $i++) {
 		$NewSpeakers[$i] = array_values($NewSpeakers[$i]);
 	}			
-
+	
 	$LordsSpeakers = $NewSpeakers;	
 
 ?>

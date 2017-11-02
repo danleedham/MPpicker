@@ -19,6 +19,9 @@ $LordsUrl = "http://www.lordswhips.org.uk/todays-lists/";
 				$SplitOutSections[$i] = str_replace("followed by","",$SplitOutSections[$i]);
 				$SplitOutSections[$i] = explode("</strong></p>",$SplitOutSections[$i]);
 				$SplitOutSections[$i] = $SplitOutSections[$i][0];
+				// Limit the size of the section titles
+				$SplitOutSections[$i] = explode("&nbsp;",$SplitOutSections[$i]);
+				$SplitOutSections[$i] = $SplitOutSections[$i][0];
 			} else {
 				$SplitOutSections[$i] = "";
 			}
@@ -28,6 +31,11 @@ $LordsUrl = "http://www.lordswhips.org.uk/todays-lists/";
 
 		for($i=0; $i<count($SplitOutSections); $i++) {
 			echo '<option value="'.$i.'">'.$SplitOutSections[$i].'</option>';
+			
 		}
+		if(isset($i)){
+			echo '<option value="'.($i).'">Manual List Number '.($i).'</option>';
+		}
+
 	}
 ?>

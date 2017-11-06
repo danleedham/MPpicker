@@ -292,7 +292,7 @@ $xmlDoc=new DOMDocument();
 			$HouseOverview = simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/HouseOverview/Commons/".$date."/");
 			$GovernmentID = $HouseOverview->Party[0]->attributes()->Id;
 			for($i=0; $i < $newlength; $i++) {
-				if($qtype == "all" && $newqarray[$i]["typeletter"] == "s" && $qdept == "all") {
+				if($qtype == "all" && $newqarray[$i]["typeletter"] == "s") {
 					if($newqarray[$i]["dept"] !== "Prime Minister") {
 						$TopicalsSorted[] = $newqarray[$i];
 					}
@@ -414,10 +414,10 @@ $xmlDoc=new DOMDocument();
 				$DeptTitle="";
 				// If we're providing all the departments
 				if($qdept == "all") {
-					if($qarray[$i]["typenumber"] == 1 && $newqarray[$i]["dept"] !== "Prime Minister") {
+					if($qarray[$i]["typenumber"] == 1) {
 						$DeptTitle = '
 						<div class="group-text-details">
-							<h4 class="list-group-item-heading">'.$qarray[$i]["dept"].'</h4>
+							<h4 class="list-group-item-heading">'.$qarray[$i]["dept"].' - '.$qarray[$i]["type"].'</h4>
 						</div>';
 					}
 				}

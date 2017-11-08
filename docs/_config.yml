@@ -1,3 +1,4 @@
 theme: jekyll-theme-cayman
 title: [UK Parliamentary Broadcast Assistant]
 description: [Parliamentary broadcast assistant leveraging the power of Data.Parliament]
+show_downloads: ["true"]

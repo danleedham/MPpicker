@@ -221,7 +221,9 @@ $xmlDoc=new DOMDocument();
 			}
 			return strcmp($a['dept'], $b['dept']);		
 		}
-	if(isset($groupsplit)) { print_r($groupssplit); }
+	if(isset($groupsplit)) { 
+		print_r($groupssplit); 
+	}
 	// If there are questions, sort the questions & generate the list
 	if ($length !== 0) {
 		usort($qarray, 'compqs');
@@ -380,58 +382,57 @@ $xmlDoc=new DOMDocument();
 			if (!isset($qdept) or $deptcount === 1) { 
 				$qdept = $qarray[0]["dept"]; 
 			}	
-			if ($qarray[$i]["dept"] == $qdept or $qdept == "all") {		
-				$iswithdrawn = '';
-				$ingroup = '';
-				if(isset($withdrawnquestions) && in_array($qarray[$i]["typeletter"].$qarray[$i]["qref"],$withdrawnquestions)){
-					$iswithdrawn = ' withdrawn';
-				}
-				// If there are groups then...
-				if(intval($groups) !==0) {		
-					// Check substantive questions for groups	
-					if($qarray[$i]["type"] == "Substantive"){
-						// Iterate through each group
-						for($j=0; $j < $howmanygroups; $j++) {
-							if(in_array($qarray[$i]["qref"],$groupssplit[$j])){								
-								$groupvisual= implode("+",$groupssplit[$j]);
-								$ingroup = '<span class="ingroup"> '.$groupvisual.'</span>';
-								$groupnumber = $j;
-							}
+			$iswithdrawn = '';
+			$ingroup = '';
+			if(isset($withdrawnquestions) && in_array($qarray[$i]["typeletter"].$qarray[$i]["qref"],$withdrawnquestions)){
+				$iswithdrawn = ' withdrawn';
+			}
+			// If there are groups then...
+			if(intval($groups) !==0) {		
+				// Check substantive questions for groups	
+				if($qarray[$i]["type"] == "Substantive"){
+					// Iterate through each group
+					for($j=0; $j < $howmanygroups; $j++) {
+						if(in_array($qarray[$i]["qref"],$groupssplit[$j])){								
+							$groupvisual= implode("+",$groupssplit[$j]);
+							$ingroup = '<span class="ingroup"> '.$groupvisual.'</span>';
+							$groupnumber = $j;
 						}
 					}
 				}
-				
-				for($ii=0; $ii < $imagescount; $ii++) {
-					if (intval($betaimages->member[$ii]->memberid) == $qarray[$i]["MemberId"]){
-						$BetaId = $betaimages->member[$ii]->imageid;
-					}
+			}
+			
+			for($ii=0; $ii < $imagescount; $ii++) {
+				if (intval($betaimages->member[$ii]->memberid) == $qarray[$i]["MemberId"]){
+					$BetaId = $betaimages->member[$ii]->imageid;
 				}
-				$imageurl = 'images/stock/thumbs/'.$BetaId.'.jpeg';
-				if (isset($BetaId) && $BetaId == ""){
-					$imageurl = 'http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"];
+			}
+			$imageurl = 'images/stock/thumbs/'.$BetaId.'.jpeg';
+			if (isset($BetaId) && $BetaId == ""){
+				$imageurl = 'http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"];
+			}
+			
+			$DeptTitle="";
+			// If we're providing all the departments
+			if($qdept == "all") {
+				if($qarray[$i]["typenumber"] == 1) {
+					$DeptTitle = '
+					<div class="group-text-details">
+						<h4 class="list-group-item-heading">'.$qarray[$i]["dept"].' - '.$qarray[$i]["type"].'</h4>
+					</div>';
 				}
-				
-				$DeptTitle="";
-				// If we're providing all the departments
-				if($qdept == "all") {
-					if($qarray[$i]["typenumber"] == 1) {
-						$DeptTitle = '
-						<div class="group-text-details">
-							<h4 class="list-group-item-heading">'.$qarray[$i]["dept"].' - '.$qarray[$i]["type"].'</h4>
-						</div>';
-					}
-				}
-				
-				$hint=$hint.$DeptTitle.'
-				    <a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$iswithdrawn.'" onclick="load('.$qarray[$i]["uin"].','.'\''.$date.'\');return false;"  href="#">
-						<img src="'.$imageurl.'" class="mini-member-image pull-left">
-						<div class="group-text-details">
-							<h4 class="list-group-item-heading">'.$ingroup.'<span class="partybox" style="background:'.$qarray[$i]["color"].'!important"></span>'.strtoupper($qarray[$i]["typeletter"]).$qarray[$i]["typenumber"].' '. $qarray[$i]["DisplayAs"].'</h4>
-							<input type="hidden" id="next'.$qarray[$i]["uin"].'" value="'.$next.'"><input type="hidden" id="prev'.$qarray[$i]["uin"].'" value="'.$prev.'">
-							<p class="list-group-item-text">'.$qarray[$i]["constituency"].' ('.$qarray[$i]["party"].')</p>
-						</div>
-					</a>';
-			   }
+			}
+			
+			$hint=$hint.$DeptTitle.'
+				<a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$iswithdrawn.'" onclick="load('.$qarray[$i]["uin"].','.'\''.$date.'\');return false;"  href="#">
+					<img src="'.$imageurl.'" class="mini-member-image pull-left">
+					<div class="group-text-details">
+						<h4 class="list-group-item-heading">'.$ingroup.'<span class="partybox" style="background:'.$qarray[$i]["color"].'!important"></span>'.strtoupper($qarray[$i]["typeletter"]).$qarray[$i]["typenumber"].' '. $qarray[$i]["DisplayAs"].'</h4>
+						<input type="hidden" id="next'.$qarray[$i]["uin"].'" value="'.$next.'"><input type="hidden" id="prev'.$qarray[$i]["uin"].'" value="'.$prev.'">
+						<p class="list-group-item-text">'.$qarray[$i]["constituency"].' ('.$qarray[$i]["party"].')</p>
+					</div>
+				</a>';
+			   
 		}
 	}
 }	  

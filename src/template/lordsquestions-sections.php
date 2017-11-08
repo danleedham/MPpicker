@@ -34,7 +34,7 @@ $LordsUrl = "http://www.lordswhips.org.uk/todays-lists/";
 			
 		}
 		if(isset($i)){
-			echo '<option value="'.($i).'">Manual List Number '.($i).'</option>';
+			echo '<option value="'.($i).'">Manual List Number '.($i+1).'</option>';
 		}
 
 	}

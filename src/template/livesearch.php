@@ -55,6 +55,13 @@
 	// Array with party ID and party color
 	require_once('colors.php');	
 	
+    // If beta images are loaded prior to this then skip
+    if(!isset($feed)){
+        $feed = file_get_contents("betaimages.xml");
+        $betaimages = simplexml_load_string($feed) or die("Can't load Beta Images");
+        $imagescount = count($betaimages);
+    }
+	
 	//First, lets look for members by name
 	if ($searchby == "name") {
 		if(strlen($q)>1) {
@@ -72,11 +79,24 @@
 				if (isset($mselected) && $mselected == $MemberId) { 
 					$ifactive = " active";
 				}
+				if($house !== "Commons") {
+				    $imageurl = 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg';
+				} else { 
+                    for($ii=0; $ii < $imagescount; $ii++) {
+                        if (intval($betaimages->member[$ii]->memberid) == $MemberId){
+                            $BetaId = $betaimages->member[$ii]->imageid;
+                            $imageurl = 'images/stock/thumbs/'.$BetaId.'.jpeg';
+                        }
+                    }
+                    if (!isset($BetaId) or $BetaId == ""){
+                        $imageurl = 'http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$MemberId;
+                    }
+                }
 				if ($FullTitle->item(0)->nodeType==1) {
 					//find a link matching the search text
 					if (stristr($FullTitle->item(0)->childNodes->item(0)->nodeValue,$q)) {
 						$hint = $hint .'<a id="m'.$MemberId.'" class="list-group-item'.$ifactive.'" onclick="load('.$MemberId.');return false;" href="#">
-						<img src="https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg" class="img-rounded mini-member-image pull-left">
+						<img src="'.$imageurl.'" class="img-rounded mini-member-image pull-left">
 						<h4 class="list-group-item-heading"> <span class="partybox" style="background:'.$color.'!important"></span>'.$KnownAs->item(0)->childNodes->item(0)->nodeValue .'</h4>
 						<p class="list-group-item-text">'.
 						$Party->item(0)->childNodes->item(0)->nodeValue.' ('.$Const->item(0)->childNodes->item(0)->nodeValue.")</p></a>";

@@ -5,7 +5,8 @@
 		$date = date('Y-m-d');
 	}
 
-	$epgURL = 'http://parliamentlive.tv/Guide/EpgDay?date='.$date.'T00%3A00%3A00%2B01%3A00';
+	$epgURL = 'http://parliamentlive.tv/Guide/EpgDay?date='.$date.'T00%3A00%3A00%2B00%3A00';
+	print_r($epgURL);
 	$content = file_get_contents($epgURL);
 	
 	// Each events starts with a description

@@ -130,7 +130,7 @@
 											<i class="fa fa-refresh fa-spin" class="pull-right" style="font-size:20px"></i>
 										</span>
 									<span id="togglemenu"><a href="#" onclick="togglemenu();return false;" class="btn btn-info hidemobile" style="display: block;" role="button">
-									Toggle Search</a></span>
+									Toggle</a></span>
 								</div>	
 							</div>
 						</div><!--panel body-->
@@ -139,10 +139,6 @@
 						
 						</div><!--list-group-->
 
-						<div class="panel-footer">
-							<small class="pull-left">This section auto-populates by magic (and php).</small>
-							<a class="btn btn-link btn-xs pull-right" href="http://data.parliament.uk/membersdataplatform/">Live Data</a>
-						</div>
 					</div><!--panel-->
 
 				</div><!--list-->

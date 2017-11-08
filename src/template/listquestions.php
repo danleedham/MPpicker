@@ -9,12 +9,26 @@ $xmlDoc=new DOMDocument();
 	if(!isset($qtype)){
 		$qtype="Substantive";
 	}
+	if(isset($qtype)){
+		if($qtype !=="all") {
+			$qtypeURL = "&CommonsQuestionTime.QuestionType=".$qtype;
+		} else {
+			$qtypeURL = "";
+		}
+	}
 	
 	// If Department isn't set above and it's passed in the URL then get it
 	if(!isset($qdept) && isset($_GET["dept"])){
 		$qdept=$_GET["dept"];
+		if($qdept == "all") {
+			$qdeptURL = "";
+		} else {
+			$qdeptURL = '&AnsweringBody='.str_replace(' ', '%20', $qdept);
+		}
+	} else {
+		$qdept = "";
 	}
-	
+
 	// If the question date isn't set above and it's passed in the URL, get it or set it to today
 	if(!isset($date) && isset($_GET["date"])){
 		$date=$_GET["date"];
@@ -28,6 +42,13 @@ $xmlDoc=new DOMDocument();
 		$grouptogether=$_GET["together"];
 	} else {
 		$grouptogether = "together";
+	}
+	
+	// Check if topicals are split by party or not
+	if(!isset($topicalsbyparty) && isset($_GET["topicalsbyparty"])){
+		$topicalsbyparty = $_GET["topicalsbyparty"];
+	} else {
+		$topicalsbyparty = "byparty";
 	}
 		
 	// If groups aren't set above and they're passed in the URL, get them
@@ -84,8 +105,7 @@ $xmlDoc=new DOMDocument();
 	}
 	
 	// Load questions of the chosen date and of the chosen type
-	$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&AnswerDate='.$date.'&CommonsQuestionTime.QuestionType='.$qtype.'&_pageSize=500');
-	
+	$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&AnswerDate='.$date.$qtypeURL.$qdeptURL.'&_pageSize=500');
 	// Extract each question element (they're called 'items' in the XML)
 	$x=$xmlDoc->getElementsByTagName('item');
 	
@@ -161,7 +181,7 @@ $xmlDoc=new DOMDocument();
 				$qref = $typeletter.$ballotnumber;	
 
 				// Just a check to make sure our query got the questions from the right department
-				if($Department == $qdept) {	
+				if($Department == $qdept or $qdept == "all") {	
 					// Now build an array with all the information we want	
 				   $qarray[] = array( 'number'=>$BallotNo[0]->textContent,
 									  'uin'=>$uin[0]->textContent,
@@ -175,6 +195,7 @@ $xmlDoc=new DOMDocument();
 									  'MemberId'=>intval($MemberId),
 									  'constituency'=>$Constituency,
 									  'party'=>$party,
+									  'partyid'=>$PartyID,
 									  'color'=>$color,
 									  'qref'=>$qref,
 									  'QuestionStatus'=>$QuestionStatus[0]->textContent
@@ -190,19 +211,25 @@ $xmlDoc=new DOMDocument();
 			$length = 0;
 		}
 		
-		// Function to sort questions by type then by number
+		// Function to sort questions by department type then by number
 		function compqs($a, $b) {
+		if ($a['dept'] == $b['dept']) {
 				if ($a['type'] == $b['type']) {
 					return $a['number'] - $b['number'];
 				}
 				return strcmp($a['type'], $b['type']);
+			}
+			return strcmp($a['dept'], $b['dept']);		
 		}
-	if(isset($groupsplit)) { print_r($groupssplit); }
+	if(isset($groupsplit)) { 
+		print_r($groupssplit); 
+	}
 	// If there are questions, sort the questions & generate the list
 	if ($length !== 0) {
 		usort($qarray, 'compqs');
 		
 		// Let's remove any questions that have been withdrawn without notice (ie removed before the order paper is printed)
+		// Also remove questions that are passed as being withdrawn without notice
 		$newqarray = array();
 		
 		for($i=0; $i < $length; $i++) {
@@ -224,10 +251,77 @@ $xmlDoc=new DOMDocument();
 		}
 		
 		// Now let's replace the qref with the new question number 
+		// First let's make an array of all the departments
+		$deptsArray = array();
 		for($i=0; $i < $newlength; $i++) {
-			$newqarray[$i]["qref"] = $i+1;
+			$deptsArray[] = $newqarray[$i]["dept"];
 		}
-				
+		$deptsArray = array_unique($deptsArray);
+		$deptsArray = array_values($deptsArray);
+
+		$deptsArrayCounts = $deptsArray;
+		// Now for each question... 
+		for($i=0; $i < $newlength; $i++) {
+			// If it's topical make topicals add, if not, add substantive
+			if($newqarray[$i]["typeletter"] == "t") {
+				$t = 1;
+				$s = 0;
+			} else {
+				$t = 0;
+				$s = 1;
+			}	
+			// Find which element of the array we're editing...
+			$deptNo = array_search($newqarray[$i]["dept"],$deptsArray);
+			// If that element doesn't have any counts yet, lets set them both to zero
+			if(!isset($deptsArrayCounts[$deptNo]["t"])){
+				$deptsArrayCounts[$deptNo] = array("t" => 0,
+												   "s" => 0);
+			}
+			// Now let's add one to either topical or substantive for the given department
+			$deptsArrayCounts[$deptNo] = array("t" => intval($deptsArrayCounts[$deptNo]["t"])+$t,
+											   "s" => intval($deptsArrayCounts[$deptNo]["s"])+$s); 
+			// Generic counter
+			$newqarray[$i]["qref"] = $i+1;
+			// Assign the type number as the specific department and specific type
+			$newqarray[$i]["typenumber"] = $deptsArrayCounts[$deptNo][$newqarray[$i]["typeletter"]];							
+		}	
+		// Now breathe. 
+		
+		
+		// Let's reorder topical questions if requested
+		if($topicalsbyparty !== "dont" && $qdept !== "all") {
+			$TopicalsSorted = array();
+			$HouseOverview = simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/HouseOverview/Commons/".$date."/");
+			$GovernmentID = $HouseOverview->Party[0]->attributes()->Id;
+			for($i=0; $i < $newlength; $i++) {
+				if($qtype == "all" && $newqarray[$i]["typeletter"] == "s") {
+					if($newqarray[$i]["dept"] !== "Prime Minister") {
+						$TopicalsSorted[] = $newqarray[$i];
+					}
+				}
+				if($newqarray[$i]["dept"] == "Prime Minister" or $newqarray[$i]["typeletter"] == "t") {
+					if($newqarray[$i]["partyid"] == intval($GovernmentID) ){
+						$TopicalsSorted[] = $newqarray[$i];
+					}
+				}	
+			}
+		
+			// Now just shove the rest of the questions to the end of the new array
+			for($i=0; $i < $newlength; $i++) {
+				$AlreadyIn  = "";
+				for($j=0; $j < count($TopicalsSorted); $j++) {
+					if($TopicalsSorted[$j]["qref"] == $newqarray[$i]["qref"]) {
+						$AlreadyIn = "Already In";
+					}
+				}
+				if(!$AlreadyIn  == "Already In") {
+					$TopicalsSorted[] = $newqarray[$i];
+				}
+			}
+			// Make the topicals sorted array the newqarray 
+			$newqarray = $TopicalsSorted;	
+		}
+		
 		// If requested, build a new array with gropued together
 		if($grouptogether !== "dont") {
 			$SortedArray = array();
@@ -288,47 +382,57 @@ $xmlDoc=new DOMDocument();
 			if (!isset($qdept) or $deptcount === 1) { 
 				$qdept = $qarray[0]["dept"]; 
 			}	
-			if ($qarray[$i]["dept"] == $qdept) {		
-				$iswithdrawn = '';
-				$ingroup = '';
-				if(isset($withdrawnquestions) && in_array($qarray[$i]["typeletter"].$qarray[$i]["qref"],$withdrawnquestions)){
-					$iswithdrawn = ' withdrawn';
-				}
-				// If there are groups then...
-				if(intval($groups) !==0) {		
-					// Check substantive questions for groups	
-					if($qarray[$i]["type"] == "Substantive"){
-						// Iterate through each group
-						for($j=0; $j < $howmanygroups; $j++) {
-							if(in_array($qarray[$i]["qref"],$groupssplit[$j])){								
-								$groupvisual= implode("+",$groupssplit[$j]);
-								$ingroup = '<span class="ingroup"> '.$groupvisual.'</span>';
-								$groupnumber = $j;
-							}
+			$iswithdrawn = '';
+			$ingroup = '';
+			if(isset($withdrawnquestions) && in_array($qarray[$i]["typeletter"].$qarray[$i]["qref"],$withdrawnquestions)){
+				$iswithdrawn = ' withdrawn';
+			}
+			// If there are groups then...
+			if(intval($groups) !==0) {		
+				// Check substantive questions for groups	
+				if($qarray[$i]["type"] == "Substantive"){
+					// Iterate through each group
+					for($j=0; $j < $howmanygroups; $j++) {
+						if(in_array($qarray[$i]["qref"],$groupssplit[$j])){								
+							$groupvisual= implode("+",$groupssplit[$j]);
+							$ingroup = '<span class="ingroup"> '.$groupvisual.'</span>';
+							$groupnumber = $j;
 						}
 					}
 				}
-				
-				for($ii=0; $ii < $imagescount; $ii++) {
-					if (intval($betaimages->member[$ii]->memberid) == $qarray[$i]["MemberId"]){
-						$BetaId = $betaimages->member[$ii]->imageid;
-					}
+			}
+			
+			for($ii=0; $ii < $imagescount; $ii++) {
+				if (intval($betaimages->member[$ii]->memberid) == $qarray[$i]["MemberId"]){
+					$BetaId = $betaimages->member[$ii]->imageid;
 				}
-				$imageurl = 'images/stock/thumbs/'.$BetaId.'.jpeg';
-				if (isset($BetaId) && $BetaId == ""){
-					$imageurl = 'http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"];
+			}
+			$imageurl = 'images/stock/thumbs/'.$BetaId.'.jpeg';
+			if (isset($BetaId) && $BetaId == ""){
+				$imageurl = 'http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"];
+			}
+			
+			$DeptTitle="";
+			// If we're providing all the departments
+			if($qdept == "all") {
+				if($qarray[$i]["typenumber"] == 1) {
+					$DeptTitle = '
+					<div class="group-text-details">
+						<h4 class="list-group-item-heading">'.$qarray[$i]["dept"].' - '.$qarray[$i]["type"].'</h4>
+					</div>';
 				}
-				
-				$hint=$hint .'
-				    <a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$iswithdrawn.'" onclick="load('.$qarray[$i]["uin"].','.'\''.$date.'\');return false;"  href="#">
-						<img src="'.$imageurl.'" class="mini-member-image pull-left">
-						<div class="group-text-details">
-							<h4 class="list-group-item-heading">'.$ingroup.'<span class="partybox" style="background:'.$qarray[$i]["color"].'!important"></span>'.strtoupper($qarray[$i]["typeletter"]).$qarray[$i]["qref"].' '. $qarray[$i]["DisplayAs"].'</h4>
-							<input type="hidden" id="next'.$qarray[$i]["uin"].'" value="'.$next.'"><input type="hidden" id="prev'.$qarray[$i]["uin"].'" value="'.$prev.'">
-							<p class="list-group-item-text">'.$qarray[$i]["constituency"].' ('.$qarray[$i]["party"].')</p>
-						</div>
-					</a>';
-			   }
+			}
+			
+			$hint=$hint.$DeptTitle.'
+				<a id="q'.$qarray[$i]["uin"].'" class="list-group-item'.$iswithdrawn.'" onclick="load('.$qarray[$i]["uin"].','.'\''.$date.'\');return false;"  href="#">
+					<img src="'.$imageurl.'" class="mini-member-image pull-left">
+					<div class="group-text-details">
+						<h4 class="list-group-item-heading">'.$ingroup.'<span class="partybox" style="background:'.$qarray[$i]["color"].'!important"></span>'.strtoupper($qarray[$i]["typeletter"]).$qarray[$i]["typenumber"].' '. $qarray[$i]["DisplayAs"].'</h4>
+						<input type="hidden" id="next'.$qarray[$i]["uin"].'" value="'.$next.'"><input type="hidden" id="prev'.$qarray[$i]["uin"].'" value="'.$prev.'">
+						<p class="list-group-item-text">'.$qarray[$i]["constituency"].' ('.$qarray[$i]["party"].')</p>
+					</div>
+				</a>';
+			   
 		}
 	}
 }	  

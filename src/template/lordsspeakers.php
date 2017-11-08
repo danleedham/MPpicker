@@ -47,7 +47,7 @@
 	// Generate the list of questions 	
 	for($i=0; $i < count($qarray); $i++) {			
 		$imageurl = 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$qarray[$i]["DodsId"].'.jpg.jpg';
-		$hint=$hint .'<a id="q" class="list-group-item" onclick="loadlords(\''.$qarray[$i]["MemberId"].'\');return false;" href="#">
+		$hint=$hint .'<a id="m'.$MemberId.'" class="list-group-item" onclick="loadlords(\''.$qarray[$i]["MemberId"].'\');return false;" href="#">
 		   <img src="'.$imageurl.'" class="img-rounded mini-member-image pull-left">
 		   <div class="group-text-details">
 		   <h4 class="list-group-item-heading"><span class="partybox" style="background:'.$qarray[$i]["color"].' !important"></span>'.$qarray[$i]["DisplayAs"].'</h4>

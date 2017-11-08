@@ -63,6 +63,11 @@
 		} else {
 			var together = "dont";
 		}
+		if (!document.getElementById("topicals-together").checked){
+			var topicalsbyparty = "byparty";
+		} else {
+			var topicalsbyparty = "dont";
+		}
 		var groups = document.getElementById("groups-input").value;
 		var withdrawn = document.getElementById("withdrawn-input").value;
 		var withoutnotice = document.getElementById("withoutnotice-input").value;
@@ -70,7 +75,8 @@
 		groups = groups.replace(/[\r\n]+/g,",");
 		groups = encodeURI(groups);
 		withdrawn = encodeURI(withdrawn);
-		$("#livesearch").load('template/listquestions.php?date='+date+'&type='+type+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice+'&together='+together,function() {
+		withoutnotice = encodeURI(withoutnotice);
+		$("#livesearch").load('template/listquestions.php?date='+date+'&type='+type+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice+'&together='+together+'&topicalsbyparty='+topicalsbyparty,function() {
 			document.getElementById('loader').style.display = 'none';
 			document.getElementById('togglemenu').style.display = 'inline';
    		});
@@ -253,7 +259,7 @@
 								</div>
 								<?php if($house !== "Lords"): ?>
 								<div class="col-sm-4" style="padding-left:6px !important; padding-right:6px !important;">
-									<button type="button" style="width: 100% !important;" class="btn btn-warning" data-toggle="modal" data-target="#groupCard">Set Groups</button>
+									<button type="button" style="width: 100% !important;" class="btn btn-warning" data-toggle="modal" data-keyboard="true" data-target="#groupCard">Set Groups</button>
 								</div>
 								<?php endif; ?>
 								<div id="search-toggle-div" class="col-sm-4" style="padding-left:6px !important;">
@@ -261,7 +267,7 @@
 										<i class="fa fa-refresh fa-spin" class="pull-right" style="font-size:20px"></i>
 									</span>
 									<a href="#" id="togglemenu" onclick="togglemenu();return false;" class="btn btn-info hidemobile" style="display: inline; float:right !important; width: 100% !important;" role="button">
-									Toggle Input</a>
+									Toggle</a>
 								</div>
 							</div>
 						</div><!--panel body-->
@@ -308,7 +314,7 @@
 </div><!--container-->
 	
 	<!-- Group details -->
-	<div id="groupCard" class="modal">
+	<div id="groupCard" class="modal" tabindex='-1'>
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -320,13 +326,19 @@
 						<div class="list-group-item">
 							<form id="groups">
 								<div class="search-form">
+									<div class="form-group">
+										<label for="dept-group-input">Department:</label><br />
+										<select id="dept-group-input" onchange="setgroups()" name="type" class="form-control">
+										<?php include 'template/questiondepts.php' ?>
+										</select>	
+									</div>
 									<div class="form-group">	
-										<label for="date-input" class="col-2 col-form-label">Enter groups on seperate lines with questions space delimited</label>
+										<label class="col-2 col-form-label">Enter groups on seperate lines with questions space delimited</label>
 										<div class="col-10">
 											<textarea class="form-control" rows="3" id="groups-input" form="groups"></textarea>
 										</div>
 									</div>
-									<div class="form-group">	
+									<div class="form-group">						
 										<div class="col-10">
 											<label for="withdrawn-input" class="col-2 col-form-label">Withdrawn <strong>on the day</strong> (s1 t1) seperated by spaces</label>
 											<input type="text" class="form-control" id="withdrawn-input" form="withdrawn"></input>
@@ -334,11 +346,14 @@
 											<label for="withoutnotice-input" class="col-2 col-form-label">Withdrawn <strong>Before Order Paper Printed</strong> (s1 t1) seperated by spaces</label>
 											<input type="text" class="form-control" id="withoutnotice-input" form="withoutnotice"></input>
 											<br />
-											<div class="col-sm-6" style="padding-left: 0px !important;">
-												<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-info" role="button">
-												Set Groups & Withdrawn</a>
+											<div class="col-sm-4" style="padding-left: 0px !important;">
+												<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" style="width:100%" class="btn btn-info" role="button">
+												Set Groups</a>
 											</div>
-											<div class="col-sm-6" style="padding-right: 0px !important;">
+											<div class="col-sm-4" style="padding-left: 0px! important; padding-right: 0px !important;">
+												<input id="topicals-together" style="float:right !important;" type="checkbox" value="grouped" name="topicals-together"  data-toggle="toggle" data-onstyle="danger" data-offstyle="warning" data-width="100%" data-on="Topicals by Number" data-off="Topicals by Party">
+											</div>
+											<div class="col-sm-4" style="padding-right: 0px !important;">
 												<input id="together-input" style="float:right !important;" type="checkbox" value="grouped" name="together-input"  data-toggle="toggle" data-onstyle="danger" data-offstyle="warning" data-width="100%" data-on="Don't reorders" data-off="Reorder by groups">
 											</div>
 											<br />

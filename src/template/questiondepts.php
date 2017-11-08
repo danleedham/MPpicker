@@ -4,6 +4,9 @@ $xmlDoc=new DOMDocument();
 if(!isset($date) && isset($_GET["date"])){
 	$date = $_GET["date"];
 }
+if(!isset($date)) {
+	$date = date("Y-m-d");
+}	
 $xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=basic&AnswerDate='.$date.'&_pageSize=500&_properties=AnsweringBody');
 $x=$xmlDoc->getElementsByTagName('item');
 $questionscount = $x->length;
@@ -41,6 +44,7 @@ if(isset($deptarray)){
 	   echo '<option'.$isdept.' value="'. $value["dept"].'">'. $value["dept"].'</option>';
 	   }
 	}
+	echo '<option value="all">All Departments</option>';
 }					
 ?>
 						

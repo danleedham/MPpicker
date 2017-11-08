@@ -159,7 +159,7 @@
 			<?php 
 				// If screenshots show button to change it
 				if(isset($screenshotused) && $screenshotused == true): ?> 
-					<a href="#" onclick="anotherphoto(document.getElementById('current-photo').value,<?php echo $m ?>);return false;" class="btn btn-info pull-right" role="button">Another Screenshot Plz</a> 
+					<a href="#" onclick="anotherphoto(document.getElementById('current-photo').value,<?php echo $m ?>);return false;" class="btn btn-info pull-right" role="button">Load Next Image</a> 
 			<?php endif; ?> 
 		</div>
 		

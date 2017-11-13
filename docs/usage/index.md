@@ -91,6 +91,7 @@ The questions tool is designed to pull data from Parliament which displays the m
 
 ### House of Commons Questions
 ![Typical view of House of Commons Questions](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage11.png "Typical view of House of Commons Questions")
+
 For the House of Commons the tool pulls the upcoming questions from the Oral Questions dataset from Data.Parliament. Questions are typically available once the computerized ballot has been taken for the date. The list of questions is presented as a list on the left hand side and the current question is presented with a large image of the MP on the right, with the text of the question presented below. 
 
 The date is set to todays date but should the user wish to look forward or backward in time for other day’s questions they can do so by changing the date within the date input at the top of the input menu. 
@@ -140,6 +141,7 @@ To the top right of the large member image is a button that allows switching bet
 ### House of Lords Questions & Lists
 ![House of Lords Questions speakers list next to House of Lords Whips Todays List
 ](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage17.png "House of Lords Questions speakers list next to House of Lords Whips Todays List")
+
 As there is no public database API for Lords questions these are presented differently to their Commons counterparts. To swap the Questions tool to show the Lords questions, click Switch to House of Lords once the questions tool first loads. 
 
 The Lords section of the questions tool has the single Section: input. Choosing Questions will then load the Oral Questions for that day. Typically, the questions are available all day, before the Lords Whips Todays Lists has been released. If any Private Notice Questions are set to be asked on that day, they will also be listed.
@@ -149,6 +151,7 @@ As with the Commons questions, clicking the member’s line on the left-hand lis
 #### Lords Speakers Lists
 ![House of Lords Speakers List
 ](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage18.png "House of Lords Speakers List")
+
 Speakers lists are available once the Lord’s Whips have released their lists for the day. Should there be speakers list(s) the title of the list is presented and the user selects the list, then loads the speakers for that list. Should there be an additional list that does not have a title shown with the dropdown list, this will be titled Manual List Number followed by the number of the speaker’s list which has no title.  
 
 The list that is generated allows the user to select a member of the House of Lords by clicking that list item. Once selected the right hand side of the application window will give more detail on that member, including the option to look through screenshots of that member.
@@ -156,11 +159,13 @@ The list that is generated allows the user to select a member of the House of Lo
 # Debate Windups
 ![House of Lords debate windup
 ](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage19.png "House of Lords debate windup")
+
 The Windups section is used to display the list of members who have taken part in a particular debate or item of business up to the moment. This is very helpful for understanding who the Minister will be answering with the windup speach or for being used as a quick reference for constituencies as speakers mention other members who have so far taken part or intervened in the debate so far.   
 
 ### Events
 ![House of Lords debate windup
 ](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage20.png "House of Lords debate windup")
+
 To select which debate to windup the first input required is the Event. The Event is typically the House of Commons or House of Lords, but should other committees or proceedings be logged live their lists can be used too. The list of events is generated live from the available proceedings taken place in Parliament as covered by ParliamentLive.tv. 
 
 Some Events may appear to be shown twice such as Westminster Hall. This is bceause these will have multiple sittings, such as an afternoon and morning session. No further information is provided in the live data so this cannot be presented. 
@@ -168,6 +173,7 @@ Some Events may appear to be shown twice such as Westminster Hall. This is bceau
 ### Debate Section
 ![House of Lords debate windup Section
 ](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage21.png "House of Lords debate windup Section")
+
 Once the correct event is chosen the application then offers the user the items of business that have so far taken place in that proceeding. As more items (such as Questions, Debates or general business) are progressed through the more become available to select. Selecting an item will then present the list of members who spoke in that debate.
 
 If an item of business is still ongoing the list will continue to grow as more members speak in a debate. 
@@ -175,6 +181,7 @@ If an item of business is still ongoing the list will continue to grow as more m
 ### Duplicate Speakers Option 
 ![House of Commons debate windup showing removed duplicates
 ](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage22.png "House of Commons debate windup showing removed duplicates")
+
 By default a member will only be listed as having spoken ('once') as the application will remove any duplicate instances of that individual speaking. By toggling the Remove Duplicates / Keep Dupicates button this option will allow the user to keep any dupliate entries, such as when the Prime Minister answers questions their name will appear between every member asking a question.
 
 ![House of Commons debate windup showing kept duplicates
@@ -184,9 +191,17 @@ By default a member will only be listed as having spoken ('once') as the applica
 ![House of Lords debate windup
 ](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage24.png "House of Lords debate windup")
 
+Guess Who is used to present lists of members who meet a set of criteria. This could be all members of a committee, female cabinet members, cross-bench members of the House of Lords who have joined in the past two months or plenty of other sub-sets of MPs and Lords. 
+
 ### Section Inputs
 ![House of Lords debate windup
 ](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage25.png "House of Lords debate windup")
+
+The tool has a set of inputs which are mostly drop down boxes. By default most are not selected. The more boxes you set values for the fewer members will meet the criteria. For Committees and Departments the user can type the name of the criteria and select from the options presented.
+
+Some of the inputs such as the House will then trigger reloading of some of the input boxes. For example, choosing the House of Lords will then only present committees which are joint committees or House of Lords only committess. 
+
+Choosing a department and not selecting Government / Opposition will only present the members from the Governing party and the official opposition. Choosing most other options will still show members of third parties that hold shadow positions. 
 
 ![House of Lords debate windup
 ](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage26.png "House of Lords debate windup")
@@ -195,5 +210,4 @@ By default a member will only be listed as having spoken ('once') as the applica
 ](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage27.png "House of Lords debate windup")
 
 ### Sorting Results
-
-### Result Options
+Results can be sorted by First Name, Last Name, Constitency (A-Z, Z-A), Date joined and age. Note: some members have not disclosed their dates of birth so they cannot all be sorted perfectly.

@@ -17,12 +17,12 @@ For other devices that do not support running a php server locally, the applicat
 
 The default landing page for the application displays the four main tools available within the application. Each of the main buttons leads user to that part of the application. 
 
+Once the application is loaded to press F11 (Mac: ^+⌘+F) to enter full screen within the web browser. If the tool bar still shows untick View -> Always show toolbar in full screen. 
+
 ### External Data status check
 Below the application links the status check area displays current status of external data connections that the application uses. Should any of these be red that means the application is having trouble accessing that dataset. The section of the application which uses that data may not perform as desired if it cannot successfully access the external APIs. 
 
 If all 4 of these are red it is likely that the application device does not have an internet connection. 
-
-Once the application is loaded to press F11 (Mac: ^+⌘+F) to enter full screen within the web browser. If the tool bar still shows untick View -> Always show toolbar in full screen. 
 
 The numbers shown within the links represent other data checks such as the total number of members currently sat in the House of Commons (650) and House of Lords (800). To check if the server is running the correct date, this is shown above the Question Stacker.
 
@@ -147,28 +147,38 @@ The Lords section of the questions tool has the single Section: input. Choosing 
 As with the Commons questions, clicking the member’s line on the left-hand list will then load their profile on the right-hand side. Unlike the Commons, this profile will be the same as the Member Picker rather than the large image. 
 
 #### Lords Speakers Lists
+![House of Lords Speakers List
+](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage18.png "House of Lords Speakers List")
 Speakers lists are available once the Lord’s Whips have released their lists for the day. Should there be speakers list(s) the title of the list is presented and the user selects the list, then loads the speakers for that list. Should there be an additional list that does not have a title shown with the dropdown list, this will be titled Manual List Number followed by the number of the speaker’s list which has no title.  
-![House of Commons section picker
-](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage18.png "House of Commons section picker")
+
+The list that is generated allows the user to select a member of the House of Lords by clicking that list item. Once selected the right hand side of the application window will give more detail on that member, including the option to look through screenshots of that member.
 
 # Debate Windups
 ![House of Lords debate windup
 ](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage19.png "House of Lords debate windup")
+The Windups section is used to display the list of members who have taken part in a particular debate or item of business up to the moment. This is very helpful for understanding who the Minister will be answering with the windup speach or for being used as a quick reference for constituencies as speakers mention other members who have so far taken part or intervened in the debate so far.   
 
 ### Events
 ![House of Lords debate windup
 ](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage20.png "House of Lords debate windup")
+To select which debate to windup the first input required is the Event. The Event is typically the House of Commons or House of Lords, but should other committees or proceedings be logged live their lists can be used too. The list of events is generated live from the available proceedings taken place in Parliament as covered by ParliamentLive.tv. 
+
+Some Events may appear to be shown twice such as Westminster Hall. This is bceause these will have multiple sittings, such as an afternoon and morning session. No further information is provided in the live data so this cannot be presented. 
 
 ### Debate Section
-![House of Lords debate windup
-](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage21.png "House of Lords debate windup")
+![House of Lords debate windup Section
+](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage21.png "House of Lords debate windup Section")
+Once the correct event is chosen the application then offers the user the items of business that have so far taken place in that proceeding. As more items (such as Questions, Debates or general business) are progressed through the more become available to select. Selecting an item will then present the list of members who spoke in that debate.
+
+If an item of business is still ongoing the list will continue to grow as more members speak in a debate. 
 
 ### Duplicate Speakers Option 
-![House of Lords debate windup
-](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage22.png "House of Lords debate windup")
+![House of Commons debate windup showing removed duplicates
+](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage22.png "House of Commons debate windup showing removed duplicates")
+By default a member will only be listed as having spoken ('once') as the application will remove any duplicate instances of that individual speaking. By toggling the Remove Duplicates / Keep Dupicates button this option will allow the user to keep any dupliate entries, such as when the Prime Minister answers questions their name will appear between every member asking a question.
 
-![House of Lords debate windup
-](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage23.png "House of Lords debate windup")
+![House of Commons debate windup showing kept duplicates
+](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage23.png "House of Commons debate windup showing kept duplicates")
 
 # Guess Who?
 ![House of Lords debate windup
@@ -187,6 +197,3 @@ Speakers lists are available once the Lord’s Whips have released their lists f
 ### Sorting Results
 
 ### Result Options
-
-
-

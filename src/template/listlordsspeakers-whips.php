@@ -18,6 +18,7 @@
 	// For each set of speakers... 
 	for($i=0; $i<count($SplitOutSpeakers); $i++) {
 		$SplitOutSpeakers[$i] = str_replace('<p style="margin-left:70.9pt;">',"",$SplitOutSpeakers[$i]);
+		$SplitOutSpeakers[$i] = str_replace('<p style="margin-left:72pt;">',"",$SplitOutSpeakers[$i]);
 		$SplitOutSpeakers[$i] = str_replace('<em>(Maiden speech)</em>','',$SplitOutSpeakers[$i]);
 		$SplitOutSpeakers[$i] = str_replace('<em>(Valedictory  Speech)</em>','',$SplitOutSpeakers[$i]);
 		$SplitOutSpeakers[$i] = str_replace('&#39;','\'',$SplitOutSpeakers[$i]);

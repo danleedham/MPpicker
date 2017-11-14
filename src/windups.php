@@ -53,7 +53,7 @@
    			document.getElementById('loader').style.display = 'none';
    			document.getElementById('togglemenu').style.display = 'inline';
    		});
-   		
+   		checkformembers();	
 	}
 	function loadevents(date){
 	   $("#event-input").load('template/wind-events.php?date='+date);
@@ -66,6 +66,28 @@
 	   $("#sect-input").load('template/wind-chapters.php?date='+date+'&event='+event);
 	   console.log('Loading events for: '+date+' to '+event);
 	}
+	
+	function checkformembers(){
+		var eventid = document.getElementById('event-input').value;
+		var section = document.getElementById('sect-input').value;
+		if (!document.getElementById("removedupes-input").checked){
+			var dupes = 'remove';
+		} else {
+			var dupes = 'keep';
+		}
+		var currentcount = document.getElementById('countspeakersdiv').value;
+		$("#countspeakersdiv").load('template/wind-checknew.php?event='+eventid+'&section='+section+'&keepdupes='+dupes, function() {
+			var newcount = document.getElementById('countspeakersdiv').value;
+			if(countspeakersdiv > currentcount) {
+				loadmembers(eventid,section);
+				console.log('New member logged...');
+			} else {
+				console.log('No new members logged...');
+			}	
+		});	
+		setTimeout(checkformembers, 10000);
+	}
+		
 	function togglemenu(){
 		var menu = document.getElementById("menu");
 		menu.style.display = menu.style.display === 'none' ? '' : 'none';
@@ -116,6 +138,7 @@
 										<?php include 'template/wind-chapters.php' ?>
 									</select>			
 								</div>
+								<div id="countspeakersdiv" style="display:none;"><input type="hidden" name="countspeakers" value="0"></div>
 							</div>
 							<div id="loadbuttons" style="padding-top:6px !important;">
 								<div class="col-sm-4" style="padding-left:0px !important; padding-right:6px !important;">

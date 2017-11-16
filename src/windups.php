@@ -52,8 +52,8 @@
 		$("#wrapups").load('template/wind-list.php?&event='+eventid+'&section='+section+'&keepdupes='+dupes,function() {
    			document.getElementById('loader').style.display = 'none';
    			document.getElementById('togglemenu').style.display = 'inline';
+			$("#currentspeakersdiv").load('template/wind-checknew.php?event='+eventid+'&section='+section+'&keepdupes='+dupes);
    		});
-   		checkformembers();	
 	}
 	function loadevents(date){
 	   $("#event-input").load('template/wind-events.php?date='+date);
@@ -75,19 +75,26 @@
 		} else {
 			var dupes = 'keep';
 		}
-		var currentcount = document.getElementById('countspeakersdiv').value;
-		$("#countspeakersdiv").load('template/wind-checknew.php?event='+eventid+'&section='+section+'&keepdupes='+dupes, function() {
-			var newcount = document.getElementById('countspeakersdiv').value;
-			if(countspeakersdiv > currentcount) {
+		var currentcount = document.getElementById("currentspeakers").value;
+		$("#countspeakersdiv").load('template/wind-checknew.php?event='+eventid+'&section='+section+'&keepdupes='+dupes+'&id=countspeakers', function() {
+			var newcount = document.getElementById("countspeakers").value;
+			console.log('New Count = '+newcount+' Old Count = '+currentcount);
+			if(newcount > currentcount) {
 				loadmembers(eventid,section);
-				console.log('New member logged...');
+				console.log('New member logged... reloading list');
 			} else {
-				console.log('No new members logged...');
+				// console.log('No new members logged...');
 			}	
 		});	
 		setTimeout(checkformembers, 10000);
 	}
-		
+	
+	window.onload = function () {
+		setTimeout(function () {
+			checkformembers(); 
+		}, 5000);
+	}
+	
 	function togglemenu(){
 		var menu = document.getElementById("menu");
 		menu.style.display = menu.style.display === 'none' ? '' : 'none';
@@ -138,7 +145,8 @@
 										<?php include 'template/wind-chapters.php' ?>
 									</select>			
 								</div>
-								<div id="countspeakersdiv" style="display:none;"><input type="hidden" name="countspeakers" value="0"></div>
+								<div id="currentspeakersdiv" style="display:none"><input type="number" id="currentspeakers" value="0"></div>
+								<div id="countspeakersdiv" style="display:none"><input type="number" id="countspeakers" value="0"></div>
 							</div>
 							<div id="loadbuttons" style="padding-top:6px !important;">
 								<div class="col-sm-4" style="padding-left:0px !important; padding-right:6px !important;">

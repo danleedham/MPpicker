@@ -10,13 +10,22 @@
 		$event = $_GET["event"];
 	}
 	
+	// Not always expecting this but when we get it it'll help us. Expecting date/time in 2017-11-14T14:51:02
+	if(!isset($section) && isset($_GET["section"])){
+		$section = $_GET["section"];
+	}
+	
 	// Only go searching if we've been set an event, otherwise it's a fools errand. 
 	if(isset($event) && $event !== "") {
 	
 		include('wind-geteventlocation.php');
-		$logsURL = 'http://parliamentlive.tv/Event/Logs/'.$event;
+		if(isset($section)) {
+			$logsURL = 'http://parliamentlive.tv/Event/EventLogsBetween/'.$event.'?startTime='.$section.'Z';
+		} else {
+			$logsURL = 'http://parliamentlive.tv/Event/Logs/'.$event;
+		}
 		$content = file_get_contents($logsURL);
-	
+		// print_r($logsURL);
 		$SplitOutClips = explode( '<header class="stack-item">', $content );
 		$SplitOutClips = array_slice($SplitOutClips,1);	
 		$GetClipTitles = $SplitOutClips;
@@ -71,5 +80,4 @@
 		$hasevents = false;
 	}
 	
-?>
-						
+?>		

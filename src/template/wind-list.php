@@ -15,34 +15,6 @@ if(!isset($keepdupes) && isset($_GET["keepdupes"])){
 if(!isset($Events)) {
 // If we don't know where we're looking from get the arrays of clips and events
 	include 'wind-getclips.php';	
-	// Find which section we want to get. Should match 'time' element
-	if(isset($section) && isset($Events)) {
-		for($i=0; $i<count($Events); $i++) {
-			if($section == $Events[$i]['time']) {
-				$Sectioni= $i;
-			}
-		}
-	}
-	if (!isset($Events)) { 
-		$NoEventsSet = true;
-	} else {
-	
-		// Remove all clips that aren't after the time set
-		$NewClips = array();
- 
-		for ($i=0; $i<count($Clips); $i++) {
-			if(!isset($section)) {
-				$EventTime = strtotime($Events[$Sectioni]['time']);
-			} else {
-				$EventTime = strtotime($section);
-			}
-			$ClipTime = strtotime($Clips[$i]['time']);
-			if($ClipTime >= $EventTime) {
-				$NewClips[] = $Clips[$i];
-			}
-		}
-	$Clips = $NewClips;
-	}
 }
 
 // If there still aren't any events set hint to ""
@@ -149,8 +121,7 @@ if(isset($NoEventsSet) && $NoEventsSet == true) {
 				$header = $wraparray[$i]["constituency"];
 				$footer = $wraparray[$i]["DisplayAs"];
 			}
-			
-			$hint=$hint .'<a id="m'.$wraparray[$i]["MemberId"].'" class="list-group-item" onclick="load('.$wraparray[$i]["MemberId"].') ;return false;"  href="#">
+			$hint=$hint.'<a class="list-group-item windup-item" onclick="load('.$wraparray[$i]["MemberId"].') ;return false;"  href="#">
 			   <img src="'.$imageurl.'" class="img-rounded mini-member-image pull-left">
 			   <h4 class="list-group-item-heading"><span class="partybox" style="background:'.$wraparray[$i]["color"].'"></span>'. $header.'</h4>
 			   <p class="list-group-item-text">'.$footer.' ('.$wraparray[$i]["party"].')</p></a>';
@@ -163,7 +134,8 @@ if ($hint=="") {
   $response='<a class="list-group-item">
 			 <h4 class ="list-group-item-heading">No members logged for the chosen criteria, sorry. </h4></a>';
 } else {
-	// Otherwise respond with the information required 	
+	// Otherwise respond with the information required 		
+			
     $response=$hint;
 }	
 	echo $response;

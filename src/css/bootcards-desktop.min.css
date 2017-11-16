@@ -819,11 +819,11 @@ h3.panel-title.pull-left {
 	height: calc(100vh - 320px);  /* bad fix to make the questions scroll but not the image */
 	overflow: auto;
 }
-
+/*
 #wrapups { 
-	height: calc(100vh - 360px);  /* bad fix to make the questions scroll but not the image */
+	height: calc(100vh - 360px);  bad fix to make the questions scroll but not the image
 	overflow: auto;
-}
+} */
 
 #livesearchmember { 
 	height: calc(100vh - 250px);  /* bad fix to make the members scroll but not the image */
@@ -898,4 +898,32 @@ div#search-toggle-div.col-sm-4 {
 
 .questioner-button {
 	padding: 2px 12px !important;	
+}
+
+#wrapups {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-content: flex-start;
+}
+
+.windup-item {
+	width: 400px !important;
+	border-width: 0px !important;
+	padding-top: 2px !important;
+	padding-bottom: 2px !important;
+	padding-left: 0px !important;
+	padding-right: 0px !important;
+    background-color: transparent !important;
+}
+
+a.windup-item:before {
+	content: "" !important;
+}
+
+.wrapup-panel {
+    border-color: transparent !important;
+    background-color: transparent !important;
 }

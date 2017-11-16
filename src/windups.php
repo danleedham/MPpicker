@@ -23,23 +23,6 @@
 ?>
 
 <script>
-	function load(member){
-		document.getElementById('togglemenu').style.display = 'none';
-		document.getElementById('loader').style.display = 'inline';
-		if (!document.getElementById("photos-input").checked){
-			var photos = 'Stock';
-		} else {
-			var photos = "screenshot";
-		}
-		console.log('Loading member: '+member);
-		$("#contactCard").load('template/member.php?m='+member+'&photos='+photos,function() {
-			document.getElementById('loader').style.display = 'none';
-			document.getElementById('togglemenu').style.display = 'inline';
-		});
-		$('.active').removeClass('active');
-		$('#m'+num).addClass("active");
-		
-	}
 	function loadmembers(eventid,section){
 		document.getElementById('togglemenu').style.display = 'none';
 		document.getElementById('loader').style.display = 'inline';
@@ -53,6 +36,7 @@
    			document.getElementById('loader').style.display = 'none';
    			document.getElementById('togglemenu').style.display = 'inline';
 			$("#currentspeakersdiv").load('template/wind-checknew.php?event='+eventid+'&section='+section+'&keepdupes='+dupes);
+			console.log('template/wind-list.php?&event='+eventid+'&section='+section+'&keepdupes='+dupes);
    		});
 	}
 	function loadevents(date){
@@ -88,7 +72,7 @@
 		});	
 		setTimeout(checkformembers, 10000);
 	}
-	
+	// wait for 5 seconds after page load then go check for members
 	window.onload = function () {
 		setTimeout(function () {
 			checkformembers(); 
@@ -101,7 +85,6 @@
 		var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 		var listsize = h - 196;
 		console.log('Removing Menu and Resizing list to '+listsize);
-		document.getElementById("wrapups").setAttribute("style","height:"+listsize+"px");	
 	}
 	function togglemobilelist(){
 		var list = document.getElementById("list");
@@ -120,9 +103,7 @@
 					Toggle List</a>
 				</div><!--panel body-->
 			<!-- left list column -->
-				<div class="col-sm-4 bootcards-list" id="list" data-title="Contacts">
-					<div class="panel panel-default">
-						<div class="panel-body">
+				<div class="col-sm-12 bootcards-list" id="list" data-title="Contacts" style="padding-bottom: 12px;">
 							<div class="search-form" id="menu">
 								<div class="row">
 									<div id="date-div" class="col-sm-6">
@@ -164,49 +145,17 @@
 									Toggle</a></span>
 								</div>	
 							</div>
-						</div><!--panel body-->
-						
+				</div>
+				<div class="col-sm-12">
+					<div class="panel panel-default wrapup-panel">		
 						<div class="list-group" id="wrapups">
-						
 						</div><!--list-group-->
-
 					</div><!--panel-->
-
 				</div><!--list-->
-
-			<!--list details column-->
-			<div class="col-sm-8 bootcards-cards">
-
-          <!--contact details -->
-          <div id="contactCard">
-             <div class="panel panel-default">
-              <div class="panel-heading clearfix">
-                <h3 class="panel-title pull-left">Select section to wrap up</h3> 
-		 	  </div>
-		 	  <div class="list-group">
-                <div class="list-group-item">
-					<div class="search-form">
-						<div class="form-group">	
-							<div class="col-12">
-								<p>Use the tools on the left and MP details will appear here. </p>
-								<p><a href="https://www.parliament.uk/documents/commons-table-office/Oral-questions-rota.pdf">Click here to view the Oral Questions Rota (external).</a href></p>
-							</div>
-						</div>
-					</div>
-                </div>
-              </div>
-		 	  <div class="panel-footer">
-                  <small>Data from UK Parliament - <a href="http://data.parliament.uk/membersdataplatform/">Members' Names Data Platform</a></small>
-                </div>
-              </div>
-		</div>
-
-      </div><!--list-details-->
-
-    </div><!--row-->
+		</div><!--row-->
 
 
-  </div><!--container-->
+	</div><!--container-->
 
 	<?php include 'template/footer.php'; ?>
 

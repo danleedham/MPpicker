@@ -1,5 +1,26 @@
-# Getting Started
-### Launching the Application
+- [Getting Started](#getting-started)
+  * [Launching the Application](#launching-the-application)
+  * [The Four application tools](#the-four-application-tools)
+  * [External Data status check](#external-data-status-check)
+- [Member Picker](#member-picker)
+  * [Search parameters](#search-parameters)
+  * [Constituency](#constituency)
+  * [Position](#position)
+  * [Output Data](#output-data)
+- [Questions](#questions)
+  * [House of Commons Questions](#house-of-commons-questions)
+  * [Printing question lists](#printing-question-lists)
+  * [Navigating Questions](#navigating-questions)
+  * [House of Lords Questions & Lists](#house-of-lords-questions---lists)
+- [Debate Windups](#debate-windups)
+  * [Events](#events)
+  * [Duplicate Speakers Option](#duplicate-speakers-option)
+- [Guess Who?](#guess-who-)
+  * [Section Inputs](#section-inputs)
+  * [Sorting Results](#sorting-results)
+  
+  # Getting Started
+## Launching the Application
 If the application is being run in the cloud, the stacker does not need to be started locally. If the application is being run locally the easiest way to start it up is by opening the XAMPP application and clicking start. If the application has been installed correctly this should automatically get the application up and running.
 
 To access the application either open a web browser (Google Chrome suggested) and point the web browser to the location of the folder on the server where the application is installed. If the application is being run locally using XAMPP for a PC the address is http://localhost and if it is a Mac then the address will be displayed in the XAMPP Server General tab, such as http://192.168.64.3.
@@ -12,14 +33,14 @@ Alternatively, the application can be started and new windows added using the de
 
 For other devices that do not support running a php server locally, the application must be run in the cloud. To access the application simply open the server location in the device of choice. 
 
-### The Four application tools
+## The Four application tools
 ![Application Landing Page](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage3.png "Application Landing Page")
 
 The default landing page for the application displays the four main tools available within the application. Each of the main buttons leads user to that part of the application. 
 
 Once the application is loaded to press F11 (Mac: ^+⌘+F) to enter full screen within the web browser. If the tool bar still shows untick View -> Always show toolbar in full screen. 
 
-### External Data status check
+## External Data status check
 Below the application links the status check area displays current status of external data connections that the application uses. Should any of these be red that means the application is having trouble accessing that dataset. The section of the application which uses that data may not perform as desired if it cannot successfully access the external APIs. 
 
 If all 4 of these are red it is likely that the application device does not have an internet connection. 
@@ -33,30 +54,30 @@ The Member Picker is a live search function that pulls up a list of members who 
 
 The layout of the tool is designed like a contact book. As the search increases in complexity the number of available results will reduce on the left-hand side. Clicking one of the results will display more detailed information about that selected member. 
 
-### Search parameters
-#### House Selection
+## Search parameters
+### House Selection
 The user selects between searching the House of Commons or House of Lords using the green / red toggle button. Selecting the house determines which part of the Parliamentary database is searched. For searching across both houses it is suggested that the Guess Who section is instead used. 
 
-#### Name
+### Name
 By default the tool will search by member Name. Once three or more characters are entered the tool will return a list of members that contain those letters within their name. For the Commons this searches for preferred names containing the value specified.
 
 For more detailed information on how the search works see: http://data.parliament.uk/membersdataplatform/memberquery.aspx#personalinfotable
 
 ![Example Name search of the House of Lords](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage5.png "Example Name search of the House of Lords")
 
-### Constituency
+## Constituency
 When using search by Constituency as three or more characters are entered the tool will return a list of members representing matching constituencies. For the Commons this returns members who currently represent a constituency that contains the search term within the constituency name. For the House of Lords this searches across the Lords full name including title and location. 
 
 ![Example Constituency search of the Commons
 ](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage6.png "Example Constituency search of the Commons")
 
-### Position
+## Position
 When searching by position an additional dialogue box is presented allowing the user to search between Government, Opposition and All Parties. This is set to All Parties by default. As the search term is four or more letters long, each member who has a government, opposition or other party position that contains the letters in the search is returned. Where there are a large number of positions that match the result the performance of the search is reduced. 
 
 ![Example Position search of Government members who have Health in their position title](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage7.png "Example Position search of Government members who have Health in their position title")
 
-### Output Data
-#### General Member Data
+## Output Data
+### General Member Data
 When a member is selected from the list of results, the right hand pane loads that members extended details. This data contains the following information if is it held by the Parliamentary Members' Names Data Platform:
 * Full Name
 * Party
@@ -64,14 +85,14 @@ When a member is selected from the list of results, the right hand pane loads th
 * Start Date in the House
 * Current notable positions, including committee memberships
 
-#### Member Images
+### Member Images
 When Stock image is chosen (set by default) and a member is loaded, their new official portrait is loaded if it exists. For members without this new portrait their older official photograph is returned. When Screenshot is selected the latest available screenshot of the member from parliamentlive.tv is loaded. For the House of Lords as the stock images available are of such poor quality their most recent screenshot is always loaded. 
 
 For all screenshots a Load Next Image button is presented. If the current screenshot is not helpful or representative (such as a nice wide shot of the chamber) then clicking this button will load the next previous screenshot available. 
 
 ![Example of a member screenshot showing Load Next Image button](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage8.png "Example of a member screenshot showing Load Next Image button")
 
-#### Late Shift Data toggle
+### Late Shift Data toggle
 When the late shift data toggle is pressed additional information about the member is loaded. This data includes:
 * Their list biographical interests 
 * Place and Date of birth (age)
@@ -81,7 +102,7 @@ When the late shift data toggle is pressed additional information about the memb
 
 ![Example of Late shift data](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage9.png "Example of Late shift data")
 
-#### Twitter toggle
+### Twitter toggle
 For members that have a registered Twitter account, a button is presented that allows the user to toggle the member’s Twitter feed. Upon pressing the button the last few tweets including retweets are presented. The tweets are interactive just like on Twitter so clicking a link such as the handle will take you to that page. 
 
 ![Anna Soubry's latest tweets](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage10.png "Anna Soubry's latest tweets")
@@ -89,19 +110,19 @@ For members that have a registered Twitter account, a button is presented that a
 # Questions
 The questions tool is designed to pull data from Parliament which displays the members due to ask questions or speak in the forthcoming set of Questions or debate. The tool is split between the House of Commons (default) and House of Lords, which is available using the button Switch to House of Lords.
 
-### House of Commons Questions
+## House of Commons Questions
 ![Typical view of House of Commons Questions](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage11.png "Typical view of House of Commons Questions")
 
 For the House of Commons the tool pulls the upcoming questions from the Oral Questions dataset from Data.Parliament. Questions are typically available once the computerized ballot has been taken for the date. The list of questions is presented as a list on the left hand side and the current question is presented with a large image of the MP on the right, with the text of the question presented below. 
 
 The date is set to todays date but should the user wish to look forward or backward in time for other day’s questions they can do so by changing the date within the date input at the top of the input menu. 
 
-#### Selecting Departments
+### Selecting Departments
 For a given date the available departments are listed within the Department dropdown box. To reload the list of departments change the date. The departments that have questions tabled for that date are then listed, along with the option of All Departments. Picking each question will then reload which type of questions are available. If like questions to the Prime Minister there are only substantive questions, topical will not be available. 
 
 ![Options for selecting question Departments](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage12.png "Options for selecting question Departments")
 
-#### Question Types
+### Question Types
 When a department is selected the options for the type of questions are loaded. Selecting the type of question will only return questions of that type when Load is clicked. If All Types is selected substantive questions will be presented first, followed by topical questions. 
 
 ![Options for selecting the question types](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage13.png "Options for selecting the question types")
@@ -110,7 +131,7 @@ By default Topical questions are sorted by listing questions from the government
 
 ![Topical Questions shown split by Government and Opposition](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage14.png "Topical Questions shown split by Government and Opposition")
 
-#### Setting Grouped & withdrawn Questions 
+### Setting Grouped & withdrawn Questions 
 Clicking on the Set Groups button displays a popup window that allows the setting of grouped and withdrawn questions. First select the department you wish to group or withdraw questions from.
 
 For questions that are to be answered in a group, input the groups with spaces between each question number, one group per line. As only substantive questions can be grouped do not enter their question type:
@@ -125,20 +146,20 @@ Questions that are withdrawn from the list of question to be asked prior to the 
 
 ![Grouped & Withdrawn Questions popup showing groups and withdrawn questions](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage15.png "Grouped & Withdrawn Questions popup showing groups and withdrawn questions")
 
-### Printing question lists
+## Printing question lists
 ![Chrome print dialogue showing question list
 ](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage16.png "Chrome print dialogue showing question list")
 
 Upon loading the questions page the user should select the departments and question types they wish to print. Once the list is the list they wish to print the user should click "Print List" on the right hand side to present the list in a print-friendly format. Printing using the usual Chrome print dialogue allows you to scale by a percantage to fit the images onto a certain number of pages. 
 
-### Navigating Questions
+## Navigating Questions
 Once the list of questions is generated is it possible to navigate between questions either by clicking on the question they desire in the list, clicking the <- Previous or Next -> buttons at the top of the member image, or using the keyboard.
 
 Users can move between questions using the keyboard arrow keys, with the right-hand arrow moving on +1 questions and the left-hand arrow key stepping back -1 question. 
 
 To the top right of the large member image is a button that allows switching between Topical and Substantive questions. If Topicals are currently loaded then the button will swap to the Substantive questions. If Substantive questions are currently loaded then the button with swap to the Topical questions. 
 
-### House of Lords Questions & Lists
+## House of Lords Questions & Lists
 ![House of Lords Questions speakers list next to House of Lords Whips Todays List
 ](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage17.png "House of Lords Questions speakers list next to House of Lords Whips Todays List")
 
@@ -148,7 +169,7 @@ The Lords section of the questions tool has the single Section: input. Choosing 
 
 As with the Commons questions, clicking the member’s line on the left-hand list will then load their profile on the right-hand side. Unlike the Commons, this profile will be the same as the Member Picker rather than the large image. 
 
-#### Lords Speakers Lists
+### Lords Speakers Lists
 ![House of Lords Speakers List
 ](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage18.png "House of Lords Speakers List")
 
@@ -162,7 +183,7 @@ The list that is generated allows the user to select a member of the House of Lo
 
 The Windups section is used to display the list of members who have taken part in a particular debate or item of business up to the moment. This is very helpful for understanding who the Minister will be answering with the windup speach or for being used as a quick reference for constituencies as speakers mention other members who have so far taken part or intervened in the debate so far.   
 
-### Events
+## Events
 ![House of Lords debate windup
 ](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage20.png "House of Lords debate windup")
 
@@ -178,7 +199,7 @@ Once the correct event is chosen the application then offers the user the items 
 
 If an item of business is still ongoing the list will continue to grow as more members speak in a debate. 
 
-### Duplicate Speakers Option 
+## Duplicate Speakers Option 
 ![House of Commons debate windup showing removed duplicates
 ](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage22.png "House of Commons debate windup showing removed duplicates")
 
@@ -193,7 +214,7 @@ By default a member will only be listed as having spoken ('once') as the applica
 
 Guess Who is used to present lists of members who meet a set of criteria. This could be all members of a committee, female cabinet members, cross-bench members of the House of Lords who have joined in the past two months or plenty of other sub-sets of MPs and Lords. 
 
-### Section Inputs
+## Section Inputs
 ![House of Lords debate windup
 ](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage25.png "House of Lords debate windup")
 
@@ -209,5 +230,5 @@ Choosing a department and not selecting Government / Opposition will only presen
 ![House of Lords debate windup
 ](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage27.png "House of Lords debate windup")
 
-### Sorting Results
+## Sorting Results
 Results can be sorted by First Name, Last Name, Constitency (A-Z, Z-A), Date joined and age. Note: some members have not disclosed their dates of birth so they cannot all be sorted perfectly.

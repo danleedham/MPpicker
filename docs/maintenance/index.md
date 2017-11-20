@@ -63,7 +63,7 @@ Once the top level php files are loaded certain elements are reloaded or replace
 * Input variables
     * `searchby` - 3 type switch, string, expecting one of `name` `constituency` or `position`
     * `q` - the search term. Expecting a string
-    * `house` - string, expecting 'Commons' or 'Lords'
+    * `house` - string, expecting `Commons` or `Lords`
     * `side` - for position queries which subset of members to search, string, expecting `opposition` `government` or `both`
     * `mselected` - which MP has been clicked or is currently showing in the search, integer
 * Outputs
@@ -83,7 +83,36 @@ Once the top level php files are loaded certain elements are reloaded or replace
     * Member image either as Parliament beta portrait or most recent screenshot
 
 ## Question Specific PHP
-
+### listquestions.php
+* `template/listquestions.php`
+* Returns a list of members who have questions for the set criteria
+* Input Variables
+    * `date` - expecting date in format: `yyyy-mm-dd`
+    * `type` - string, expecting `all`, `Substantive` or `Topical`
+    * `dept` - string, expecting name of Department as returned by Oral Questions API
+    * `groups` - expecting encodeURI'd version of a text area input. Question numbers separated by spaces, with each group separated by linebreaks
+    * `withdrawn` - expecting encodeURI'd version of a string. Question type+number 's1' 't1' separated by spaces
+    * `withoutnotice`  - expecting encodeURI'd version of a string. Question type+number 's1' 't1' separated by spaces
+    * `together` - string, expecting `together` or `dont`
+    * `topicalsbyparty` -  string, expecting `byparty` or `dont`
+* Outputs
+    * HTML code with bootcards css
+    * Multiple `<a></a>` elements
+    * Elements are all `class="list-group-item`
+       
+### questioner.php
+* `template/questioner.php`
+* Returns the detailed information about a single question including the large version of the member asking the question's image
+* Input Variables
+    * `uin` - integer, the id of the question to be loaded from the Oral Questions API
+    * `date` - date of the question asked, in format: `yyyy-mm-dd`
+    * `photos` - string, expecting `screenshot` or `Stock`
+    * `next` - integer, the id of the next question in the list
+    * `prev` - integer, the id of the previous question in the list
+* Outputs
+    * HTML code with bootcards CSS
+    * Sits within `class="panel panel-default"`
+    * Member image either as Parliament beta portrait or most recent screenshot
 
 ## Windups PHP
 

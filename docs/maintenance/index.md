@@ -114,6 +114,16 @@ Once the top level php files are loaded certain elements are reloaded or replace
     * Sits within `class="panel panel-default"`
     * Member image either as Parliament beta portrait or most recent screenshot
 
+### listlordsquestions.php
+* `template/listlordsquestions.php`
+* Returns a list of Lords who have questions set for the current date
+* Input Variables
+    * Optional - date in format yyyy-mm-dd. If none supplied, current date is used
+* Outputs 
+    * HTML code with bootcards CSS
+    * Multiple `<a></a>` elements
+    * Elements are all `class="list-group-item`
+
 ## Windups PHP
 
 

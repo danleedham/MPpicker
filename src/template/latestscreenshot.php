@@ -38,7 +38,7 @@ if ($screenshotcount == 0) {
 } else {	
 	for($i=0; $i<($x->length); $i++) {
 			$thumbnailUrl = $x->item($i)->getAttribute('href');
-			$thumbnailUrl = str_replace("width=480","width=960",$thumbnailUrl);
+			// $thumbnailUrl = str_replace("width=480","width=960",$thumbnailUrl);
 			$clipid = $x->item($i)->parentNode->getAttribute('href');
 			$clipref = explode("/",$clipid);
 			$clipid = $clipref[4].'-'.$clipref[6];			

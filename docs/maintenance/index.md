@@ -47,13 +47,53 @@ The application is stored within the `src` folder of the repository. Within the 
 * `who.php` is the page that is the front end for the Guess Who? tool
 * `windups.php` is the page that is the front end for the Wind Ups tool
 
-# Core PHP
-The application uses PHP to provide preprocess the displayed HTML code, to call information from various datasets, to manipulate this data and then present the data in forms helpful for the user. The application is built for use with PHP7.
+# General Includes
+* `footer.php` This file generates the toolbar at the bottom of the application that allows for switching between the tools. 
+* `headinc.php` This file is included at the top of each page that and contains links to css files, the fav icon data, Bootstrap Toggle, Font Awesome and Google Fonts. If one whishes to add further includes or libraries that will be available across all pages it is suggested it is added to this file if it should be added to the header. 
 
-Once the top level php files are loaded certain elements are reloaded or replaced with  whenever the user calls a function. These part files are all stored within the `template` folder. 
+# Application PHP
+The application uses PHP to preprocess the displayed HTML code, to call information from various datasets, to manipulate this data and then present the data in forms helpful for the user. The application is built for use with PHP7.
+
+Once the top level php files are loaded certain elements are reloaded or replaced with updated data whenever the user calls a function. These part files are all stored within the `template` folder. 
+
+## Member Picker Specific PHP
+### livesearch.php
+* `/template/livesearch.php`
+* Queries the Members' Names Data Platform API with a query for either name, constituency or position
+* Input variables
+    * `searchby` - 3 type switch, string, expecting one of `name` `constituency` or `position`
+    * `q` - the search term. Expecting a string
+    * `house` - string, expecting 'Commons' or 'Lords'
+    * `side` - for position queries which subset of members to search, string, expecting `opposition` `government` or `both`
+    * `mselected` - which MP has been clicked or is currently showing in the search, integer
+* Outputs
+    * HTML code with bootcards CSS
+    * Multiple `<a></a>` elements
+    * Elements are all `class="list-group-item"`
+
+### member.php
+* `/template/member.php`
+* Returns the detailed information about a single member
+* Input Variables
+    * `m` - integer, the memberid for pulling from the Members' Name Data Platform
+    * `photos` - string, expecting `screenshot` or `Stock`
+* Outputs
+    * HTML code with bootcards CSS
+    * Sits within `class="panel panel-default"`   
+    * Member image either as Parliament beta portrait or most recent screenshot
+
+## Question Specific PHP
+
+
+## Windups PHP
+
+
+## Guess Who Specific PHP
+
 
 # Application Javascript
-The application uses Javascript to dynamic HTML. Each tool has multiple inputs and buttons which trigger functions that . 
+The application uses Javascript to dynamic HTML. Each tool has multiple inputs and buttons which trigger functions that use input variables to return relevant data to the user. `template/core.php` provides the core jQuery and Bootstrap Javascript and is included on all pages that run bootstrap for the UI. 
+
 
 For Questions key functions are:
 * `loadquestions(date,dept,type)`
@@ -66,6 +106,9 @@ For Questions key functions are:
 For the Member Picker key functions are:
 * `showResult(str)`
 * `load(id)`
+* `twitter(handle)`
+* `loadextras()
+* `anotherphoto(current,m)`
 
 For Guess Who key functions are: 
 * `loadresults()`

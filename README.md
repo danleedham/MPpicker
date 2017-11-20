@@ -2,6 +2,17 @@
 
 [For documentation see the GitHub Pages](https://danleedham.github.io/UK-Parliamentary-Stacker/)
 
+* [Introduction](#introduction)
+* [Installation](#installation)
+   + [Prerequisites](#prerequisites)
+   + [Deployment](#deployment)
+   + [Example Installation using XAMPP](#example-installation-using-xampp)
+* [Deployment](#deployment-1)
+* [Built With](#built-with)
+* [Authors](#authors)
+* [License](#license)
+* [Acknowledgments](#acknowledgments)
+
 ## Introduction
 _'The Stacker'_ is a browser based application that aids broadcast and journalistic coverage of the UK Parliament by leveraging live data powered by Data.parliament (DDP). There is no database as part of the project as in previous incarnations of the stacker. 
 

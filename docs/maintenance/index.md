@@ -58,7 +58,7 @@ Once the top level php files are loaded certain elements are reloaded or replace
 
 ## Member Picker Specific PHP
 ### livesearch.php
-* `/template/livesearch.php`
+* `template/livesearch.php`
 * Queries the Members' Names Data Platform API with a query for either name, constituency or position
 * Input variables
     * `searchby` - 3 type switch, string, expecting one of `name` `constituency` or `position`
@@ -72,7 +72,7 @@ Once the top level php files are loaded certain elements are reloaded or replace
     * Elements are all `class="list-group-item"`
 
 ### member.php
-* `/template/member.php`
+* `template/member.php`
 * Returns the detailed information about a single member
 * Input Variables
     * `m` - integer, the memberid for pulling from the Members' Name Data Platform
@@ -124,11 +124,30 @@ Once the top level php files are loaded certain elements are reloaded or replace
     * Multiple `<a></a>` elements
     * Elements are all `class="list-group-item`
 
+### lordsspeakers.php
+* `template/lordsspeakers.php`
+* Returns a list of Lords who are listed as speakers for the chosen debate
+* Input Variables
+    * `chosenBusiness` - integer, expects the value of the nth debate with speakers that is listed on the [Lords Whips Today's List](http://www.lordswhips.org.uk/todays-lists) page. 
+* Outputs
+    * HTML Code with bootcards CSS
+    * Multiple `<a></a>` elements
+    * Elements are all `class="list-group-item` 
+    
 ## Windups PHP
 
 
 ## Guess Who Specific PHP
 
+
+## Other PHP files
+### latestscreenshot.php
+
+### twitter.php
+
+
+### networktests.php
+* `template/networktests.php`
 
 # Application Javascript
 The application uses Javascript to dynamic HTML. Each tool has multiple inputs and buttons which trigger functions that use input variables to return relevant data to the user. `template/core.php` provides the core jQuery and Bootstrap Javascript and is included on all pages that run bootstrap for the UI. 

@@ -118,7 +118,7 @@ Once the top level php files are loaded certain elements are reloaded or replace
 * `template/listlordsquestions.php`
 * Returns a list of Lords who have questions set for the current date
 * Input Variables
-    * Optional - date in format yyyy-mm-dd. If none supplied, current date is used
+    * Optional - `date` in format yyyy-mm-dd. If none supplied, current date is used
 * Outputs 
     * HTML code with bootcards CSS
     * Multiple `<a></a>` elements
@@ -135,7 +135,34 @@ Once the top level php files are loaded certain elements are reloaded or replace
     * Elements are all `class="list-group-item` 
     
 ## Windups PHP
+### wind-events.php
+* `template/wind-events.php`
+* Returns a list of Events from Parliamentlive.tv. These events are the name of the chamber or committee from which to draw speakers logs. 
+* Inputs
+    * Optional - `date` in format yyyy-mm-dd. If none supplied, current date is used
+* Outputs
+    * HTML code
+    * Multiple `<option>` elements
+    * Option values are set as the id of each element (GUID)
 
+### wind-getclips.php
+* `template/wind-getclips.php`
+* This file scrapes a particular event on Parliamentlive.tv and extracts the list of logged speakers along with any logged events
+* Inputs
+    * `date` - in format yyyy-mm-dd. If none supplied, current date is used
+    * `event` - string in the form of (GUID): 52c323e1-b659-40c2-b924-48b40f478313, the id of the event from which to extract speakers
+    * `section` - optional, expecting date/time in format 2017-11-14T14:51:02, the time at which to start returning logs from. This is typically the time of a chapter like event, such as a specific debate. 
+* Outputs
+    * `$Events` - List of events that have been logged. Multidimensional array
+        * `time` - time of logged event
+        * `name` - human readable name of the event
+        * `id` - The element i number
+    * `$Clips` -
+        * `time` - time of logged clip
+        * `name` - human readable name of the clip (usually an MP / Lords name)
+        * `id` - The element i number
+    * Multiple `<option>` elements
+    * Option values are set as the id of each element (GUID)
 
 ## Guess Who Specific PHP
 

@@ -169,12 +169,36 @@ Once the top level php files are loaded certain elements are reloaded or replace
 
 ## Other PHP files
 ### latestscreenshot.php
+* `template/latestscreenshot.php`
+* This file presents the user with a screenshot image from the AV Visual Live Logging (http://www.data.parliament.uk/dataset/avlivelogging) API. The user inputs a member and can request a 'previous' screenshot if the currently displayed one is not representative. 
+* Inputs
+    * `m` - integer, The ID of the member whose screenshot to pull
+    * `imagenumber` - integer, the nth most recent screenshot
+    * `count` - optional, integer, how many previous screenshots to pull from the API. If this isn't set, it will pull the number required to display imagenumber
+* Outputs 
+    * HTML code with hidden `<div>` with the the id `data`
+    * text value of the image URL
+    * imagenumber of the current image
 
 ### twitter.php
-
+* `template/twitter.php`
+* Returns a chosen handle's twitter profile's last 4 tweets
+* Inputs
+    * `handle` - string, the handle of the member's Twitter account
+* Outputs
+    * HTML Code
+    * `<div class="list-group-item"><a class="twitter-timeline"`
+    * Includes async Javascript file for Twitter platform
 
 ### networktests.php
 * `template/networktests.php`
+* This file runs some simple tests to see if the application can access various APIs that the application uses for data sources. If a part of the API can be accessed the file returns a green square. If a part of the API cannot be accessed the file returns a red square. 
+* Inputs
+    * none
+* Outputs
+    * HTML Code with Bootstrap CSS
+    * Single `<div>` with 4 `<h4>` elements
+
 
 # Application Javascript
 The application uses Javascript to dynamic HTML. Each tool has multiple inputs and buttons which trigger functions that use input variables to return relevant data to the user. `template/core.php` provides the core jQuery and Bootstrap Javascript and is included on all pages that run bootstrap for the UI. 

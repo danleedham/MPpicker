@@ -1,3 +1,4 @@
+# User Manual
 - [Getting Started](#getting-started)
   * [Launching the Application](#launching-the-application)
   * [The Four application tools](#the-four-application-tools)
@@ -19,17 +20,18 @@
   * [Section Inputs](#section-inputs)
   * [Sorting Results](#sorting-results)
   
-  # Getting Started
+# Getting Started
 ## Launching the Application
-If the application is being run in the cloud, the stacker does not need to be started locally. If the application is being run locally the easiest way to start it up is by opening the XAMPP application and clicking start. If the application has been installed correctly this should automatically get the application up and running.
 
-To access the application either open a web browser (Google Chrome suggested) and point the web browser to the location of the folder on the server where the application is installed. If the application is being run locally using XAMPP for a PC the address is http://localhost and if it is a Mac then the address will be displayed in the XAMPP Server General tab, such as http://192.168.64.3.
-
-Alternatively, the application can be started and new windows added using the desktop shortcuts which are bundled with the application and found in the apps folder. 
+For Mac and PC the application can be started and new windows added using the desktop shortcuts which are bundled with the application, found in the `apps` folder. 
 
 ![Windows Desktop Icons](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage1.png "Windows Desktop Icons")
 
 ![Mac Desktop Icons](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage2.png "Mac Desktop Icon")
+
+For installations without the desktop icons, the application can be started manually. If the application is being run in the cloud, the stacker does not need to be started locally. If the application is being run locally the easiest way to start it up is by opening the XAMPP application and clicking start. If the application has been installed correctly this should automatically get the application up and running.
+
+To access the application manually open a web browser (Google Chrome suggested) and point the web browser to the location of the folder on the server where the application is installed. If the application is being run locally using XAMPP for a PC the address is http://localhost and if it is a Mac then the address will be displayed in the XAMPP Server General tab, such as http://192.168.64.3.
 
 For other devices that do not support running a php server locally, the application must be run in the cloud. To access the application simply open the server location in the device of choice. 
 
@@ -61,7 +63,7 @@ The user selects between searching the House of Commons or House of Lords using 
 ### Name
 By default the tool will search by member Name. Once three or more characters are entered the tool will return a list of members that contain those letters within their name. For the Commons this searches for preferred names containing the value specified.
 
-For more detailed information on how the search works see: http://data.parliament.uk/membersdataplatform/memberquery.aspx#personalinfotable
+For more detailed information on how the search works see: [http://data.parliament.uk](http://data.parliament.uk/membersdataplatform/memberquery.aspx#personalinfotable)
 
 ![Example Name search of the House of Lords](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage5.png "Example Name search of the House of Lords")
 
@@ -88,7 +90,7 @@ When a member is selected from the list of results, the right hand pane loads th
 ### Member Images
 When Stock image is chosen (set by default) and a member is loaded, their new official portrait is loaded if it exists. For members without this new portrait their older official photograph is returned. When Screenshot is selected the latest available screenshot of the member from parliamentlive.tv is loaded. For the House of Lords as the stock images available are of such poor quality their most recent screenshot is always loaded. 
 
-For all screenshots a Load Next Image button is presented. If the current screenshot is not helpful or representative (such as a nice wide shot of the chamber) then clicking this button will load the next previous screenshot available. 
+For all screenshots a Load Next Image button is presented. If the current screenshot is not helpful or representative (such as a nice wide shot of the chamber) then clicking this button will load the preceding screenshot available. 
 
 ![Example of a member screenshot showing Load Next Image button](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage8.png "Example of a member screenshot showing Load Next Image button")
 
@@ -139,10 +141,15 @@ For questions that are to be answered in a group, input the groups with spaces b
 4 16 17
 9 13 14
 ```
-For questions that have been unstarred / withdrawn on the day enter these in the Withdrawn on the day input. Withdrawn questions entered as their type letter then the number of the question, with a space between each question to be withdrawn: ``
+For questions that have been unstarred / withdrawn on the day, enter these in the Withdrawn on the day input. Withdrawn questions entered as their type letter then the number of the question, with a space between each question to be withdrawn: 
+```
 s1 t2
-``
-Questions that are withdrawn from the list of question to be asked prior to the order paper being printed are marked within the database as ‘Withdrawn Without Notice’. Occasionally questions that should have been marked as Withdrawn Without Notice are not so they need to be marked manually. For a question that appears on the list but does not appear on the order paper, that question should be added to the Withdrawn Before Order Paper Printed input. They should be entered as their type letter then the number of the question, with a space between each question to be removed: s1 t2. 
+```
+
+Questions that are withdrawn from the list of question to be asked prior to the order paper being printed are marked within the database as ‘Withdrawn Without Notice’. Occasionally questions that should have been marked as Withdrawn Without Notice are not so they need to be marked manually. For a question that appears on the list but does not appear on the order paper, that question should be added to the Withdrawn Before Order Paper Printed input. They should be entered as their type letter then the number of the question, with a space between each question to be removed: 
+``` 
+s1 t2
+```
 
 ![Grouped & Withdrawn Questions popup showing groups and withdrawn questions](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage15.png "Grouped & Withdrawn Questions popup showing groups and withdrawn questions")
 
@@ -150,7 +157,7 @@ Questions that are withdrawn from the list of question to be asked prior to the 
 ![Chrome print dialogue showing question list
 ](https://github.com/danleedham/UK-Parliamentary-Stacker/raw/master/docs/images/docimage16.png "Chrome print dialogue showing question list")
 
-Upon loading the questions page the user should select the departments and question types they wish to print. Once the list is the list they wish to print the user should click "Print List" on the right hand side to present the list in a print-friendly format. Printing using the usual Chrome print dialogue allows you to scale by a percantage to fit the images onto a certain number of pages. 
+Upon loading the questions page the user should select the departments and question types they wish to print. Once the list is the list they wish to print the user should click "Print List" on the right hand side (before any members have been selected) to present the list in a print-friendly format. Printing using the usual Chrome print dialogue allows you to scale by a percantage to fit the images onto a certain number of pages (in + More Settings). 
 
 ## Navigating Questions
 Once the list of questions is generated is it possible to navigate between questions either by clicking on the question they desire in the list, clicking the <- Previous or Next -> buttons at the top of the member image, or using the keyboard.

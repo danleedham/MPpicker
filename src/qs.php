@@ -227,12 +227,10 @@
 								
 								<div class="form-inline" style="padding-top:6px !important;">
 									<?php if($house == "Lords"): ?>
-									<label for="sect-input">Section:</label><br />
 									<select id="sect-input" onchange="loadlordsquestions()" name="type" class="form-control">
 										<?php include 'template/lordsquestions-sections.php' ?>
 									</select>	
 									<?php else: ?>
-									<label for="dept-input">Department:</label><br />
 									<select id="dept-input" onchange="loadtypes()" name="type" class="form-control">
 										<?php include 'template/questiondepts.php' ?>
 									</select>	
@@ -240,7 +238,6 @@
 								</div>
 								<?php if($house !== "Lords"): ?>
 								<div class="form-inline" style="padding-top:6px !important;">
-								   <label for="type-input">Type:</label><br />
 									<select id="type-input" name="type" class="form-control" onchange="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(this.value));return false;">
 										Type: <?php include 'template/questiontypes.php' ?>
 									</select>

@@ -923,6 +923,14 @@ a.windup-item:before {
 	content: "" !important;
 }
 
+.list-section-list {
+	border-width: 0px !important;
+	padding-top: 3px !important;
+	padding-bottom: 3px !important;
+	padding-left: 0px !important;
+	padding-right: 0px !important;
+}
+
 .wrapup-panel {
     border-color: transparent !important;
     background-color: transparent !important;

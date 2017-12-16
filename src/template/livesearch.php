@@ -95,11 +95,10 @@
 				if ($FullTitle->item(0)->nodeType==1) {
 					//find a link matching the search text
 					if (stristr($FullTitle->item(0)->childNodes->item(0)->nodeValue,$q)) {
-						$hint = $hint .'<a id="m'.$MemberId.'" class="list-group-item'.$ifactive.'" onclick="load('.$MemberId.');return false;" href="#">
-						<img src="'.$imageurl.'" class="img-rounded mini-member-image pull-left">
-						<h4 class="list-group-item-heading"> <span class="partybox" style="background:'.$color.'!important"></span>'.$KnownAs->item(0)->childNodes->item(0)->nodeValue .'</h4>
-						<p class="list-group-item-text">'.
-						$Party->item(0)->childNodes->item(0)->nodeValue.' ('.$Const->item(0)->childNodes->item(0)->nodeValue.")</p></a>";
+						$hint = $hint .'<a id="m'.$MemberId.'" class="list-group-item list-section-list'.$ifactive.'" onclick="load('.$MemberId.');return false;" href="#">
+						<img src="'.$imageurl.'" class="mini-member-image pull-left">
+						<h4 class="list-group-item-heading"> <span class="partybox" style="background:'.$color.'!important"></span>'.$KnownAs->item(0)->childNodes->item(0)->nodeValue .'</h4>'.
+						$Party->item(0)->childNodes->item(0)->nodeValue.' ('.$Const->item(0)->childNodes->item(0)->nodeValue.")</a>";
 					}
 				}
 			}
@@ -143,11 +142,10 @@
 				if ($FullTitle->item(0)->nodeType==1) {
 					//find a link matching the search text
 					if (stristr($Const->item(0)->childNodes->item(0)->nodeValue,$q)) {
-						$hint=$hint .'<a id="m'.$MemberId.'" class="list-group-item'.$ifactive.'" onclick="load('.$MemberId.');return false;" href="#">
-						<img src="'.$imageurl.'" class="img-rounded mini-member-image pull-left">
-						<h4 class="list-group-item-heading"><span class="partybox" style="background:'.$color.'!important"></span>'.$KnownAs->item(0)->childNodes->item(0)->nodeValue .'</h4>
-						<p class="list-group-item-text">'.
-						$Party->item(0)->childNodes->item(0)->nodeValue.' ('.$Const->item(0)->childNodes->item(0)->nodeValue.")</p></a>";
+						$hint=$hint .'<a id="m'.$MemberId.'" class="list-group-item list-section-list'.$ifactive.'" onclick="load('.$MemberId.');return false;" href="#">
+						<img src="'.$imageurl.'" class="mini-member-image pull-left">
+						<h4 class="list-group-item-heading"><span class="partybox" style="background:'.$color.'!important"></span>'.$KnownAs->item(0)->childNodes->item(0)->nodeValue .'</h4>'.
+						$Party->item(0)->childNodes->item(0)->nodeValue.' ('.$Const->item(0)->childNodes->item(0)->nodeValue.")</a>";
 					}
 				}
 			}
@@ -196,11 +194,10 @@
 				if ($FullTitle->item(0)->nodeType==1) {
 					//find a link matching the search text
 					if (strpos(strtolower(implode($Jobsarray)),strtolower($q))) {
-						$hint=$hint .'<a id="m'.$MemberId.'" class="list-group-item'.$ifactive.'" onclick="load('.$MemberId.');return false;" href="#">
-						<img src="'.$imageurl.'" class="img-rounded mini-member-image pull-left">
-						<h4 class="list-group-item-heading"> <span class="partybox" style="background:'.$color.'!important"></span>'.$JobsarrayForDisplay.'</h4>
-						<p class="list-group-item-text">'.
-						$KnownAs->item(0)->childNodes->item(0)->nodeValue ." - ".$Party->item(0)->childNodes->item(0)->nodeValue."</p></a>";
+						$hint=$hint .'<a id="m'.$MemberId.'" class="list-group-item list-section-list'.$ifactive.'" onclick="load('.$MemberId.');return false;" href="#">
+						<img src="'.$imageurl.'" class="mini-member-image pull-left">
+						<h4 class="list-group-item-heading list-group-position"> <span class="partybox" style="background:'.$color.'!important"></span>'.$JobsarrayForDisplay.'</h4>'.
+						$KnownAs->item(0)->childNodes->item(0)->nodeValue ." - ".$Party->item(0)->childNodes->item(0)->nodeValue."</a>";
 					}
 				}
 			}

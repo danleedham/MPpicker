@@ -123,8 +123,8 @@
     margin-bottom: 0
 }
 .list-group-item img {
-    height: 45px;
-    width: 45px;
+    height: 55px;
+    width: 55px;
     overflow: hidden;
     margin-right: 5px
 }
@@ -743,7 +743,7 @@ a.list-group-item.active:before {
     background-color: #447a1c !important;
 }
 .bootcards-list .form-group {
-    margin-bottom: 13px !important;
+    margin-bottom: 2px !important;
     margin-top: 2px !important;
 }
 .list-group-item.withdrawn {
@@ -925,13 +925,32 @@ a.windup-item:before {
 
 .list-section-list {
 	border-width: 0px !important;
-	padding-top: 3px !important;
-	padding-bottom: 3px !important;
-	padding-left: 0px !important;
+	padding-top: 0px !important;
+	padding-bottom: 0px !important;
+	padding-left: 17px !important;
 	padding-right: 0px !important;
+	overflow: hidden !important;
 }
 
 .wrapup-panel {
     border-color: transparent !important;
     background-color: transparent !important;
+}
+
+.list-group-item-heading {
+    padding-top: 6px !important;
+}
+
+/* from Bootstrap.min.css */
+.list-group-item {
+    margin-bottom: 0px !important; 
+}
+
+.list-group-position {
+    font-size: 14px;
+}
+
+.no-side-padding {
+	padding-left: 0px !important;
+	padding-right: 0px !important;
 }

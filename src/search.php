@@ -171,7 +171,7 @@
 					</div>
 
 					<div class="list-group" id="livesearchmember">
-						<?php require ("template/initiallist.php"); ?>
+						
 					</div>
 					<!--list-group-->
 					<!-- <div class="panel-footer">

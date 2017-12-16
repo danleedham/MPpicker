@@ -17,6 +17,36 @@ if(!isset($Events)) {
 	include 'wind-getclips.php';	
 }
 
+// Find which section we want to get. Should match 'time' element
+	if(isset($section) && isset($Events)) {
+		for($i=0; $i<count($Events); $i++) {
+			if($section == $Events[$i]['time']) {
+				$Sectioni= $i;
+			}
+		}
+	}
+	if (!isset($Events)) { 
+		$NoEventsSet = true;
+	} else {
+	
+		// Remove all clips that aren't after the time set
+		$NewClips = array();
+ 
+		for ($i=0; $i<count($Clips); $i++) {
+			if(!isset($section)) {
+				$EventTime = strtotime($Events[$Sectioni]['time']);
+			} else {
+				$EventTime = strtotime($section);
+			}
+			$ClipTime = strtotime($Clips[$i]['time']);
+			if($ClipTime >= $EventTime) {
+				$NewClips[] = $Clips[$i];
+			}
+		}
+	$Clips = $NewClips;
+	}
+
+
 // If there still aren't any events set hint to ""
 if(isset($NoEventsSet) && $NoEventsSet == true) {
 	$hint = "";

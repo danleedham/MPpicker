@@ -19,13 +19,21 @@
 	if(isset($event) && $event !== "") {
 	
 		include('wind-geteventlocation.php');
+		
+		// Get the next section so we know when to stop 
+		
 		if(isset($section)) {
-			$logsURL = 'http://parliamentlive.tv/Event/EventLogsBetween/'.$event.'?startTime='.$section.'Z';
-		} else {
+		    $currenttime = strtotime("+3 hours", time());
+		    // echo $currenttime.' vs '.strtotime($section);
+		    if($currenttime <= strtotime($section)) {
+			    $logsURL = 'http://parliamentlive.tv/Event/EventLogsBetween/'.$event.'?startTime='.$section.'Z';
+			}
+		}
+		if(!isset($logsURL)) {
 			$logsURL = 'http://parliamentlive.tv/Event/Logs/'.$event;
 		}
 		$content = file_get_contents($logsURL);
-		// print_r($logsURL);
+		
 		$SplitOutClips = explode( '<header class="stack-item">', $content );
 		$SplitOutClips = array_slice($SplitOutClips,1);	
 		$GetClipTitles = $SplitOutClips;
@@ -44,6 +52,7 @@
 			$GetClipTimes[$i] = trim($GetClipTimes[$i][0]);
 
 		}
+		
 		// Combine clip names and times please!
 		$Clips = array();
 		for ($i=0; $i<count($GetClipTimes); $i++){

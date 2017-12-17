@@ -14,8 +14,8 @@
 	} else { 
 		$oral = "success";
 	}
-	
 	$QuestionsUntil = $xmloral->items[0]->item[0]->AnswerDate[0];
+	
 	// Can we get data from the AV Visual Live Logging api?
 	$xmlav = @simplexml_load_file('http://lda.data.parliament.uk/tvprogrammes.xml?_view=basic&_pageSize=1');
 	if (!$xmlav) {
@@ -31,9 +31,9 @@
 		$beta = "danger";
 	} 
 ?>
- 				<div class="col-xs-12 col-sm-6">
-						  <h4><span class="label label-<?php echo $members; ?>">&nbsp</span> Members Data Platform</h4>
-						  <h4><span class="label label-<?php echo $oral; ?>">&nbsp</span> Commons Oral Questions (until: <?php echo $QuestionsUntil[0]; ?>)</h4>
-						  <h4><span class="label label-<?php echo $av; ?>">&nbsp</span> Screenshots</h4>
-						  <h4><span class="label label-<?php echo $beta; ?>">&nbsp</span> Member Beta Images</h4>
-					  </div>
+<div class="col-xs-12 col-sm-6">
+  <h4><span class="label label-<?php echo $members; ?>">&nbsp</span> Members Data Platform</h4>
+  <h4><span class="label label-<?php echo $oral; ?>">&nbsp</span> Commons Oral Questions (until: <?php echo $QuestionsUntil[0]; ?>)</h4>
+  <h4><span class="label label-<?php echo $av; ?>">&nbsp</span> Screenshots</h4>
+  <h4><span class="label label-<?php echo $beta; ?>">&nbsp</span> Member Beta Images</h4>
+</div>

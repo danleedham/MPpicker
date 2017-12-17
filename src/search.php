@@ -17,84 +17,7 @@
 	        $betaimages = simplexml_load_string($feed);
 	        $imagescount =  count($betaimages);
 	        
-	?><!-- Here's the script that *should* get the relevant members from the search. Note search string must be greater than 2 -->
-	<script>
-		function showResult(str) {
-			// Check which house to search through  
-			if (!document.getElementById("choosehouse").checked) {
-				var house = "Commons";
-			} else {
-				var house = "Lords";
-			}
-			// Check if the user wants to search by name, constituency or opsition
-			var searchby = document.getElementById("searchby").value;
-			if (searchby == "name") {
-				reqdchars = 2;
-				var url = "livesearch.php";
-			} else if (searchby == "constituency") {
-				reqdchars = 3;
-				var url = "livesearch.php";
-			} else {
-				reqdchars = 4;
-				var url = "livesearch.php";
-			}
-			// If we want to search by position then 
-			if (searchby == "position"){
-				var positiontype = document.getElementById("positiontype").value;
-				var side = "&side=" + positiontype;
-			} else {
-				var side = "";
-			}
-			// If the string is x characters or more then do a nice little search
-			if (str.length <= reqdchars) {
-				document.getElementById("livesearchmember").innerHTML = "";
-				document.getElementById("livesearchmember").style.border = "0px";
-				return;
-			}
-			if (window.XMLHttpRequest) {
-				// code for IE7+, Firefox, Chrome, Opera, Safari
-				xmlhttp = new XMLHttpRequest();
-			} else { // code for IE6, IE5
-				xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-			}
-			xmlhttp.onreadystatechange = function() {
-				if (this.readyState == 4 && this.status == 200) {
-					document.getElementById("livesearchmember").innerHTML = this.responseText;
-				}
-			}
-			xmlhttp.open("GET", "template/" + url + "?house=" + house + "&searchby=" + searchby + "&q=" + str + side, true);
-			xmlhttp.send();
-		}
-
-		function load(id) {
-			if (!document.getElementById("photos").checked) {
-				var photos = 'Stock';
-			} else {
-				var photos = document.getElementById("photos").value;
-			}
-			if (!document.getElementById("searchby").checked) {
-				var searchby = 'name';
-			}
-			$("#contactCard").load('template/member.php?m=' + id + '&photos=' + photos);
-			$('.active').removeClass('active');
-			$('#m' + id).addClass("active");
-		}
-
-		function togglemobilelist() {
-			var list = document.getElementById("list");
-			list.style.display = list.style.display === 'none' ? 'block' : 'none';
-		}
-		function changesearchby() {
-			var searchby = document.getElementById("searchby").value;
-			console.log('Searching by '+searchby);
-			var positiontype = document.getElementById("positiontypediv");
-			if (searchby == "position") {
-				positiontype.style.display = 'block';
-			} else {
-				 positiontype.style.display = 'none';
-			}
-		}
-	</script>
+	?>
 </head>
 
 <body>
@@ -105,7 +28,7 @@
 
 			<div id="mobilemenu">
 				<div class="panel-body">
-					<a class="btn btn-warning" href="#" onclick="togglemobilelist();return false;" role="button">Toggle Search</a>
+					<a class="btn btn-warning" href="#" onclick="searchtogglemobilelist();return false;" role="button">Toggle Search</a>
 				</div>
 				<!--panel body-->
 			</div>
@@ -119,14 +42,14 @@
 						<div class="search-form">
 							<div class="col-sm-12 input-toggle">
 								<div class="form-group">
-									<input class="form-control" form="mpsearch" name="q" onkeyup="showResult(this.value)" placeholder="Start Typing..." size="20" type="text">
+									<input class="form-control" form="mpsearch" name="q" onkeyup="searchshowResult(this.value)" placeholder="Start Typing..." size="20" type="text">
 								</div>
 							</div>
 						</div>
 						<div class="search-form">	
 							<div class="col-sm-12 input-toggle">
 								<div class="form-group">
-									<select class="form-control custom-select" form="mpsearch" id="searchby" name="searchby" onchange="changesearchby();">
+									<select class="form-control custom-select" form="mpsearch" id="searchby" name="searchby" onchange="searchchangesearchby();">
 										<option value="name">
 											Name
 										</option>

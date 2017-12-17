@@ -68,32 +68,21 @@
     		<?php echo $xml->Member[0]->DisplayAs ?>
     	</h3>
     </div>
-	<div class="list-group">
-		<div class="list-group-item">	
+	
 		<img id="questioner-img" src="<?php echo $imageurl; ?>" class="pull-right <?php if(isset($screenshotused) && $screenshotused == true) { echo 'main-member-screenshot';} else { echo 'main-member-image' ;} ?>"">
-						
-			<label>Party</label>
-			<h4 class="list-group-item-heading" style="color:                  
+	<div class="list-group">
+		<div class="list-group-item">			
+			<h4 class="list-group-item-heading">
+			    <?php echo $xml->Member[0]->MemberFrom ?>
+				<span style="color:                  
 				<?php echo $colors[intval($PartyID)]; ?>">
 				<?php echo $xml->Member[0]->Party ?>
 			</h4>
-		</div>
-		<div class="list-group-item">
-			<label>Constituency</label>
-			<h4 class="list-group-item-heading">
-				<?php echo $xml->Member[0]->MemberFrom ?>
-			</h4>
-		</div>
-
-		<div class="list-group-item">
-			<label>Start Date in the House</label>
+		    <label style="margin-top: 12px !important">Start Date in the House</label>
 			<h4 class="list-group-item-heading">
 				<?php echo date('d-m-Y', strtotime($xml->Member[0]->HouseStartDate)) ?>
 			</h4>
-		</div>
-
-		<div class="list-group-item">
-		<label>Current Notable Positions</label>
+		    <label style="margin-top: 12px !important">Current Positions</label>
 			<?php 
 				// let's see if they're currently a member of the Government
 				for($i = 0; $i < count($xml->Member[0]->GovernmentPosts[0]); $i ++) {
@@ -130,9 +119,7 @@
 					}
 				} 
 			?>
-
-		</div>
-		<div class="list-group-item">
+            <br />
 			<?php 
 				for($i = 0; $i < count($xml->Member[0]->Addresses[0]); $i ++) {
 					if ($xml->Member[0]->Addresses->Address[$i]->Type == "Twitter") {
@@ -157,7 +144,7 @@
 			<?php endif; ?> 
 		</div>
 		
-		<div class="list-group-item" id="twitter" style="display:none;"></div>
+		<div id="twitter" style="display:none;"></div>
 			<div class="list-group-item" id="extras" style="display:none;">
 				<?php 
 					if(isset($xml->Member[0]->BiographyEntries[0]->BiographyEntry[0]->Entry)): 

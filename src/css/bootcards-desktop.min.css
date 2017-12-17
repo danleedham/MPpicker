@@ -705,11 +705,12 @@ a.list-group-item.active:before {
 }
 
 .main-member-screenshot {
-	height: 60% !important;
-    width: 60% !important;
+	height: 100% !important;
+    width: 100% !important;
     z-index: 3;
     position: relative;
     margin-right: 0px !important;
+    padding-bottom: 15px !important;
 }
 
 .main-question-image {
@@ -826,7 +827,7 @@ h3.panel-title.pull-left {
 } */
 
 #livesearchmember { 
-	height: calc(100vh - 250px);  /* bad fix to make the members scroll but not the image */
+	/* height: calc(100vh - 250px);  bad fix to make the members scroll but not the image */
 	overflow: auto;
 }
 
@@ -937,9 +938,6 @@ a.windup-item:before {
     background-color: transparent !important;
 }
 
-.list-group-item-heading {
-    padding-top: 6px !important;
-}
 
 /* from Bootstrap.min.css */
 .list-group-item {
@@ -953,4 +951,9 @@ a.windup-item:before {
 .no-side-padding {
 	padding-left: 0px !important;
 	padding-right: 0px !important;
+}
+
+label {
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
 }

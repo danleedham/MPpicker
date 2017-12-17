@@ -56,6 +56,8 @@ function windcheckformembers(){
 		if(newcount > currentcount) {
 			windloadmembers(eventid,section);
 			console.log('New member logged... reloading list');
+			windloadsections();
+			console.log('Reloading Sections');
 		} else {
 			// console.log('No new members logged...');
 		}	

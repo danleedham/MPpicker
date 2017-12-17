@@ -316,3 +316,13 @@ function searchchangesearchby() {
          positiontype.style.display = 'none';
     }
 }
+
+function searchiflordsscreenshot() {
+    console.log('Checking to see if Lords...')
+    if (!document.getElementById("choosehouse").checked) {
+        console.log('Nah, you\'re good');
+    } else {
+        console.log('Setting default image to Screenshot');
+        $('#photos').bootstrapToggle('on')
+    }
+}

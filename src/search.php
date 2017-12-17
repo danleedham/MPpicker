@@ -84,7 +84,7 @@
 						</div>
 						<div class="search-form" style="padding-top: 6px">	
 							<div class="col-sm-6 membersearch-options input-toggle">
-								<input data-off="Commons" data-offstyle="success" data-on="Lords" data-onstyle="danger" data-toggle="toggle" data-width="100%" id="choosehouse" name="house" type="checkbox" value="Lords">
+								<input data-off="Commons" data-offstyle="success" data-on="Lords" data-onstyle="danger" data-toggle="toggle" data-width="100%" id="choosehouse" name="house" type="checkbox" value="Lords" onchange="searchiflordsscreenshot();">
 							</div>
 
 							<div class="col-sm-6 membersearch-options input-toggle">

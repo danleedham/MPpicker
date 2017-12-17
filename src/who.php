@@ -13,124 +13,19 @@
 	</script>
 	<link href="template/chosen/chosen.css" rel="stylesheet">
 
-	<title>Who's that?</title><?php
-	        //get the css and js nonesense
-	        include 'template/headinc.php'; 
-	    ?>
+	<title>Who's that?</title>
+	<?php
+	    //get the css and js nonesense
+	    include 'template/headinc.php'; 
+	?>
+	
 	<script>
-		function loadsex() {
-			var house = document.getElementById("house-input").value;
-			$("#sex-input").load('template/whosex.php?&house=' + house);
-		}
-
-		function hidemenu() {
-			var menu = document.getElementById("list");
-			menu.style.display = menu.style.display === 'none' ? '' : 'none';
-			var results = document.getElementById("whoresults");
-			results.classList.add("col-sm-12");
-			results.classList.remove("col-sm-9");
-		}
-
-		function loadparties() {
-			var house = document.getElementById("house-input").value;
-			var sex = document.getElementById("sex-input").value;
-			$("#party-input").load('template/whoparty.php?house=' + house + '&sex=' + sex);
-		}
-
-		function loadpartiesjusthouse() {
-			var house = document.getElementById("house-input").value;
-			$("#party-input").load('template/whoparty.php?house=' + house);
-		}
-
-		function loadresults() {
-			document.getElementById('loader').style.display = 'inline';
-			var house = document.getElementById("house-input").value;
-			if (house) {
-				var houseurl = '&house=' + house;
-			} else {
-				var houseurl = "";
-			}
-			var sex = document.getElementById("sex-input").value;
-			if (sex) {
-				var sexurl = '&sex=' + sex;
-			} else {
-				var sexurl = "";
-			}
-			var party = document.getElementById("party-input").value;
-			if (party) {
-				var partyurl = '&party=' + encodeURI(party);
-			} else {
-				var partyurl = "";
-			}
-			var position = document.getElementById("position-input").value;
-			if (position) {
-				var positionurl = '&position=' + encodeURI(position);
-			} else {
-				var positionurl = "";
-			}
-			var committee = document.getElementById("committee-input").value;
-			if (committee) {
-				var committeeurl = '&committee=' + encodeURI(committee);
-			} else {
-				var committeeurl = "";
-			}
-			var department = document.getElementById("department-input").value;
-			if (department) {
-				var departmenturl = '&department=' + encodeURI(department);
-			} else {
-				var departmenturl = "";
-			}
-			var topic = document.getElementById("topic-input").value;
-			if (topic) {
-				var topicurl = '&topic=' + encodeURI(topic);
-			} else {
-				var topicurl = "";
-			}
-			var photos = document.getElementById("photos-input").value;
-			if (photos) {
-				var photosurl = '&photos=' + encodeURI(photos);
-			} else {
-				var photosurl = "";
-			}
-			var joined = document.getElementById("joined-input").value;
-			if (joined) {
-				var joinedurl = '&joined=' + String(joined);
-			} else {
-				var joinedurl = "";
-			}
-			var sortby = document.getElementById("sortby-input").value;
-			if (sortby) {
-				var sortbyurl = '&sortby=' + String(sortby);
-			} else {
-				var sortbyurl = "";
-			}
-			console.log('Loading List: ' + houseurl + sexurl + partyurl + positionurl + committeeurl + topicurl + departmenturl + photosurl + joinedurl);
-			$("#whoresults").load('template/wholist.php?' + houseurl + sexurl + partyurl + positionurl + committeeurl + topicurl + departmenturl + photosurl + joinedurl + sortbyurl, function() {
-				document.getElementById('loader').style.display = 'none';
-			});
-		}
-
-		function hidejobs() {
-			elements = document.getElementsByClassName("joblist");
-			for (var i = 0; i < elements.length; i++) {
-				elements[i].style.display = elements[i].style.display == 'none' ? 'block' : 'none';
-			}
-		}
-
-		function hideconst() {
-			elements = document.getElementsByClassName("constituency");
-			for (var i = 0; i < elements.length; i++) {
-				elements[i].style.display = elements[i].style.display == 'none' ? 'block' : 'none';
-			}
-		}
-
-		function hideparty() {
-			elements = document.getElementsByClassName("party");
-			for (var i = 0; i < elements.length; i++) {
-				elements[i].style.display = elements[i].style.display == 'none' ? 'block' : 'none';
-			}
-		}
-	</script>
+	window.onload = function() {
+		wholoadcommitteelists();
+		wholoaddepartmentlists();
+		whotopics();
+	};
+  	</script>
 </head>
 
 <body>
@@ -138,21 +33,25 @@
 		<div class="row">
 			<!-- Search panel -->
 			<!--options column-->
-
-
 			<div class="col-sm-3 bootcards-list" data-title="Contacts" id="list">
 				<div class="panel panel-default">
 					<div class="panel-heading clearfix">
-						<h3 class="panel-title"><span onclick="hidemenu();return false;" style="float:right;"><i aria-hidden="true" class="fa fa-bars"></i></span> Use the search tools below <span id="loader" style="display:none;"><i class="pull-right" style="font-size:20px"></i></span></h3>
+						<h3 class="panel-title">
+							<span onclick="whohidemenu();return false;" style="float:right;">
+								<i aria-hidden="true" class="fa fa-bars"></i>
+							</span> 
+								Use the search tools below 
+							<span id="loader" style="display:none;">
+								<i class="pull-right" style="font-size:20px"></i>
+							</span>
+						</h3>
 					</div>
-
-
 					<div class="list-group">
 						<!-- start search form -->
-						
 						<!-- house -->
 						<div class="list-group-item">
-							<select class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" form="mpsearch" id="house-input" name="house" onchange="loadsex(); loadpartiesjusthouse();">
+							<select class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" form="mpsearch" id="house-input" name="house" 
+								onchange="wholoadsex(); wholoadpartiesjusthouse(); updatelists();">
 								<option value="Commons">
 									Commons
 								</option>
@@ -193,32 +92,30 @@
 							</select>
 						</div>
 						<!-- committees -->
-
-
 						<div class="list-group-item">
-							<select class="chosen-select form-control custom-select mb-2 mr-sm-2 mb-sm-0" data-placeholder="Choose a Committee..." id="committee-input" tabindex="2">
-								<option value="">
-								</option><?php $house = "Commons";
-								                          include("template/whocommittee.php"); ?>
-							</select>
+							<div id="whocommittee">	
+     							<select class="form-control custom-select mb-2 mr-sm-2 mb-sm-0">
+     								<option value="">Loading Committees...</option>
+     							</select>
+							</div>
 						</div>
+						
 						<!-- departments -->
-
-
 						<div class="list-group-item">
-							<select class="chosen-select form-control custom-select mb-2 mr-sm-2 mb-sm-0" data-placeholder="Choose a Department..." id="department-input" tabindex="2">
-								<option value="">
-								</option><?php include("template/whodepartment.php"); ?>
-							</select>
+							<div id="whodepartment">
+								<select class="form-control custom-select mb-2 mr-sm-2 mb-sm-0">
+     								<option value="">Loading Departments...</option>
+     							</select>	
+							</div>
 						</div>
-						<!-- departments -->
-
-
-						<div class="list-group-item">
-							<select class="chosen-select form-control custom-select mb-2 mr-sm-2 mb-sm-0" data-placeholder="Choose a topic..." id="topic-input" tabindex="2">
-								<option value="">
-								</option><?php include("template/whointerests.php"); ?>
-							</select>
+						
+						<!-- interests -->
+					<div class="list-group-item">
+							<div id="whotopics">
+								<select class="form-control custom-select mb-2 mr-sm-2 mb-sm-0">
+     								<option value="">Loading Interest Topics...</option>
+     							</select>	
+							</div>
 						</div>
 						<!-- Joined after -->
 
@@ -290,13 +187,13 @@
 
 
 						<div class="list-group-item">
-							<a class="btn btn-success" href="#" onclick="loadresults();return false;" role="button">Hit me up</a> <a class="btn btn-danger" href="#" onclick="window.location.reload()" role="button">Reset</a>
+							<a class="btn btn-success" href="#" onclick="wholoadresults();return false;" role="button">Hit me up</a> <a class="btn btn-danger" href="#" onclick="window.location.reload()" role="button">Reset</a>
 						</div>
 
 
 						<div class="list-group-item">
 							Toggle:<br>
-							<a class="btn btn-warning" href="#" onclick="hideparty();return false;" role="button">Party</a> <a class="btn btn-warning" href="#" onclick="hideconst();return false;" role="button">Const</a> <a class="btn btn-warning" href="#" onclick="hidejobs();return false;" role="button">Jobs</a>
+							<a class="btn btn-warning" href="#" onclick="whohideparty();return false;" role="button">Party</a> <a class="btn btn-warning" href="#" onclick="whohideconst();return false;" role="button">Const</a> <a class="btn btn-warning" href="#" onclick="whohidejobs();return false;" role="button">Jobs</a>
 						</div>
 					</div>
 					<!--list group-->
@@ -314,13 +211,12 @@
 	</div>
 	<!--row-->
 	<!--container-->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.js" type="text/javascript">
-	</script> 
 	<script src="template/chosen/chosen.jquery.js" type="text/javascript">
 	</script> 
-	<script charset="utf-8" src="template/chosen/docsupport/prism.js" type="text/javascript">
-	</script> 
 	<script charset="utf-8" src="template/chosen/docsupport/init.js" type="text/javascript">
-	</script> <?php include 'template/footer.php'; ?> <?php include 'template/core.php'; ?>
+	</script> 
+	
+	<?php include 'template/footer.php'; ?> 
+	<?php include 'template/core.php'; ?>
 </body>
 </html>

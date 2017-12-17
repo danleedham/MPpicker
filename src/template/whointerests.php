@@ -1,3 +1,5 @@
+<select class="chosen-select form-control custom-select mb-2 mr-sm-2 mb-sm-0" data-placeholder="Choose a topic..." id="topic-input" tabindex="2">
+
 <?php
 
 /* whointerests.php 
@@ -17,8 +19,7 @@
 		$house = "Commons";
 	}
 
-	echo '<option value=""></option>';
-	echo '<option value="">All</option>';
+	echo '<option value="">All Interests</option>';
 	$xmlDoc=new DOMDocument();
 	// Load just the current members BiographyEntries as that's what contains the interests
 	
@@ -48,4 +49,4 @@
 		}
 	}
 ?>  
-
+</select>

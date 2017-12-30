@@ -23,6 +23,9 @@
 	if (!isset($house)) {
 		$house = "Commons";
 	}
+	if(isset($_GET["futuredayorals"])){
+	    $futuredayorals=$_GET["futuredayorals"];
+	}
 	?>
 
 <script>
@@ -154,48 +157,71 @@
 	function checkKey(e) {
 		e = e || window.event;
 		if (e.keyCode == '37') {
-			$('.active').removeClass('active');
-			document.getElementById('togglemenu').style.display = 'none';
-			document.getElementById('loader').style.display = 'inline';
-			if (!document.getElementById("photos-input").checked){
-				var photos = 'Stock';
-			} else {
-				var photos = "screenshot";
-			}
-			var num = document.getElementById("currentuin").value;
 			var thisprev = document.getElementById("currentprev").value;
 			var date = document.getElementById("date-input").value;
-			var next = document.getElementById('next'+thisprev).value	;
-			var prev = document.getElementById('prev'+thisprev).value;
-			console.log('Loading question: '+thisprev+' next: '+next+' prev: '+prev);
-			$("#contactCard").load('template/questioner.php?uin='+thisprev+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
-				document.getElementById('loader').style.display = 'none';
-			});
-			$('#q'+thisprev).addClass("active");
-			document.getElementById('togglemenu').style.display = 'inline';
+			console.log('Previous Question demanded. Loading UIN: '+thisprev);
+			futuredayoralsload(thisprev,date)	
 		}
 		else if (e.keyCode == '39') {
-			document.getElementById('togglemenu').style.display = 'none';
-			$('.active').removeClass('active');
-			document.getElementById('loader').style.display = 'inline';
-			if (!document.getElementById("photos-input").checked){
-				var photos = 'Stock';
-			} else {
-				var photos = "screenshot";
-			}
-			var num = document.getElementById("currentuin").value;
 			var thisnext = document.getElementById("currentnext").value;
 			var date = document.getElementById("date-input").value;
-			var next = document.getElementById('next'+thisnext).value;
-			var prev = document.getElementById('prev'+thisnext).value;
-			console.log('Loading question: '+thisnext+' next: '+next+' prev: '+prev);
-			$("#contactCard").load('template/questioner.php?uin='+thisnext+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
-				document.getElementById('loader').style.display = 'none';
-				document.getElementById('togglemenu').style.display = 'inline';
-			});
-			$('#q'+thisnext).addClass("active");
-			
+			console.log('Next Question demanded. Loading UIN: '+thisnext);
+			futuredayoralsload(thisnext,date)
 	   }
+	}
+	function futuredayoralsloaddepts(date){
+	   $("#dept-input").load('template/futuredayorals-returndepts.php?output=true&date='+date);
+	   console.log('Loading departments for: '+date);
+	}
+	
+	
+	function futuredayoralsloadquestions(date,dept){
+		document.getElementById('togglemenu').style.display = 'none';
+		document.getElementById('loader').style.display = 'inline';
+		if (!document.getElementById("together-input").checked){
+			var together = "together";
+		} else {
+			var together = "dont";
+		}
+		if (!document.getElementById("topicals-together").checked){
+			var topicalsbyparty = "byparty";
+		} else {
+			var topicalsbyparty = "dont";
+		}
+		var groups = document.getElementById("groups-input").value;
+		var withdrawn = document.getElementById("withdrawn-input").value;
+		var withoutnotice = document.getElementById("withoutnotice-input").value;
+		console.log('Loading questions to '+dept+' on '+date+' using groups: '+groups+' and withdrawing (day): '+withdrawn+' withdrawing (before): '+withoutnotice+' grouped: '+together);
+		groups = groups.replace(/[\r\n]+/g,",");
+		groups = encodeURI(groups);
+		withdrawn = encodeURI(withdrawn);
+		withoutnotice = encodeURI(withoutnotice);
+		$("#livesearch").load('template/futuredayorals-returnlist.php?date='+date+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice+'&together='+together+'&topicalsbyparty='+topicalsbyparty+'&outputList=true',function() {
+			document.getElementById('loader').style.display = 'none';
+			document.getElementById('togglemenu').style.display = 'inline';
+			var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+		    var listsize = h - 154;
+		    document.getElementById("livesearch").setAttribute("style","height:"+listsize+"px");
+   		});
+	}
+	
+	function futuredayoralsload(num,date){
+		document.getElementById('togglemenu').style.display = 'none';
+		document.getElementById('loader').style.display = 'inline';
+		if (!document.getElementById("photos-input").checked){
+			var photos = 'Stock';
+		} else {
+			var photos = "screenshot";
+		}
+		var next = document.getElementById('next'+num).value;
+		var prev = document.getElementById('prev'+num).value;
+		console.log('Loading question: '+num+' next: '+next+' prev: '+prev);
+		$("#contactCard").load('template/futuredayorals-questioner.php?uin='+num+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
+			document.getElementById('loader').style.display = 'none';
+			document.getElementById('togglemenu').style.display = 'inline';
+		});
+		$('.active').removeClass('active');
+		$('#q'+num).addClass("active");
 	}
 </script>
 
@@ -217,7 +243,14 @@
 								<?php if($house !== "Lords"): ?>
 								<div class="row">
 									<div id="date-div" class="col-sm-6">
+										<?php if(isset($futuredayorals) && $futuredayorals == "use"): ?>
+										    <select id="date-input" class="form-control" onchange="futuredayoralsloaddepts(this.value)" value="<?php echo $date ?>" name="date" >	
+										    <?php $outputDates = "true";
+										        include 'template/futuredayorals-returndates.php' ?>
+										        </select>
+										<?php else: ?>
 											<input id="date-input" type="date" class="input-sm form-control" onchange="loaddepts(this.value)" value="<?php echo $date ?>" name="date" >	
+									    <?php endif; ?>
 									</div>
 									<div id="photos-div" class="col-sm-6">
 											<input id="photos-input" class="pull-right" style="float:right !important;" type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-width="100%" data-off="Stock">
@@ -231,12 +264,17 @@
 										<?php include 'template/lordsquestions-sections.php' ?>
 									</select>	
 									<?php else: ?>
+									    <?php if(isset($futuredayorals) && $futuredayorals == "use"): ?>
+									    <select id="dept-input" name="type" class="form-control">
+									    </select>	
+									    <?php else: ?>
 									<select id="dept-input" onchange="loadtypes()" name="type" class="form-control">
 										<?php include 'template/questiondepts.php' ?>
 									</select>	
+									    <?php endif; ?>
 									<?php endif; ?>
 								</div>
-								<?php if($house !== "Lords"): ?>
+								<?php if($house !== "Lords" && !isset($futuredayorals)): ?>
 								<div class="form-inline" style="padding-top:6px !important;">
 									<select id="type-input" name="type" class="form-control" onchange="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(this.value));return false;">
 										Type: <?php include 'template/questiontypes.php' ?>
@@ -250,8 +288,13 @@
 								<a href="#" onclick="loadlordsquestions();return false;" class="btn btn-danger" role="button" style="width: 100% !important;">
 									Load</a>
 								<?php else: ?>
-								<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-success" role="button" style="width: 100% !important;">
+								    <?php if(isset($futuredayorals) && $futuredayorals == "use"): ?>
+								    <a href="#" onclick="futuredayoralsloadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value));return false;" class="btn btn-success" role="button" style="width: 100% !important;">
+									Use Backup</a>
+								    <?php else: ?>
+								    <a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-success" role="button" style="width: 100% !important;">
 									Load</a>
+								    <?php endif; ?>
 								<?php endif; ?>
 								</div>
 								<?php if($house !== "Lords"): ?>
@@ -344,7 +387,7 @@
 											<input type="text" class="form-control" id="withoutnotice-input" form="withoutnotice"></input>
 											<br />
 											<div class="col-sm-4" style="padding-left: 0px !important;">
-												<a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" style="width:100%" class="btn btn-info" role="button">
+												<a href="#" onclick="futuredayoralsloadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value));return false;" style="width:100%" class="btn btn-info" role="button">
 												Set Groups</a>
 											</div>
 											<div class="col-sm-4" style="padding-left: 0px! important; padding-right: 0px !important;">

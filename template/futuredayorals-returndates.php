@@ -11,6 +11,10 @@
     // This include returns $FOralsContent as a string and $FOralsUpdatedDate as a dateTime
 	include("futuredayorals-loadpage.php");
 	
+	if(isset($outputDates) && $outputDates = "true"){ 
+	    echo '<select id="date-input" class="form-control" onchange="futuredayoralsloaddepts(this.value)" value="" name="date" >';
+	}
+	
 	// Each date sentance starts with the <h2 class="date"> palava
 	$SplitOutDays = explode('<h2 class="date">',$FOralsContent);	
 	
@@ -35,6 +39,12 @@
 	}
 	
     if(!isset($HasDates)) {
-        echo '<option value="">No Dates Available</option>';
+        echo '<option value="">No Dates Available</option></select> ';
+    } else {
+        echo '</select>';
     }
+    
+    
+
 ?>
+

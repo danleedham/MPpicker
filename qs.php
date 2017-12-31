@@ -29,130 +29,6 @@
 	?>
 
 <script>
-	function load(num,date){
-		document.getElementById('togglemenu').style.display = 'none';
-		document.getElementById('loader').style.display = 'inline';
-		if (!document.getElementById("photos-input").checked){
-			var photos = 'Stock';
-		} else {
-			var photos = "screenshot";
-		}
-		var next = document.getElementById('next'+num).value;
-		var prev = document.getElementById('prev'+num).value;
-		console.log('Loading question: '+num+' next: '+next+' prev: '+prev);
-		$("#contactCard").load('template/questioner.php?uin='+num+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
-			document.getElementById('loader').style.display = 'none';
-			document.getElementById('togglemenu').style.display = 'inline';
-		});
-		$('.active').removeClass('active');
-		$('#q'+num).addClass("active");
-	}
-	function loadlords(id){
-		document.getElementById('togglemenu').style.display = 'none';
-		document.getElementById('loader').style.display = 'inline';
-		console.log('Loading Lords Member: '+id);
-		$("#contactCard").load('template/member.php?m='+id,function() {
-			document.getElementById('loader').style.display = 'none';
-			document.getElementById('togglemenu').style.display = 'inline';
-		});
-		$('.active').removeClass('active');
-		$('#q'+id).addClass("active");
-	}
-	function loadquestions(date,dept,type){
-		document.getElementById('togglemenu').style.display = 'none';
-		document.getElementById('loader').style.display = 'inline';
-		if (!document.getElementById("together-input").checked){
-			var together = "together";
-		} else {
-			var together = "dont";
-		}
-		if (!document.getElementById("topicals-together").checked){
-			var topicalsbyparty = "byparty";
-		} else {
-			var topicalsbyparty = "dont";
-		}
-		var groups = document.getElementById("groups-input").value;
-		var withdrawn = document.getElementById("withdrawn-input").value;
-		var withoutnotice = document.getElementById("withoutnotice-input").value;
-		console.log('Loading '+type+' questions to '+dept+' on '+date+' using groups: '+groups+' and withdrawing (day): '+withdrawn+' withdrawing (before): '+withoutnotice+' grouped: '+together);
-		groups = groups.replace(/[\r\n]+/g,",");
-		groups = encodeURI(groups);
-		withdrawn = encodeURI(withdrawn);
-		withoutnotice = encodeURI(withoutnotice);
-		$("#livesearch").load('template/listquestions.php?date='+date+'&type='+type+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice+'&together='+together+'&topicalsbyparty='+topicalsbyparty,function() {
-			document.getElementById('loader').style.display = 'none';
-			document.getElementById('togglemenu').style.display = 'inline';
-   		});
-	}
-	function loadlordsquestions(){
-		document.getElementById('togglemenu').style.display = 'none';
-		document.getElementById('loader').style.display = 'inline';
-		var chosenBusiness = document.getElementById("sect-input").value;
-		if(chosenBusiness == "questions") {
-			var urlend = "listlordsquestions.php";
-		} else {
-			var urlend = 'lordsspeakers.php?chosenBusiness='+chosenBusiness;
-		}
-		$("#livesearch").load('template/'+urlend,function() {
-			document.getElementById('loader').style.display = 'none';
-			document.getElementById('togglemenu').style.display = 'inline';
-		});		
-	}
-	function loaddepts(date){
-	   $("#dept-input").load('template/questiondepts.php?date='+date);
-	   $("#type-input").load('template/questiontypes.php?date='+date);
-	   console.log('Loading departments for: '+date);
-	}
-	function loadtypes(){
-	   var date = document.getElementById("date-input").value;
-	   var dept = encodeURI(document.getElementById("dept-input").value);
-	   $("#type-input").load('template/questiontypes.php?date='+date+'&dept='+dept);
-	   console.log('Loading Question Types for: '+date+' to '+dept);
-	}
-	function gotopicals(){
-	   document.getElementById("type-input").value = 'Topical';
-	   var date = document.getElementById("date-input").value;
-	   date = date.toString();
-	   var dept = document.getElementById("dept-input").value;
-	   dept = encodeURI(dept);
-	   var groups = document.getElementById("groups-input").value;
-	   var withdrawn = document.getElementById("withdrawn-input").value;
-	   var withoutnotice = document.getElementById("withoutnotice-input").value;
-	   console.log('Loading Topical questions to '+dept+' on '+date+' and withdrawing: '+withdrawn);
-	   groups = groups.replace(/[\r\n]+/g,",");
-	   groups = encodeURI(groups);
-	   withdrawn = encodeURI(withdrawn);
-	   $("#livesearch").load('template/listquestions.php?date='+date+'&type=Topical&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice);
-	}
-	function gosubstantive(){
-	   document.getElementById("type-input").value = 'Substantive';
-	   var date = document.getElementById("date-input").value;
-	   date = date.toString();
-	   var dept = document.getElementById("dept-input").value;
-	   dept = encodeURI(dept);
-	   var groups = document.getElementById("groups-input").value;
-	   var withdrawn = document.getElementById("withdrawn-input").value;
-	   var withoutnotice = document.getElementById("withoutnotice-input").value;
-	   console.log('Loading Substantive questions to '+dept+' on '+date+' using groups: '+groups+' and withdrawing: '+withdrawn);
-	   groups = groups.replace(/[\r\n]+/g,",");
-	   groups = encodeURI(groups);
-	   withdrawn = encodeURI(withdrawn);
-	   $("#livesearch").load('template/listquestions.php?date='+date+'&type=Substantive&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice);
-	}
-	function togglemenu(){
-		var menu = document.getElementById("menu");
-		menu.style.display = menu.style.display === 'none' ? '' : 'none';
-		var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-		var listsize = h - 154;
-		console.log('Removing Menu and Resizing list to '+listsize);
-		document.getElementById("livesearch").setAttribute("style","height:"+listsize+"px");
-		
-	}
-	function togglemobilelist(){
-		var list = document.getElementById("list");
-		list.style.display = list.style.display === 'none' ? 'block' : 'none';
-	}
-
 	document.onkeydown = checkKey;
 	function checkKey(e) {
 		e = e || window.event;
@@ -169,60 +45,10 @@
 			futuredayoralsload(thisnext,date)
 	   }
 	}
-	function futuredayoralsloaddepts(date){
-	   $("#dept-input").load('template/futuredayorals-returndepts.php?output=true&date='+date);
-	   console.log('Loading departments for: '+date);
-	}
-	
-	
-	function futuredayoralsloadquestions(date,dept){
-		document.getElementById('togglemenu').style.display = 'none';
-		document.getElementById('loader').style.display = 'inline';
-		if (!document.getElementById("together-input").checked){
-			var together = "together";
-		} else {
-			var together = "dont";
-		}
-		if (!document.getElementById("topicals-together").checked){
-			var topicalsbyparty = "byparty";
-		} else {
-			var topicalsbyparty = "dont";
-		}
-		var groups = document.getElementById("groups-input").value;
-		var withdrawn = document.getElementById("withdrawn-input").value;
-		var withoutnotice = document.getElementById("withoutnotice-input").value;
-		console.log('Loading questions to '+dept+' on '+date+' using groups: '+groups+' and withdrawing (day): '+withdrawn+' withdrawing (before): '+withoutnotice+' grouped: '+together);
-		groups = groups.replace(/[\r\n]+/g,",");
-		groups = encodeURI(groups);
-		withdrawn = encodeURI(withdrawn);
-		withoutnotice = encodeURI(withoutnotice);
-		$("#livesearch").load('template/futuredayorals-returnlist.php?date='+date+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice+'&together='+together+'&topicalsbyparty='+topicalsbyparty+'&outputList=true',function() {
-			document.getElementById('loader').style.display = 'none';
-			document.getElementById('togglemenu').style.display = 'inline';
-			var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-		    var listsize = h - 154;
-		    document.getElementById("livesearch").setAttribute("style","height:"+listsize+"px");
-   		});
-	}
-	
-	function futuredayoralsload(num,date){
-		document.getElementById('togglemenu').style.display = 'none';
-		document.getElementById('loader').style.display = 'inline';
-		if (!document.getElementById("photos-input").checked){
-			var photos = 'Stock';
-		} else {
-			var photos = "screenshot";
-		}
-		var next = document.getElementById('next'+num).value;
-		var prev = document.getElementById('prev'+num).value;
-		console.log('Loading question: '+num+' next: '+next+' prev: '+prev);
-		$("#contactCard").load('template/futuredayorals-questioner.php?uin='+num+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
-			document.getElementById('loader').style.display = 'none';
-			document.getElementById('togglemenu').style.display = 'inline';
-		});
-		$('.active').removeClass('active');
-		$('#q'+num).addClass("active");
-	}
+
+	window.onload = function() {
+		futuredayoralsloaddates();
+	};
 </script>
 
 </head>
@@ -244,12 +70,11 @@
 								<div class="row">
 									<div id="date-div" class="col-sm-6">
 										<?php if(isset($futuredayorals) && $futuredayorals == "use"): ?>
-										    <select id="date-input" class="form-control" onchange="futuredayoralsloaddepts(this.value)" value="<?php echo $date ?>" name="date" >	
-										    <?php $outputDates = "true";
-										        include 'template/futuredayorals-returndates.php' ?>
-										        </select>
+										<select id="date-input" class="form-control" onchange="futuredayoralsloaddepts(this.value)" value="Loading Dates..." name="date" >
+										    <option>Loading Dates...</option>
+										</select>
 										<?php else: ?>
-											<input id="date-input" type="date" class="input-sm form-control" onchange="loaddepts(this.value)" value="<?php echo $date ?>" name="date" >	
+											<input id="date-input" type="date" class="input-sm form-control" onchange="qsloaddepts(this.value)" value="<?php echo $date ?>" name="date" >	
 									    <?php endif; ?>
 									</div>
 									<div id="photos-div" class="col-sm-6">
@@ -260,15 +85,16 @@
 								
 								<div class="form-inline" style="padding-top:6px !important;">
 									<?php if($house == "Lords"): ?>
-									<select id="sect-input" onchange="loadlordsquestions()" name="type" class="form-control">
+									<select id="sect-input" onchange="qsloadlordsquestions()" name="type" class="form-control">
 										<?php include 'template/lordsquestions-sections.php' ?>
 									</select>	
 									<?php else: ?>
 									    <?php if(isset($futuredayorals) && $futuredayorals == "use"): ?>
 									    <select id="dept-input" name="type" class="form-control">
+									    <option> Loading Departments...</option>
 									    </select>	
 									    <?php else: ?>
-									<select id="dept-input" onchange="loadtypes()" name="type" class="form-control">
+									<select id="dept-input" onchange="qsloadtypes()" name="type" class="form-control">
 										<?php include 'template/questiondepts.php' ?>
 									</select>	
 									    <?php endif; ?>
@@ -276,7 +102,7 @@
 								</div>
 								<?php if($house !== "Lords" && !isset($futuredayorals)): ?>
 								<div class="form-inline" style="padding-top:6px !important;">
-									<select id="type-input" name="type" class="form-control" onchange="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(this.value));return false;">
+									<select id="type-input" name="type" class="form-control" onchange="qsloadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(this.value));return false;">
 										Type: <?php include 'template/questiontypes.php' ?>
 									</select>
 								</div>
@@ -285,14 +111,14 @@
 							<div id="loadbuttons" style="padding-top:6px !important;">
 								<div class="col-sm-4" style="padding-left:0px !important; padding-right:6px !important;">
 								<?php if($house == "Lords"): ?>
-								<a href="#" onclick="loadlordsquestions();return false;" class="btn btn-danger" role="button" style="width: 100% !important;">
+								<a href="#" onclick="qsloadlordsquestions();return false;" class="btn btn-danger" role="button" style="width: 100% !important;">
 									Load</a>
 								<?php else: ?>
 								    <?php if(isset($futuredayorals) && $futuredayorals == "use"): ?>
 								    <a href="#" onclick="futuredayoralsloadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value));return false;" class="btn btn-success" role="button" style="width: 100% !important;">
 									Use Backup</a>
 								    <?php else: ?>
-								    <a href="#" onclick="loadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-success" role="button" style="width: 100% !important;">
+								    <a href="#" onclick="qsloadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-success" role="button" style="width: 100% !important;">
 									Load</a>
 								    <?php endif; ?>
 								<?php endif; ?>
@@ -306,7 +132,7 @@
 									<span id="loader" class="pull-right" style="display:none; padding-top: 6px !important; padding-bottom: 6px; !important">
 										<i class="fa fa-refresh fa-spin" class="pull-right" style="font-size:20px"></i>
 									</span>
-									<a href="#" id="togglemenu" onclick="togglemenu();return false;" class="btn btn-info hidemobile" style="display: inline; float:right !important; width: 100% !important;" role="button">
+									<a href="#" id="togglemenu" onclick="qstogglemenu();return false;" class="btn btn-info hidemobile" style="display: inline; float:right !important; width: 100% !important;" role="button">
 									Toggle</a>
 								</div>
 							</div>
@@ -342,6 +168,7 @@
 								<p><a href="https://www.parliament.uk/documents/commons-table-office/Oral-questions-rota.pdf">Click here to view the Oral Questions Rota (external).</a href></p>
 								<a href="#" onclick="printQuestions();return false;" class="btn btn-info" role="button">Print Questions as listed</a>
 								<a href="?house=Lords" class="btn btn-danger" role="button">Switch to House of Lords</a>
+								<a href="?futuredayorals=use" class="btn btn-success" role="button">Use Backup Questions Data</a>
 							</div>
 						</div>
 					</div>

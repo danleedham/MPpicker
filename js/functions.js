@@ -72,6 +72,16 @@ function togglemenu(){
 	var listsize = h - 196;
 	console.log('Removing Menu and Resizing list to '+listsize);
 }
+
+function qstogglemenu(){
+    var menu = document.getElementById("menu");
+    menu.style.display = menu.style.display === 'none' ? '' : 'none';
+    var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+    var listsize = h - 154;
+    console.log('Removing Menu and Resizing list to '+listsize);
+    document.getElementById("livesearch").setAttribute("style","height:"+listsize+"px");
+    
+}
 function togglemobilelist(){
 	var list = document.getElementById("list");
 	list.style.display = list.style.display === 'none' ? 'block' : 'none';
@@ -328,3 +338,156 @@ function searchiflordsscreenshot() {
         $('#photos').bootstrapToggle('on')
     }
 }
+
+function printQuestions(){
+    $("<link/>", {
+        rel: "stylesheet",
+        type: "text/css",
+        href: "css/print-overrides.css"
+    }).appendTo("head");    
+}
+
+function futuredayoralsloaddepts(date){
+   $("#dept-input").load('template/futuredayorals-returndepts.php?output=true&date='+date);
+   var jsDate = new Date(date*1000);
+   var humanDate = jsDate.toLocaleDateString();
+   console.log('Loading departments for: '+humanDate);
+}
+function futuredayoralsloaddates() {
+    console.log('Loading Dates');
+    $("#date-div").load('template/futuredayorals-returndates.php?output=true',function() {
+        console.log('Loaded list of Dates');
+        var date = document.getElementById("date-input").value;
+        futuredayoralsloaddepts(date)
+    });
+}
+function futuredayoralsloadquestions(date,dept){
+    document.getElementById('togglemenu').style.display = 'none';
+    document.getElementById('loader').style.display = 'inline';
+    if (!document.getElementById("together-input").checked){
+        var together = "together";
+    } else {
+        var together = "dont";
+    }
+    if (!document.getElementById("topicals-together").checked){
+        var topicalsbyparty = "byparty";
+    } else {
+        var topicalsbyparty = "dont";
+    }
+    var groups = document.getElementById("groups-input").value;
+    var withdrawn = document.getElementById("withdrawn-input").value;
+    var withoutnotice = document.getElementById("withoutnotice-input").value;
+    console.log('Loading questions to '+dept+' on '+date+' using groups: '+groups+' and withdrawing (day): '+withdrawn+' withdrawing (before): '+withoutnotice+' grouped: '+together);
+    groups = groups.replace(/[\r\n]+/g,",");
+    groups = encodeURI(groups);
+    withdrawn = encodeURI(withdrawn);
+    withoutnotice = encodeURI(withoutnotice);
+    $("#livesearch").load('template/futuredayorals-returnlist.php?date='+date+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice+'&together='+together+'&topicalsbyparty='+topicalsbyparty+'&outputList=true',function() {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('togglemenu').style.display = 'inline';
+        var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+        var listsize = h - 154;
+        document.getElementById("livesearch").setAttribute("style","height:"+listsize+"px");
+    });
+}
+	
+function futuredayoralsload(num,date){
+    document.getElementById('togglemenu').style.display = 'none';
+    document.getElementById('loader').style.display = 'inline';
+    if (!document.getElementById("photos-input").checked){
+        var photos = 'Stock';
+    } else {
+        var photos = "screenshot";
+    }
+    var next = document.getElementById('next'+num).value;
+    var prev = document.getElementById('prev'+num).value;
+    console.log('Loading question: '+num+' next: '+next+' prev: '+prev);
+    $("#contactCard").load('template/futuredayorals-questioner.php?uin='+num+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('togglemenu').style.display = 'inline';
+    });
+    $('.active').removeClass('active');
+    $('#q'+num).addClass("active");
+}
+	
+function qsload(num,date){
+    document.getElementById('togglemenu').style.display = 'none';
+    document.getElementById('loader').style.display = 'inline';
+    if (!document.getElementById("photos-input").checked){
+        var photos = 'Stock';
+    } else {
+        var photos = "screenshot";
+    }
+    var next = document.getElementById('next'+num).value;
+    var prev = document.getElementById('prev'+num).value;
+    console.log('Loading question: '+num+' next: '+next+' prev: '+prev);
+    $("#contactCard").load('template/questioner.php?uin='+num+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('togglemenu').style.display = 'inline';
+    });
+    $('.active').removeClass('active');
+    $('#q'+num).addClass("active");
+}
+function qsloadlords(id){
+    document.getElementById('togglemenu').style.display = 'none';
+    document.getElementById('loader').style.display = 'inline';
+    console.log('Loading Lords Member: '+id);
+    $("#contactCard").load('template/member.php?m='+id,function() {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('togglemenu').style.display = 'inline';
+    });
+    $('.active').removeClass('active');
+    $('#q'+id).addClass("active");
+}
+function qsloadquestions(date,dept,type){
+    document.getElementById('togglemenu').style.display = 'none';
+    document.getElementById('loader').style.display = 'inline';
+    if (!document.getElementById("together-input").checked){
+        var together = "together";
+    } else {
+        var together = "dont";
+    }
+    if (!document.getElementById("topicals-together").checked){
+        var topicalsbyparty = "byparty";
+    } else {
+        var topicalsbyparty = "dont";
+    }
+    var groups = document.getElementById("groups-input").value;
+    var withdrawn = document.getElementById("withdrawn-input").value;
+    var withoutnotice = document.getElementById("withoutnotice-input").value;
+    console.log('Loading '+type+' questions to '+dept+' on '+date+' using groups: '+groups+' and withdrawing (day): '+withdrawn+' withdrawing (before): '+withoutnotice+' grouped: '+together);
+    groups = groups.replace(/[\r\n]+/g,",");
+    groups = encodeURI(groups);
+    withdrawn = encodeURI(withdrawn);
+    withoutnotice = encodeURI(withoutnotice);
+    $("#livesearch").load('template/listquestions.php?date='+date+'&type='+type+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice+'&together='+together+'&topicalsbyparty='+topicalsbyparty,function() {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('togglemenu').style.display = 'inline';
+    });
+}
+	function qsloadlordsquestions(){
+		document.getElementById('togglemenu').style.display = 'none';
+		document.getElementById('loader').style.display = 'inline';
+		var chosenBusiness = document.getElementById("sect-input").value;
+		if(chosenBusiness == "questions") {
+			var urlend = "listlordsquestions.php";
+		} else {
+			var urlend = 'lordsspeakers.php?chosenBusiness='+chosenBusiness;
+		}
+		$("#livesearch").load('template/'+urlend,function() {
+			document.getElementById('loader').style.display = 'none';
+			document.getElementById('togglemenu').style.display = 'inline';
+		});		
+	}
+	function qsloaddepts(date){
+	   $("#dept-input").load('template/questiondepts.php?date='+date);
+	   $("#type-input").load('template/questiontypes.php?date='+date);
+	   console.log('Loading departments for: '+date);
+	}
+	function qsloadtypes(){
+	   var date = document.getElementById("date-input").value;
+	   var dept = encodeURI(document.getElementById("dept-input").value);
+	   $("#type-input").load('template/questiontypes.php?date='+date+'&dept='+dept);
+	   console.log('Loading Question Types for: '+date+' to '+dept);
+	}	
+	

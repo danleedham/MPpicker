@@ -23,7 +23,6 @@
 <link href="css/bootcards-desktop.min.css" rel="stylesheet">
 <link href="css/bootstrap.min.css" rel="stylesheet">
 
-<script src="js/print.js"></script>
 <!-- Font Awesome, the iconic font and CSS framework. --> 
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
 

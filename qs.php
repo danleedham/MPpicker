@@ -45,12 +45,15 @@
 			futuredayoralsload(thisnext,date)
 	   }
 	}
-
+</script>
+<?php if(isset($futuredayorals) && $futuredayorals == "use"): ?> 
+<script>
 	window.onload = function() {
 		futuredayoralsloaddates();
 	};
 </script>
 
+<?php endif; ?>
 </head>
 
 <body>		

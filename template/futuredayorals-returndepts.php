@@ -71,6 +71,9 @@
             foreach ($Departments as $dept) {
                 echo '<option value="'.$dept.'">'.$dept.'</option>';
             }
+            if(count($Departments) > 1 ) {
+                echo '<option value="all">All Departments</option>';
+            }
         }
     } else {
         echo '<option value="">No Departments Available for Date</option>';

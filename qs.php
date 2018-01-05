@@ -45,6 +45,9 @@
 			futuredayoralsload(thisnext,date)
 	   }
 	}
+	window.onload = function() {
+		qscheckforadvance();
+	}
 </script>
 <?php if(isset($futuredayorals) && $futuredayorals == "use"): ?> 
 <script>
@@ -104,11 +107,16 @@
 									<?php endif; ?>
 								</div>
 								<?php if($house !== "Lords" && !isset($futuredayorals)): ?>
-								<div class="form-inline" style="padding-top:6px !important;">
-									<select id="type-input" name="type" class="form-control" onchange="qsloadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(this.value));return false;">
-										Type: <?php include 'template/questiontypes.php' ?>
-									</select>
-								</div>
+								<div class="row"  style="padding-top:6px !important;">
+									<div class="col-sm-6">
+										<select id="type-input" name="type" class="form-control" onchange="qsloadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(this.value));return false;">
+											Type: <?php include 'template/questiontypes.php' ?>
+										</select>
+									</div>
+									<div id="livelog-div" class="col-sm-6">
+										<input id="uselive" class="pull-right" style="float:right !important;" checked type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="info" data-on="Move Qs on Live" data-width="100%" data-off="Move Qs on Live">
+									</div>
+								</div>		
 								<?php endif; ?>
 							</div>
 							<div id="loadbuttons" style="padding-top:6px !important;">
@@ -154,6 +162,7 @@
 				</div><!--list-->
 
 			<!--list details column-->
+			<div id="currentlivequestiondiv" style="display:none"><input type="number" id="currentlivequestion" value="0"></div>
 			<div class="col-sm-8 bootcards-cards" id="bootcards-cards">
 
           <!--contact details -->

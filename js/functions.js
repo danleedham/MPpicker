@@ -465,29 +465,60 @@ function qsloadquestions(date,dept,type){
         document.getElementById('togglemenu').style.display = 'inline';
     });
 }
-	function qsloadlordsquestions(){
-		document.getElementById('togglemenu').style.display = 'none';
-		document.getElementById('loader').style.display = 'inline';
-		var chosenBusiness = document.getElementById("sect-input").value;
-		if(chosenBusiness == "questions") {
-			var urlend = "listlordsquestions.php";
-		} else {
-			var urlend = 'lordsspeakers.php?chosenBusiness='+chosenBusiness;
-		}
-		$("#livesearch").load('template/'+urlend,function() {
-			document.getElementById('loader').style.display = 'none';
-			document.getElementById('togglemenu').style.display = 'inline';
-		});		
+function qsloadlordsquestions(){
+	document.getElementById('togglemenu').style.display = 'none';
+	document.getElementById('loader').style.display = 'inline';
+	var chosenBusiness = document.getElementById("sect-input").value;
+	if(chosenBusiness == "questions") {
+		var urlend = "listlordsquestions.php";
+	} else {
+		var urlend = 'lordsspeakers.php?chosenBusiness='+chosenBusiness;
 	}
-	function qsloaddepts(date){
-	   $("#dept-input").load('template/questiondepts.php?date='+date);
-	   $("#type-input").load('template/questiontypes.php?date='+date);
-	   console.log('Loading departments for: '+date);
-	}
-	function qsloadtypes(){
-	   var date = document.getElementById("date-input").value;
-	   var dept = encodeURI(document.getElementById("dept-input").value);
-	   $("#type-input").load('template/questiontypes.php?date='+date+'&dept='+dept);
-	   console.log('Loading Question Types for: '+date+' to '+dept);
-	}	
+	$("#livesearch").load('template/'+urlend,function() {
+		document.getElementById('loader').style.display = 'none';
+		document.getElementById('togglemenu').style.display = 'inline';
+	});		
+}
+function qsloaddepts(date){
+   $("#dept-input").load('template/questiondepts.php?date='+date);
+   $("#type-input").load('template/questiontypes.php?date='+date);
+   console.log('Loading departments for: '+date);
+}
+function qsloadtypes(){
+   var date = document.getElementById("date-input").value;
+   var dept = encodeURI(document.getElementById("dept-input").value);
+   $("#type-input").load('template/questiontypes.php?date='+date+'&dept='+dept);
+   console.log('Loading Question Types for: '+date+' to '+dept);
+}	
 	
+function qscheckforadvance(){
+	var date = document.getElementById("date-input").value;
+	if (!document.getElementById("uselive").checked){   
+		if(!document.getElementById("currentuin")){
+			console.log('No question loaded... waiting for user input');
+		} else {
+			var currenuin = document.getElementById("currentuin").value;
+			$("#currentlivequestiondiv").load('template/qs-currentquestion.php?date='+date, function() {
+				var currentlivelogged = document.getElementById("currentlivequestion").value;
+				console.log('Current Logged Question = '+currentlivelogged);
+				if(currenuin !== currentlivelogged) {
+					var toload = document.getElementById('next'+currentlivelogged).value;
+					var newuin = document.getElementById("currentuin").value;
+					if(newuin !== toload) {
+						if(!document.getElementById('q'+toload)) {
+							console.log('No more questions left to log');
+						} else {
+							qsload(toload,date);
+							console.log('Loaded from logs');
+						}
+					}
+				} else {
+					// console.log('No new members logged...');
+				}
+			});
+		}			
+	} else {
+		// console.log('Not moving questions on');
+	}
+	setTimeout(qscheckforadvance, 5000);
+}

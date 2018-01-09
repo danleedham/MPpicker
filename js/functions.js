@@ -463,6 +463,7 @@ function qsloadquestions(date,dept,type){
     $("#livesearch").load('template/listquestions.php?date='+date+'&type='+type+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice+'&together='+together+'&topicalsbyparty='+topicalsbyparty,function() {
         document.getElementById('loader').style.display = 'none';
         document.getElementById('togglemenu').style.display = 'inline';
+        qscheckforadvance();
     });
 }
 function qsloadlordsquestions(){
@@ -499,11 +500,11 @@ function qsloadinitialquestions(){
 }
 	
 function qscheckforadvance(){
-	var date = document.getElementById("date-input").value;
-	if (!document.getElementById("uselive").checked){   
+	if (document.getElementById("uselive").checked){ 
 		if(!document.getElementById("currentuin")){
 			console.log('No question loaded... waiting for user input');
 		} else {
+		    var date = document.getElementById("date-input").value;
 			var currenuin = document.getElementById("currentuin").value;
 			$("#currentlivequestiondiv").load('template/qs-currentquestion.php?date='+date, function() {
 				var currentlivelogged = document.getElementById("currentlivequestion").value;
@@ -520,12 +521,21 @@ function qscheckforadvance(){
 						}
 					}
 				} else {
-					// console.log('No new members logged...');
+					//console.log('No new members logged...');
 				}
 			});
-		}			
+		}
+		setTimeout(qscheckforadvance, 2500);			
 	} else {
-		// console.log('Not moving questions on');
+		console.log('Not moving questions on');
 	}
-	setTimeout(qscheckforadvance, 2500);
+}
+
+function qsuseliveadvance(){
+    if (document.getElementById("uselive").checked){ 
+        console.log('Turning auto advance on');
+        qscheckforadvance();
+    } else {
+        console.log('Turning auto advance off');
+    }
 }

@@ -28,11 +28,6 @@
 	}
 	?>
 
-<script>
-	window.onload = function() {
-		qscheckforadvance();
-	}
-</script>
 <?php if(isset($futuredayorals) && $futuredayorals == "use"): ?> 
 <script>
 	window.onload = function() {
@@ -131,11 +126,11 @@
 									<?php else: ?>
 									    <?php if(isset($futuredayorals) && $futuredayorals == "use"): ?>
 									    <select id="dept-input" name="type" class="form-control">
-									    <option> Loading Departments...</option>
+									    <option value=""> Loading Departments...</option>
 									    </select>	
 									    <?php else: ?>
 									<select id="dept-input" onchange="qsloadtypes()" name="type" class="form-control">
-										<option>Loading Departments...</option>
+										<option value="">Loading Departments...</option>
 									</select>	
 									    <?php endif; ?>
 									<?php endif; ?>
@@ -144,11 +139,11 @@
 								<div class="row"  style="padding-top:6px !important;">
 									<div class="col-sm-6">
 										<select id="type-input" name="type" class="form-control" onchange="qsloadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(this.value));return false;">
-											<option>Loading Types...</option>
+											<option value="">Loading Types...</option>
 										</select>
 									</div>
 									<div id="livelog-div" class="col-sm-6">
-										<input id="uselive" class="pull-right" style="float:right !important;" checked type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="info" data-on="Auto Advance Qs" data-width="100%" data-off="Don't Advance">
+										<input id="uselive" onchange="qsuseliveadvance();" class="pull-right" style="float:right !important;" checked type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="info" data-on="Auto Advance Qs" data-width="100%" data-off="Don't Advance">
 									</div>
 								</div>		
 								<?php endif; ?>

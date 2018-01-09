@@ -490,6 +490,13 @@ function qsloadtypes(){
    $("#type-input").load('template/questiontypes.php?date='+date+'&dept='+dept);
    console.log('Loading Question Types for: '+date+' to '+dept);
 }	
+
+function qsloadinitialquestions(){
+    var date = document.getElementById("date-input").value;
+    var dept = encodeURI(document.getElementById("dept-input").value);
+    var type = encodeURI(document.getElementById("dept-input").value);
+    qsloadquestions(date,dept,type);
+}
 	
 function qscheckforadvance(){
 	var date = document.getElementById("date-input").value;
@@ -520,5 +527,5 @@ function qscheckforadvance(){
 	} else {
 		// console.log('Not moving questions on');
 	}
-	setTimeout(qscheckforadvance, 5000);
+	setTimeout(qscheckforadvance, 2500);
 }

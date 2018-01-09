@@ -38,7 +38,7 @@
 	        $DisplayAs = explode('</strong>',$DisplayAs[1]);
 	        $jQuestions[$j]['DisplayAs'] = $DisplayAs[0];
 	        $constituency = explode('<span class="memberConstituency"> (',$iQuestions[$j]);
-	        $constituency = explode('): </span>',$constituency[1]);
+	        $constituency = @explode('): </span>',$constituency[1]);
 	        $jQuestions[$j]['constituency'] = $constituency[0];   
 	        $text = explode('<span class="questionText">',$iQuestions[$j]);
 	        if(count($text) > 1) {

@@ -14,11 +14,11 @@
 	<title>Wrapups Lists</title>
 
 	<script>
-		// wait for 5 seconds after page load then go check for members
+		// wait for 2 seconds after page load then go check for members
 		window.onload = function () {
 			setTimeout(function () {
 				windcheckformembers(); 
-			}, 5000);
+			}, 2000);
 		}
 	</script>
 

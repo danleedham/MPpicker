@@ -539,3 +539,8 @@ function qsuseliveadvance(){
         console.log('Turning auto advance off');
     }
 }
+
+function qsturnoffliveadvance(){
+    console.log('Manually turning off auto advance');
+    	$('#uselive').bootstrapToggle('off')
+}

@@ -21,12 +21,18 @@ function windloadmembers(eventid,section){
 		var dupes = 'remove';
 	} else {
 		var dupes = 'keep';
+	if (!document.getElementById("sort-input").checked){
+		var sort = 'alpha';
+	} else {
+		var sort = 'time';
 	}
-	$("#wrapups").load('template/wind-list.php?&event='+eventid+'&section='+section+'&keepdupes='+dupes,function() {
+
+	$("#wrapups").load('template/wind-list.php?&event='+eventid+'&section='+section+'&keepdupes='+dupes+'&sort='+sort,function() {
 		document.getElementById('loader').style.display = 'none';
 		document.getElementById('togglemenu').style.display = 'inline';
 		$("#currentspeakersdiv").load('template/wind-checknew.php?event='+eventid+'&section='+section+'&keepdupes='+dupes);
 		console.log('template/wind-list.php?&event='+eventid+'&section='+section+'&keepdupes='+dupes);
+		console.log('Sorting by '+sort);
 	});
 }
 function windloadevents(date){

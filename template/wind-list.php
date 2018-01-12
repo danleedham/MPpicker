@@ -11,7 +11,10 @@ if(!isset($section) && isset($_GET["section"])){
 if(!isset($keepdupes) && isset($_GET["keepdupes"])){
 	$keepdupes=$_GET["keepdupes"];
 } 
-
+// expecting alpha or order
+if(!isset($sort) && isset($_GET["sort"])){
+	$sort=$_GET["sort"];
+} 
 if(!isset($Events)) {
 // If we don't know where we're looking from get the arrays of clips and events
 	include 'wind-getclips.php';	
@@ -127,7 +130,18 @@ if(isset($NoEventsSet) && $NoEventsSet == true) {
 						);
 		}
 	}
-
+	if (isset($sort) && $sort == "alpha") {
+		if(isset($house) && $house == "Lords"){
+			usort($wraparray, function($a, $b) {
+				return strcmp($a["DisplayAs"], $b["DisplayAs"]);
+			});
+		} else {
+			usort($wraparray, function($a, $b) {
+				return strcmp($a["constituency"], $b["constituency"]);
+			});
+		}
+	} 
+	
 	$hint = "";	
 	if(isset($wraparray)){
 		$newlength = count($wraparray);

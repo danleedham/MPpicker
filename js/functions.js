@@ -3,7 +3,7 @@
 function anotherphoto(current,m){
 	var toget = parseInt(current)+1;
 	var url = "template/latestscreenshot.php?imagenumber="+toget+"&m="+m;
-	console.log('URL requested: '+url);		
+	console.log('URL requested: ' + url);		
 	$.get(url, function(response) {
 	  var imgs = response.replace('<div id="data" style="display: none;">',"");
 	  var imgs = imgs.replace('</div>',"");
@@ -13,7 +13,7 @@ function anotherphoto(current,m){
 	});	
 }
 // Load Members from the ID and Section
-function windloadmembers(eventid,section){
+function windloadmembers(eventid,section) {
 	document.getElementById('togglemenu').style.display = 'none';
 	document.getElementById('loader').style.display = 'inline';
 	console.log('Loading list for program '+location+' and section: '+section);
@@ -21,18 +21,17 @@ function windloadmembers(eventid,section){
 		var dupes = 'remove';
 	} else {
 		var dupes = 'keep';
+	}
 	if (!document.getElementById("sort-input").checked){
 		var sort = 'alpha';
 	} else {
 		var sort = 'time';
 	}
-
 	$("#wrapups").load('template/wind-list.php?&event='+eventid+'&section='+section+'&keepdupes='+dupes+'&sort='+sort,function() {
 		document.getElementById('loader').style.display = 'none';
 		document.getElementById('togglemenu').style.display = 'inline';
 		$("#currentspeakersdiv").load('template/wind-checknew.php?event='+eventid+'&section='+section+'&keepdupes='+dupes);
 		console.log('template/wind-list.php?&event='+eventid+'&section='+section+'&keepdupes='+dupes);
-		console.log('Sorting by '+sort);
 	});
 }
 function windloadevents(date){
@@ -296,7 +295,7 @@ function searchshowResult(str) {
         if (this.readyState == 4 && this.status == 200) {
             document.getElementById("livesearchmember").innerHTML = this.responseText;
         }
-    }
+    };
     xmlhttp.open("GET", "template/" + url + "?house=" + house + "&searchby=" + searchby + "&q=" + str + side, true);
     xmlhttp.send();
     

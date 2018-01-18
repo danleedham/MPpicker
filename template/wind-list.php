@@ -147,12 +147,13 @@ if(isset($NoEventsSet) && $NoEventsSet == true) {
 		$newlength = count($wraparray);
 		// Generate the list of questions 	
 		for($i=0; $i < $newlength; $i++) {
+		    $BetaId = "";
 			for($ii=0; $ii < $imagescount; $ii++) {
 				if (intval($betaimages->member[$ii]->memberid) == intval($wraparray[$i]["MemberId"])){			
 				    $BetaId = $betaimages->member[$ii]->imageid;
 				} 
 			}
-			if (!isset($BetaId) or $BetaId == ""){
+			if ($BetaId == ""){
 				$imageurl = 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$wraparray[$i]["DodsId"].'.jpg.jpg';
 			} else {
 				$imageurl = 'images/stock/thumbs/'.$BetaId.'.jpeg'; 

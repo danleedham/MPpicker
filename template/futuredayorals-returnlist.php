@@ -10,8 +10,8 @@
 	if(!isset($date) && isset($_GET["date"])){
 		$date=$_GET["date"];
 	}
-	if (!isset($date)) {
-		$date = strtotime(date('j d F'));
+	if(!isset($date)) {
+		$date=$date = date("d-m-Y");
 	}
    
     if(!isset($outputList) && isset($_GET["outputList"])){

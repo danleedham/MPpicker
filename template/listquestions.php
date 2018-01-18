@@ -414,7 +414,7 @@ $xmlDoc=new DOMDocument();
 			
 			$DeptTitle="";
 			// If we're providing all the departments
-			if($qdept == "all") {
+			if($qdept == "all" or $qtype == "all") {
 				if($qarray[$i]["typenumber"] == 1) {
 					$DeptTitle = '
 					<div class="group-text-details">

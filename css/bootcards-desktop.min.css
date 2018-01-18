@@ -957,3 +957,9 @@ label {
     margin-top: 0px !important;
     margin-bottom: 0px !important;
 }
+
+.btn {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow:ellipsis;
+}

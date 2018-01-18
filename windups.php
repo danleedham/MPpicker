@@ -60,14 +60,11 @@
 							<a href="#" onclick="windloadmembers(encodeURI(document.getElementById('event-input').value),encodeURI(document.getElementById('sect-input').value));return false;" class="btn btn-success" style="width:100%;" role="button">
 							Get List</a>
 						</div>
-						<div id="photos-div" class="col-sm-2">
-								<input id="photos-input" class="pull-right" style="float:right !important;" type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-width="100%" data-off="Stock">
+						<div class="col-sm-3">
+							<input id="removedupes-input" style="float:right !important;" type="checkbox" value="keep" name="photos"  data-toggle="toggle" data-onstyle="warning" data-offstyle="success" data-on="Keep Duplicates" data-width="100%" data-off="Show Unique">
 						</div>
-						<div class="col-sm-2">
-							<input id="removedupes-input" style="float:right !important;" type="checkbox" value="keep" name="photos"  data-toggle="toggle" data-onstyle="warning" data-offstyle="success" data-on="Keep" data-width="100%" data-off="Remove">
-						</div>
-						<div class="col-sm-2">
-							<input id="sort-input" style="float:right !important;" type="checkbox" value="keep" name="sort"  data-toggle="toggle" data-onstyle="warning" data-offstyle="success" data-on="Time Order" data-width="100%" data-off="Alphabetical">
+						<div class="col-sm-3">
+							<input id="sort-input" style="float:right !important;" type="checkbox" value="keep" name="sort"  data-toggle="toggle" data-onstyle="warning" data-offstyle="success" data-on="Time Order" data-width="100%" data-off="Alphabetical Order">
 						</div>
 						<div class="col-sm-3">
 							<span id="loader" class="pull-right" style="display:none; padding-top: 6px !important; padding-bottom: 6px; !important">

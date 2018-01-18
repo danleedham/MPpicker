@@ -31,8 +31,8 @@
 <?php if(isset($futuredayorals) && $futuredayorals == "use"): ?> 
 <script>
 	window.onload = function() {
-		futuredayoralsloaddates();
-		qstogglemenu();
+		var date = document.getElementById("date-input").value;
+		futuredayoralsloaddepts(date);
 	};
 	document.onkeydown = checkKey;
 	function checkKey(e) {
@@ -104,16 +104,14 @@
 								<?php if($house !== "Lords"): ?>
 								<div class="row">
 									<div id="date-div" class="col-sm-6">
-										<?php if(isset($futuredayorals) && $futuredayorals == "use"): ?>
-										<select id="date-input" class="form-control" onchange="futuredayoralsloaddepts(this.value)" value="Loading Dates..." name="date" >
-										    <option>Loading Dates...</option>
-										</select>
-										<?php else: ?>
-											<input id="date-input" type="date" class="input-sm form-control" onchange="qsloaddepts(this.value)" value="<?php echo $date ?>" name="date" >	
-									    <?php endif; ?>
+									<?php if(isset($futuredayorals) && $futuredayorals == "use"): ?>
+										<input id="date-input" type="date" class="input-sm form-control" onchange="futuredayoralsloaddepts(this.value)" value="<?php echo $date ?>" name="date" >	
+									<?php else: ?>
+										<input id="date-input" type="date" class="input-sm form-control" onchange="qsloaddepts(this.value)" value="<?php echo $date ?>" name="date" >	
+									<?php endif; ?>
 									</div>
 									<div id="photos-div" class="col-sm-6">
-											<input id="photos-input" class="pull-right" style="float:right !important;" type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-width="100%" data-off="Stock">
+										<input id="photos-input" class="pull-right" style="float:right !important;" type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-width="100%" data-off="Stock">
 									</div>
 								</div>	
 								<?php endif; ?>
@@ -143,7 +141,7 @@
 										</select>
 									</div>
 									<div id="livelog-div" class="col-sm-6">
-										<input id="uselive" onchange="qsuseliveadvance();" class="pull-right" style="float:right !important;" checked type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="info" data-on="Auto Advance Qs" data-width="100%" data-off="Don't Advance">
+										<input id="uselive" onchange="qsuseliveadvance();" class="pull-right" style="float:right !important;" type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="info" data-on="Auto Advance Qs" data-width="100%" data-off="Don't Advance">
 									</div>
 								</div>		
 								<?php endif; ?>

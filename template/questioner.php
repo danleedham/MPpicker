@@ -131,18 +131,18 @@ $xmlMembers=new DOMDocument();
 						<input type="hidden" id="currentuin" value="<?php echo $uin; ?>">
 						<input type="hidden" id="currentnext" value="<?php echo $next; ?>">
 						<input type="hidden" id="currentprev" value="<?php echo $prev; ?>">
-				<a class="btn btn-primary pull-right questioner-button" onclick="load(<?php echo '\''.$next.'\',\''.$date.'\''; ?>);return false;" href="#" data-toggle="modal">
+				<a class="btn btn-primary pull-right questioner-button" onclick="qsload(<?php echo '\''.$next.'\',\''.$date.'\''; ?>);return false;" href="#" data-toggle="modal">
 				  <i class="fa fa-arrow-right"></i>Next
 				</a>
-				 <a class="btn btn-primary pull-right questioner-button" onclick="load(<?php echo '\''.$prev.'\',\''.$date.'\''; ?>);return false;" data-toggle="modal">
+				 <a class="btn btn-primary pull-right questioner-button" onclick="qsload(<?php echo '\''.$prev.'\',\''.$date.'\''; ?>);return false;" data-toggle="modal">
 				  <i class="fa fa-arrow-left"></i>Previous
 				</a>
 				<?php if($qarray[0]["type"] == "Topical"):?>
-				 <a class="btn btn-warning pull-right questioner-button" style="margin-right: 6px;" onclick="gosubstantive()">
+				 <a class="btn btn-warning pull-right questioner-button" style="margin-right: 6px;" onclick="qsgosubstantive()">
 				  <i class="fa fa-refresh"></i>To Substantive
 				</a>
 				<?php else: ?>
-				<a class="btn btn-warning pull-right questioner-button" style="margin-right: 6px;" onclick="gotopicals()">
+				<a class="btn btn-warning pull-right questioner-button" style="margin-right: 6px;" onclick="qsgotopicals()">
 				  <i class="fa fa-refresh"></i>To Topicals
 				</a>
 				<?php endif; ?>

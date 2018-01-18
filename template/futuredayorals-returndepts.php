@@ -18,64 +18,46 @@
 	include("futuredayorals-loadpage.php");
 	
 	// Each date starts with the <h2 class="date"> palava
-	$SplitOutDays = explode('<h2 class="date">',$FOralsContent);
+	$SplitOutDepts = explode('Oral Questions to the',$FOralsContent);
 	
 	// Remove the waffle at the beginning of the page
-	$SplitOutDays = array_slice($SplitOutDays,1);
+	$SplitOutDepts = array_slice($SplitOutDepts,1);
 	// We now have an array with each date split into a subarray
 	
-	// Just keep the content from the correct date
-	$DayToKeep = array();
-	
-	if(!is_numeric($date)){
-	    $date = strtotime($date);
+	for($i=0; $i<count($SplitOutDepts); $i++) {
+		$iSave = $SplitOutDepts[$i];
+		$SplitOutDepts[$i] = array();
+		$SplitOutDepts[$i]['dept'] = explode('</p>',$iSave);
+		$SplitOutDepts[$i]['dept'] = trim($SplitOutDepts[$i]['dept'][0]);
+		$SplitOutDepts[$i]['content'] = $iSave;
 	}
-	for($i=0; $i<count($SplitOutDays); $i++) {
-		$iSaveContent = $SplitOutDays[$i];
-		$SplitOutDays[$i] = array();
-		$SplitOutDays[$i]['content'] = $iSaveContent;
-		$SplitOutDays[$i]['date'] = explode('</h2>',$SplitOutDays[$i]['content']);
-		$SplitOutDays[$i]['date'] = $SplitOutDays[$i]['date'][0];
-		$SplitOutDays[$i]['date'] = str_replace("Questions for Answer on ","",$SplitOutDays[$i]['date']);
 
-		if($SplitOutDays[$i]['date'] == date('l j F',$date)){
-		    $DayToKeep['date'] = $SplitOutDays[$i]['date'];
-		    $DayToKeep['content'] = $SplitOutDays[$i]['content'];
-		    $HasChosenDate = true;
-		}
-	}
-	//print_r($SplitOutDays);
-    if(isset($HasChosenDate)){
-        // If it's the last date available, remove the waffle at the end of the page. 
-        $Departments = explode("</div>",$DayToKeep['content']);
-        $Departments = $Departments[0];
-    
-        // This should give us each department / type split
-        $Departments = preg_split('/(id="fdo)+\d+(">)/',$Departments);
-        array_shift($Departments);
-        
-        // Now we want to keep 
-        $QuestionsByDepartment = array(); 
-        
-        for($i=0; $i<count($Departments); $i++) {
-            $Departments[$i] = explode('</h3>',$Departments[$i]);
-            $iSaveQuestions = str_replace('<h3 class="target"',"",$Departments[$i][1]);
-            $Departments[$i] = $Departments[$i][0];
-            $Departments[$i] = explode('Questions to the ',$Departments[$i]);
-            $Departments[$i] = $Departments[$i][1];
+	$SplitOutDepts[count($SplitOutDepts)-1]['content'] = explode('<p class="paraBusinessSub-SectionHeading"',$SplitOutDepts[count($SplitOutDepts)-1]['content']);
+    $SplitOutDepts[count($SplitOutDepts)-1]['content'] =  $SplitOutDepts[count($SplitOutDepts)-1]['content'][0];
+    	
+   	// print_r($SplitOutDepts);
+   	
+    $Departments = array();    
+    $QuestionsByDepartment = array(); 
+    for($i=0; $i<count($SplitOutDepts); $i++) {
+        if(isset($SplitOutDepts[$i]['dept']) && $SplitOutDepts[$i]['dept'] !== "" ){
+            $iSaveQuestions = $SplitOutDepts[$i]['content'];
+            $Departments[] = $SplitOutDepts[$i]['dept'];
             $QuestionsByDepartment[$i]['department'] = $Departments[$i]; 
             $QuestionsByDepartment[$i]['questions'] = $iSaveQuestions;
         }
-        $Departments = array_unique($Departments);
-        if(isset($outputDepts) && $outputDepts = "true"){       
-            foreach ($Departments as $dept) {
-                echo '<option value="'.$dept.'">'.$dept.'</option>';
-            }
-            if(count($Departments) > 1 ) {
-                echo '<option value="all">All Departments</option>';
-            }
-        }
-    } else {
-        echo '<option value="">No Departments Available for Date</option>';
     }
+    
+    $Departments = array_unique($Departments);
+    
+    if(isset($outputDepts) && $outputDepts = "true"){       
+        foreach ($Departments as $dept) {
+            echo '<option value="'.$dept.'">'.$dept.'</option>';
+        }
+        if(count($Departments) > 0 ) {
+            echo '<option value="all">All Departments</option>';
+        }
+    }
+    
+    //print_r($QuestionsByDepartment);
 ?>

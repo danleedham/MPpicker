@@ -5,6 +5,13 @@
         To be included in other files    
     */
     
+    if(isset($_GET["date"])) {
+		$date=$_GET["date"];
+	}
+	if(!isset($date)) {
+		$date=$date = date("d-m-Y");
+	}
+	
 	// Load Future Orals URL
 	$context =  stream_context_create(
 	                array(
@@ -13,18 +20,12 @@
 	                                )
 	                )
 	            );
-	$FOralsUrl = "https://publications.parliament.uk/pa/cm/cmfutoral/futoral.htm";
+	
+	$dateForUrl = date("ymd", strtotime($date));        
+	// Old URL "https://publications.parliament.uk/pa/cm/cmfutoral/futoral.htm";
+	$FOralsUrl = "https://publications.parliament.uk/pa/cm201719/cmagenda/ob".$dateForUrl.".htm";
 	$FOralsContent = file_get_contents($FOralsUrl, false, $context);
 	
-	// Find the date the page was updated
-	$GetUpdatedDate = explode('<p class="Into_Intro">',$FOralsContent);
-	
-	// The sentance we want ends with </p>
-	$FOralsUpdated = explode('.</p>',$GetUpdatedDate[1]);
-	$FOralsUpdatedString = $FOralsUpdated[0];
-	
-	// Now make the string a date	
-	$FOralsUpdatedDate = strtotime(str_replace("Questions for oral answer on a future day as of ","",$FOralsUpdatedString));
-	// print_r($UpdatedDate);
+	//print_r($FOralsContent);
 	
 ?>

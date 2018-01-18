@@ -468,7 +468,6 @@ function qsloadquestions(date,dept,type){
     $("#livesearch").load('template/listquestions.php?date='+date+'&type='+type+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice+'&together='+together+'&topicalsbyparty='+topicalsbyparty,function() {
         document.getElementById('loader').style.display = 'none';
         document.getElementById('togglemenu').style.display = 'inline';
-        qscheckforadvance();
     });
 }
 function qsloadlordsquestions(){
@@ -500,7 +499,7 @@ function qsloadtypes(){
 function qsloadinitialquestions(){
     var date = document.getElementById("date-input").value;
     var dept = encodeURI(document.getElementById("dept-input").value);
-    var type = encodeURI(document.getElementById("dept-input").value);
+    var type = encodeURI(document.getElementById("type-input").value);
     qsloadquestions(date,dept,type);
 }
 	
@@ -547,5 +546,23 @@ function qsuseliveadvance(){
 
 function qsturnoffliveadvance(){
     console.log('Manually turning off auto advance');
-    	$('#uselive').bootstrapToggle('off')
+    $('#uselive').bootstrapToggle('off');
+}
+
+
+function qsgotopicals() {
+     document.getElementById('type-input').value='Topical';
+     var date = document.getElementById("date-input").value;
+     var dept = encodeURI(document.getElementById("dept-input").value); 
+     var type = "Topical"; 
+     qsloadquestions(date,dept,type);
+}
+
+function qsgosubstantive() {
+     document.getElementById('type-input').value='Substantive';
+     var date = document.getElementById("date-input").value;
+     var dept = encodeURI(document.getElementById("dept-input").value); 
+     var type = "Substantive"; 
+     qsloadquestions(date,dept,type);
+     
 }

@@ -76,15 +76,6 @@ $xmlMembers=new DOMDocument();
 				 <a class="btn btn-primary pull-right questioner-button" onclick="futuredayoralsload(<?php echo '\''.$prev.'\',\''.$date.'\''; ?>);return false;" data-toggle="modal">
 				  <i class="fa fa-arrow-left"></i>Previous
 				</a>
-				<?php if($qarray[$Findi]["type"] == "Topical"):?>
-				 <a class="btn btn-warning pull-right questioner-button" style="margin-right: 6px;" onclick="gosubstantive()">
-				  <i class="fa fa-refresh"></i>To Substantive
-				</a>
-				<?php else: ?>
-				<a class="btn btn-warning pull-right questioner-button" style="margin-right: 6px;" onclick="gotopicals()">
-				  <i class="fa fa-refresh"></i>To Topicals
-				</a>
-				<?php endif; ?>
 			</div>
 			<div class="list-group">
 				<div class="list-group-item list-group-item-image">

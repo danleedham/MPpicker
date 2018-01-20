@@ -7,7 +7,7 @@
 
 	$epgURL = 'http://parliamentlive.tv/Guide/EpgDay?date='.$date.'T00%3A00%3A00%2B00%3A00';
 	
-	print_r($epgURL);
+	//print_r($epgURL);
 	
 	$content = file_get_contents($epgURL);
 	
@@ -46,8 +46,10 @@
 	if(isset($Events)){
 		foreach ($Events as $key => $value) {
 			if ($value["id"]){
-			echo '<option value="'. $value["id"].'">'. $value["name"].'</option>';
-			$hasevents = true;
+				if(!isset($dontecho)){
+					echo '<option value="'. $value["id"].'">'. $value["name"].'</option>';
+				}
+				$hasevents = true;
 		   }
 		}
 	}	

@@ -4,7 +4,7 @@
 		<div class="bootcards-desktop-footer clearfix">
 			<div class="btn-group">
 			<a href="search.php" class="btn btn-default <?php if ($_SERVER['REQUEST_URI'] === "/search.php") { echo 'active'; } ?>">
-			<i class="fa fa-vcard-o"></i>Member Picker
+			<i class="fa fa-vcard-o"></i>Member Search
 			</a>
 			<a href="qs.php" class="btn btn-default <?php if ($_SERVER['REQUEST_URI'] === "/qs.php") { echo 'active'; } ?>">
 			<i class="fa fa-users"></i>Questions

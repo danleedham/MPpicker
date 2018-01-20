@@ -28,7 +28,12 @@
 	}
 	?>
 
+<?php if(isset($futuredayorals) && $futuredayorals == "use"): ?> 
 <script>
+	window.onload = function() {
+		var date = document.getElementById("date-input").value;
+		futuredayoralsloaddepts(date);
+	};
 	document.onkeydown = checkKey;
 	function checkKey(e) {
 		e = e || window.event;
@@ -46,13 +51,40 @@
 	   }
 	}
 </script>
-<?php if(isset($futuredayorals) && $futuredayorals == "use"): ?> 
+
+<?php elseif(isset($house) && $house == "Lords"): ?> 
 <script>
 	window.onload = function() {
-		futuredayoralsloaddates();
+		qsloadlordsquestions();
+		qstogglemenu();
 	};
 </script>
 
+<?php else: ?>
+<script>
+	window.onload = function() {
+		var date = document.getElementById("date-input").value;
+		qsloadtypes();
+		qsloaddepts(date);
+	};
+	
+	document.onkeydown = checkKey;
+	function checkKey(e) {
+		e = e || window.event;
+		if (e.keyCode == '37') {
+			var thisprev = document.getElementById("currentprev").value;
+			var date = document.getElementById("date-input").value;
+			console.log('Previous Question demanded. Loading UIN: '+thisprev);
+			qsload(thisprev,date)	
+		}
+		else if (e.keyCode == '39') {
+			var thisnext = document.getElementById("currentnext").value;
+			var date = document.getElementById("date-input").value;
+			console.log('Next Question demanded. Loading UIN: '+thisnext);
+			qsload(thisnext,date)
+	   }
+	}
+</script>
 <?php endif; ?>
 </head>
 
@@ -72,16 +104,14 @@
 								<?php if($house !== "Lords"): ?>
 								<div class="row">
 									<div id="date-div" class="col-sm-6">
-										<?php if(isset($futuredayorals) && $futuredayorals == "use"): ?>
-										<select id="date-input" class="form-control" onchange="futuredayoralsloaddepts(this.value)" value="Loading Dates..." name="date" >
-										    <option>Loading Dates...</option>
-										</select>
-										<?php else: ?>
-											<input id="date-input" type="date" class="input-sm form-control" onchange="qsloaddepts(this.value)" value="<?php echo $date ?>" name="date" >	
-									    <?php endif; ?>
+									<?php if(isset($futuredayorals) && $futuredayorals == "use"): ?>
+										<input id="date-input" type="date" class="input-sm form-control" onchange="futuredayoralsloaddepts(this.value)" value="<?php echo $date ?>" name="date" >	
+									<?php else: ?>
+										<input id="date-input" type="date" class="input-sm form-control" onchange="qsloaddepts(this.value)" value="<?php echo $date ?>" name="date" >	
+									<?php endif; ?>
 									</div>
 									<div id="photos-div" class="col-sm-6">
-											<input id="photos-input" class="pull-right" style="float:right !important;" type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-width="100%" data-off="Stock">
+										<input id="photos-input" class="pull-right" style="float:right !important;" type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="success" data-on="ScreenShot" data-width="100%" data-off="Stock">
 									</div>
 								</div>	
 								<?php endif; ?>
@@ -94,28 +124,33 @@
 									<?php else: ?>
 									    <?php if(isset($futuredayorals) && $futuredayorals == "use"): ?>
 									    <select id="dept-input" name="type" class="form-control">
-									    <option> Loading Departments...</option>
+									    <option value=""> Loading Departments...</option>
 									    </select>	
 									    <?php else: ?>
 									<select id="dept-input" onchange="qsloadtypes()" name="type" class="form-control">
-										<?php include 'template/questiondepts.php' ?>
+										<option value="">Loading Departments...</option>
 									</select>	
 									    <?php endif; ?>
 									<?php endif; ?>
 								</div>
 								<?php if($house !== "Lords" && !isset($futuredayorals)): ?>
-								<div class="form-inline" style="padding-top:6px !important;">
-									<select id="type-input" name="type" class="form-control" onchange="qsloadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(this.value));return false;">
-										Type: <?php include 'template/questiontypes.php' ?>
-									</select>
-								</div>
+								<div class="row"  style="padding-top:6px !important;">
+									<div class="col-sm-6">
+										<select id="type-input" name="type" class="form-control" onchange="qsloadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(this.value));return false;">
+											<option value="">Loading Types...</option>
+										</select>
+									</div>
+									<div id="livelog-div" class="col-sm-6">
+										<input id="uselive" onchange="qsuseliveadvance();" class="pull-right" style="float:right !important;" type="checkbox" value="screenshot" name="photos"  data-toggle="toggle" data-onstyle="danger" data-offstyle="info" data-on="Auto Advance Qs" data-width="100%" data-off="Don't Advance">
+									</div>
+								</div>		
 								<?php endif; ?>
 							</div>
 							<div id="loadbuttons" style="padding-top:6px !important;">
 								<div class="col-sm-4" style="padding-left:0px !important; padding-right:6px !important;">
 								<?php if($house == "Lords"): ?>
 								<a href="#" onclick="qsloadlordsquestions();return false;" class="btn btn-danger" role="button" style="width: 100% !important;">
-									Load</a>
+									Load Lords</a>
 								<?php else: ?>
 								    <?php if(isset($futuredayorals) && $futuredayorals == "use"): ?>
 								    <a href="#" onclick="futuredayoralsloadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value));return false;" class="btn btn-success" role="button" style="width: 100% !important;">
@@ -136,7 +171,7 @@
 										<i class="fa fa-refresh fa-spin" class="pull-right" style="font-size:20px"></i>
 									</span>
 									<a href="#" id="togglemenu" onclick="qstogglemenu();return false;" class="btn btn-info hidemobile" style="display: inline; float:right !important; width: 100% !important;" role="button">
-									Toggle</a>
+									Toggle Options</a>
 								</div>
 							</div>
 						</div><!--panel body-->
@@ -154,6 +189,7 @@
 				</div><!--list-->
 
 			<!--list details column-->
+			<div id="currentlivequestiondiv" style="display:none"><input type="number" id="currentlivequestion" value="0"></div>
 			<div class="col-sm-8 bootcards-cards" id="bootcards-cards">
 
           <!--contact details -->
@@ -217,8 +253,12 @@
 											<input type="text" class="form-control" id="withoutnotice-input" form="withoutnotice"></input>
 											<br />
 											<div class="col-sm-4" style="padding-left: 0px !important;">
-												<a href="#" onclick="futuredayoralsloadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value));return false;" style="width:100%" class="btn btn-info" role="button">
+												<?php if(isset($futuredayorals) && $futuredayorals == "use"): ?> <a href="#" onclick="futuredayoralsloadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value));return false;" style="width:100%" class="btn btn-info" role="button">
 												Set Groups</a>
+												<?php else: ?>
+												<a href="#" onclick="qsloadquestions(document.getElementById('date-input').value,encodeURI(document.getElementById('dept-input').value),encodeURI(document.getElementById('type-input').value));return false;" class="btn btn-info" role="button">
+							                    Set Groups</a>
+												<?php endif; ?> 
 											</div>
 											<div class="col-sm-4" style="padding-left: 0px! important; padding-right: 0px !important;">
 												<input id="topicals-together" style="float:right !important;" type="checkbox" value="grouped" name="topicals-together"  data-toggle="toggle" data-onstyle="danger" data-offstyle="warning" data-width="100%" data-on="Topicals by Number" data-off="Topicals by Party">

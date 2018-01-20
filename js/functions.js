@@ -3,7 +3,7 @@
 function anotherphoto(current,m){
 	var toget = parseInt(current)+1;
 	var url = "template/latestscreenshot.php?imagenumber="+toget+"&m="+m;
-	console.log('URL requested: '+url);		
+	console.log('URL requested: ' + url);		
 	$.get(url, function(response) {
 	  var imgs = response.replace('<div id="data" style="display: none;">',"");
 	  var imgs = imgs.replace('</div>',"");
@@ -13,7 +13,7 @@ function anotherphoto(current,m){
 	});	
 }
 // Load Members from the ID and Section
-function windloadmembers(eventid,section){
+function windloadmembers(eventid,section) {
 	document.getElementById('togglemenu').style.display = 'none';
 	document.getElementById('loader').style.display = 'inline';
 	console.log('Loading list for program '+location+' and section: '+section);
@@ -22,7 +22,12 @@ function windloadmembers(eventid,section){
 	} else {
 		var dupes = 'keep';
 	}
-	$("#wrapups").load('template/wind-list.php?&event='+eventid+'&section='+section+'&keepdupes='+dupes,function() {
+	if (!document.getElementById("sort-input").checked){
+		var sort = 'alpha';
+	} else {
+		var sort = 'time';
+	}
+	$("#wrapups").load('template/wind-list.php?&event='+eventid+'&section='+section+'&keepdupes='+dupes+'&sort='+sort,function() {
 		document.getElementById('loader').style.display = 'none';
 		document.getElementById('togglemenu').style.display = 'inline';
 		$("#currentspeakersdiv").load('template/wind-checknew.php?event='+eventid+'&section='+section+'&keepdupes='+dupes);
@@ -290,7 +295,7 @@ function searchshowResult(str) {
         if (this.readyState == 4 && this.status == 200) {
             document.getElementById("livesearchmember").innerHTML = this.responseText;
         }
-    }
+    };
     xmlhttp.open("GET", "template/" + url + "?house=" + house + "&searchby=" + searchby + "&q=" + str + side, true);
     xmlhttp.send();
     
@@ -465,29 +470,99 @@ function qsloadquestions(date,dept,type){
         document.getElementById('togglemenu').style.display = 'inline';
     });
 }
-	function qsloadlordsquestions(){
-		document.getElementById('togglemenu').style.display = 'none';
-		document.getElementById('loader').style.display = 'inline';
-		var chosenBusiness = document.getElementById("sect-input").value;
-		if(chosenBusiness == "questions") {
-			var urlend = "listlordsquestions.php";
-		} else {
-			var urlend = 'lordsspeakers.php?chosenBusiness='+chosenBusiness;
-		}
-		$("#livesearch").load('template/'+urlend,function() {
-			document.getElementById('loader').style.display = 'none';
-			document.getElementById('togglemenu').style.display = 'inline';
-		});		
+function qsloadlordsquestions(){
+	document.getElementById('togglemenu').style.display = 'none';
+	document.getElementById('loader').style.display = 'inline';
+	var chosenBusiness = document.getElementById("sect-input").value;
+	if(chosenBusiness == "questions") {
+		var urlend = "listlordsquestions.php";
+	} else {
+		var urlend = 'lordsspeakers.php?chosenBusiness='+chosenBusiness;
 	}
-	function qsloaddepts(date){
-	   $("#dept-input").load('template/questiondepts.php?date='+date);
-	   $("#type-input").load('template/questiontypes.php?date='+date);
-	   console.log('Loading departments for: '+date);
-	}
-	function qsloadtypes(){
-	   var date = document.getElementById("date-input").value;
-	   var dept = encodeURI(document.getElementById("dept-input").value);
-	   $("#type-input").load('template/questiontypes.php?date='+date+'&dept='+dept);
-	   console.log('Loading Question Types for: '+date+' to '+dept);
-	}	
+	$("#livesearch").load('template/'+urlend,function() {
+		document.getElementById('loader').style.display = 'none';
+		document.getElementById('togglemenu').style.display = 'inline';
+	});		
+}
+function qsloaddepts(date){
+   $("#dept-input").load('template/questiondepts.php?date='+date);
+   $("#type-input").load('template/questiontypes.php?date='+date);
+   console.log('Loading departments for: '+date);
+}
+function qsloadtypes(){
+   var date = document.getElementById("date-input").value;
+   var dept = encodeURI(document.getElementById("dept-input").value);
+   $("#type-input").load('template/questiontypes.php?date='+date+'&dept='+dept);
+   console.log('Loading Question Types for: '+date+' to '+dept);
+}	
+
+function qsloadinitialquestions(){
+    var date = document.getElementById("date-input").value;
+    var dept = encodeURI(document.getElementById("dept-input").value);
+    var type = encodeURI(document.getElementById("type-input").value);
+    qsloadquestions(date,dept,type);
+}
 	
+function qscheckforadvance(){
+	if (document.getElementById("uselive").checked){ 
+		if(!document.getElementById("currentuin")){
+			console.log('No question loaded... waiting for user input');
+		} else {
+		    var date = document.getElementById("date-input").value;
+			var currenuin = document.getElementById("currentuin").value;
+			$("#currentlivequestiondiv").load('template/qs-currentquestion.php?date='+date, function() {
+				var currentlivelogged = document.getElementById("currentlivequestion").value;
+				console.log('Current Logged Question = '+currentlivelogged);
+				if(currenuin !== currentlivelogged) {
+					var toload = document.getElementById('next'+currentlivelogged).value;
+					var newuin = document.getElementById("currentuin").value;
+					if(newuin !== toload) {
+						if(!document.getElementById('q'+toload)) {
+							console.log('No more questions left to log');
+						} else {
+							qsload(toload,date);
+							console.log('Loaded from logs');
+						}
+					}
+				} else {
+					//console.log('No new members logged...');
+				}
+			});
+		}
+		setTimeout(qscheckforadvance, 2500);			
+	} else {
+		console.log('Not moving questions on');
+	}
+}
+
+function qsuseliveadvance(){
+    if (document.getElementById("uselive").checked){ 
+        console.log('Turning auto advance on');
+        qscheckforadvance();
+    } else {
+        console.log('Turning auto advance off');
+    }
+}
+
+function qsturnoffliveadvance(){
+    console.log('Manually turning off auto advance');
+    $('#uselive').bootstrapToggle('off');
+}
+
+
+function qsgotopicals() {
+     document.getElementById('type-input').value='Topical';
+     var date = document.getElementById("date-input").value;
+     var dept = encodeURI(document.getElementById("dept-input").value); 
+     var type = "Topical"; 
+     qsloadquestions(date,dept,type);
+}
+
+function qsgosubstantive() {
+     document.getElementById('type-input').value='Substantive';
+     var date = document.getElementById("date-input").value;
+     var dept = encodeURI(document.getElementById("dept-input").value); 
+     var type = "Substantive"; 
+     qsloadquestions(date,dept,type);
+     
+}

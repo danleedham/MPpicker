@@ -414,7 +414,7 @@ $xmlDoc=new DOMDocument();
 			
 			$DeptTitle="";
 			// If we're providing all the departments
-			if($qdept == "all") {
+			if($qdept == "all" or $qtype == "all") {
 				if($qarray[$i]["typenumber"] == 1) {
 					$DeptTitle = '
 					<div class="group-text-details">
@@ -424,7 +424,7 @@ $xmlDoc=new DOMDocument();
 			}
 			
 			$hint=$hint.$DeptTitle.'
-				<a id="q'.$qarray[$i]["uin"].'" class="list-group-item list-section-list '.$iswithdrawn.'" onclick="qsload('.$qarray[$i]["uin"].','.'\''.$date.'\');return false;"  href="#">
+				<a id="q'.$qarray[$i]["uin"].'" class="list-group-item list-section-list '.$iswithdrawn.'" onclick="qsturnoffliveadvance(); qsload('.$qarray[$i]["uin"].','.'\''.$date.'\');return false;"  href="#">
 					<img src="'.$imageurl.'" class="mini-member-image pull-left">
 					<h4 class="list-group-item-heading">'.$ingroup.'<span class="partybox" style="background:'.$qarray[$i]["color"].'!important"></span>'.strtoupper($qarray[$i]["typeletter"]).$qarray[$i]["typenumber"].' '. $qarray[$i]["DisplayAs"].'</h4>
 					<input type="hidden" id="next'.$qarray[$i]["uin"].'" value="'.$next.'"><input type="hidden" id="prev'.$qarray[$i]["uin"].'" value="'.$prev.'">

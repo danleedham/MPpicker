@@ -1,31 +1,32 @@
 <?php
 
-    // This include returns $FOralsContent as a string and $FOralsUpdatedDate as a dateTime
     // This include retuns $QuestionsByDepartment with an array: department,questions
     
 	include("futuredayorals-returndepts.php");
 	
-	$date = date('Y-m-d',$date);
+	//$date = date('Y-m-d',$date);
+	// print_r($QuestionsByDepartment);
 	
 	// Itterate across each department
 	for ($i=0; $i<count($QuestionsByDepartment); $i++){
-	    $iQuestions = explode('<p class="questionContainer">',$QuestionsByDepartment[$i]['questions']);
+	    $iQuestions = explode('<p class="paraQuestion" style="clear : both; ">',$QuestionsByDepartment[$i]['questions']);
 	    
 	    // Remove any first elements not containing questions
 	    if(!strpos($iQuestions[0],"UIN")){
 	        array_shift($iQuestions);
 	    }
 	    $department = $QuestionsByDepartment[$i]['department'];
-	    // print_r($iQuestions);
+	  
+	  
 	    $jQuestions = array();
 	    // Now itterate across each question and pull the elements
 	    for($j=0; $j<count($iQuestions); $j++){
 	        $jQuestions[$j]['department'] = $department;
-	        $uin = explode('<span class="UIN">',$iQuestions[$j]);
+	        $uin = explode('<span class="charUIN">',$iQuestions[$j]);
 	        $uin = explode('</span>',$uin[1]);
-	        $uin = intval(str_replace(["(",")</span></p>"],"",$uin[0]));
+	        $uin = intval(trim(str_replace(["(",")</span></p>"],"",$uin[0])));
 	        $jQuestions[$j]['uin'] = $uin;
-	        $qref = explode('<span class="questionNumber">',$iQuestions[$j]);
+	        $qref = explode('<span class="charBallotNumber">',$iQuestions[$j]);
 	        $qref = explode('</span>',$qref[1]);
 	        $jQuestions[$j]['qref'] = $qref[0];
 	        if(strstr($qref[0],'T')){
@@ -34,15 +35,15 @@
 	            $type = "Substantive";
 	        } 
 	        $jQuestions[$j]['type'] = $type;
-	        $DisplayAs = explode('<strong class="memberName">',$iQuestions[$j]);
-	        $DisplayAs = explode('</strong>',$DisplayAs[1]);
+	        $DisplayAs = explode('<span class="charMember">',$iQuestions[$j]);
+	        $DisplayAs = explode('</span>',$DisplayAs[1]);
 	        $jQuestions[$j]['DisplayAs'] = $DisplayAs[0];
-	        $constituency = explode('<span class="memberConstituency"> (',$iQuestions[$j]);
-	        $constituency = explode('): </span>',$constituency[1]);
+	        $constituency = explode('<span class="charConstituency"> (',$iQuestions[$j]);
+	        $constituency = @explode(')</span>',$constituency[1]);
 	        $jQuestions[$j]['constituency'] = $constituency[0];   
-	        $text = explode('<span class="questionText">',$iQuestions[$j]);
+	        $text = explode('<br />',$iQuestions[$j]);
 	        if(count($text) > 1) {
-	            $text = explode('</span>',$text[1]);
+	            $text = explode('<span',$text[1]);
 	            $jQuestions[$j]['text'] = $text[0];
 	        } else {
 	            $jQuestions[$j]['text'] = "";
@@ -58,7 +59,7 @@
 	        $AllQuestions[] = $Questions[$i][$j];
 	    }
 	}
-	//print_r($AllQuestions);
+	
 	
 	// Now let's build an XML type array similar to the one we would use in the DDP API
     $XML = new SimpleXMLElement("<items></items>");
@@ -187,4 +188,5 @@
 			}
 		}
 	}
+	
 ?>

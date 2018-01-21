@@ -5,7 +5,6 @@
    + [Prerequisites](#prerequisites)
    + [Deployment](#deployment)
    + [Example Installation using XAMPP](#example-installation-using-xampp)
-* [Deployment](#deployment-1)
 * [Built With](#built-with)
 * [Authors](#authors)
 * [License](#license)
@@ -15,6 +14,7 @@
 _'The Stacker'_ is a browser based application that aids broadcast and journalistic coverage of the UK Parliament by leveraging live data powered by Data.parliament (DDP). There is no database as part of the project as in previous incarnations of the stacker. 
 
 The Stacker consists of four sections:
+
   - Member's Database
   - Questions Stacker
   - Windups
@@ -45,6 +45,7 @@ Included within the `apps` folder of the release are helpful tools for launching
 3. Open XAMPP
 
 For Mac: 
+
 	1. In the General tab click to Start the server
 	2. Note the IP address of the server in the General tab (Example: 192.168.64.2)
 	3. In the Services tab ensure the Apache service is running as a minimum
@@ -52,7 +53,8 @@ For Mac:
 	5. In the Volumes tab click Mount for /opt/lampp
 	6. Click Explore next to /opt/lampp to open the file directory
 	
-For PC:	
+For PC:
+	
 	1. In the Control Panel click Start next to the Apache Module
 	2. In the main Config settings (top right of the CP) tick the box next to Apache in the autostart of modules selection
 	3. Click Explorer in the main Control Panel to open up the file directory
@@ -61,8 +63,6 @@ For PC:
 5. XAMPP is typically used for development and as such has strict error reporting. We'll turn that off. Open the file `/etc/php.ini` and on line 553 replace `display_errors=On` with `display_errors=Off`
 6. Within a Google Chrome browser open up MAC: the IP address of the server from above; PC: localhost/
 
-## Deployment
-Add additional notes about how to deploy this on a live system
 ## Built With
 The stacker is built upon a number of open source projects:
 - [Bootstrap] - Used to build responsive, mobile-first projects on the web with the world's most popular front-end component library (ver  v3.3.7 with amendments)
@@ -73,7 +73,7 @@ The stacker is built upon a number of open source projects:
 - [jQuery] - a lightweight, "write less, do more", JavaScript library (ver 2.1.1)
 
 ## Authors
-* **Dan Leedham** - *Initial work* - [NEP Bow Tie / NaSTA UK](https://github.com/danleedham)
+* **Dan Leedham** - *Initial work* - [NEP / NaSTA UK](https://github.com/danleedham)
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](docs/LICENSE.md) file for details

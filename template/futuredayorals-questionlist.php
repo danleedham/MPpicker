@@ -9,7 +9,7 @@
 	
 	// Itterate across each department
 	for ($i=0; $i<count($QuestionsByDepartment); $i++){
-	    $iQuestions = explode('<p class="paraQuestion" style="clear : both; ">',$QuestionsByDepartment[$i]['questions']);
+	    $iQuestions = explode('<p class="paraQuestion">',$QuestionsByDepartment[$i]['questions']);
 	    
 	    // Remove any first elements not containing questions
 	    if(!strpos($iQuestions[0],"UIN")){

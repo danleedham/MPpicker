@@ -18,7 +18,7 @@
 	include("futuredayorals-loadpage.php");
 	
 	// Each date starts with the <h2 class="date"> palava
-	$SplitOutDepts = explode('Oral Questions to the',$FOralsContent);
+	$SplitOutDepts = explode('Oral Questions to',$FOralsContent);
 	
 	// Remove the waffle at the beginning of the page
 	$SplitOutDepts = array_slice($SplitOutDepts,1);

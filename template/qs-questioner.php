@@ -39,7 +39,7 @@ $xmlMembers=new DOMDocument();
 	$betaimages = simplexml_load_string($feed) or die("Can't load Beta Images");
 	$imagescount =  count($betaimages);
 	// Arry with party ID and party colors
-	require_once('colors.php');
+	require_once('core/colors.php');
 	
 	$hint="";
 	for($i=0; $i<($questionscount); $i++) {
@@ -152,33 +152,28 @@ $xmlMembers=new DOMDocument();
 				<?php 
 					$DodsId=$xml->Member[0]->attributes()->Dods_Id;
 					$m=$xml->Member[0]->attributes()->Member_Id;
-					// If the user hasn't explicitly asked for screenshots	
 					if (!isset($photos) or $photos  !== "screenshot") {	
-						if ($house == "Commons") {
-							for($ii=0; $ii < $imagescount; $ii++) {
-								if (intval($betaimages->member[$ii]->memberid) == intval($xml->Member[0]->attributes()->Member_Id)){
-									$BetaId = $betaimages->member[$ii]->imageid;
-								}
-							}
-							$imageurl = 'images/stock/'.$BetaId.'.jpeg';
-						} else { 
-							// If the house selected isn't the house of Commons
-							$imageurl = 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg';
-						}
-					}
-					// Fallback on screenshots please
-					if((isset($BetaId) && $BetaId == "") or !isset($imageurl)) {
-						// If the user has asked for a screenshot then...
-						$count = "1";
-						require("latestscreenshot.php");
-						if(isset($screenshotoutput)) {
-							$imageurl = $screenshotoutput['url'];
-							$screenshotused = true;
-							echo '<input id="current-photo" type="hidden" value="'.$screenshotoutput['imagenumber'].'">';
-							echo '<input id="m" type="hidden" value="'.$m.'">';
-						} else {
-							$imageurl = 'images/screenshot/'.$DodsId.'.jpg';
-						}
+                        for($ii=0; $ii < $imagescount; $ii++) {
+                            if (intval($betaimages->member[$ii]->memberid) == intval($xml->Member[0]->attributes()->Member_Id)){
+                                $BetaId = $betaimages->member[$ii]->imageid;
+                            }
+                        }
+                        if(isset($BetaId) && $BetaId !== "") {
+                            $imageurl = 'images/stock/'.$BetaId.'.jpeg';
+                        }
+                    }
+                    if(!isset($imageurl)) {
+                        // If the user has asked for a screenshot then...
+                        $count = "1";
+                        require("latestscreenshot.php");
+                        if(isset($screenshotoutput)) {
+                            $imageurl = $screenshotoutput['url'];
+                            $screenshotused = true;
+                            echo '<input id="current-photo" type="hidden" value="'.$screenshotoutput['imagenumber'].'">';
+                            echo '<input id="m" type="hidden" value="'.$m.'">';
+                        } else {
+                            $imageurl = "";
+                        }
 					}	
 				?>
 				<img id="questioner-img" src="<?php echo $imageurl; ?>" class="main-question-image">
@@ -203,4 +198,3 @@ $xmlMembers=new DOMDocument();
 	<?php 
 		endif;
 	?>
-	<script src="/js/functions.js"></script>

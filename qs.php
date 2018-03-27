@@ -1,15 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="google" value="notranslate">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<?php include 'template/core/header.php'; ?>
+
 	<title>Questions Picker</title>
 
-	<?php include 'template/headinc.php';
+	<?php 
 	//get parameters from URL
 	if(isset($_GET["date"])){
 		$date=$_GET["date"];
@@ -66,6 +59,7 @@
 		var date = document.getElementById("date-input").value;
 		qsloadtypes();
 		qsloaddepts(date);
+		qsloadsuggestedgroups(date);
 	};
 	
 	document.onkeydown = checkKey;
@@ -119,7 +113,7 @@
 								<div class="form-inline" style="padding-top:6px !important;">
 									<?php if($house == "Lords"): ?>
 									<select id="sect-input" onchange="qsloadlordsquestions()" name="type" class="form-control">
-										<?php include 'template/lordsquestions-sections.php' ?>
+										<?php include 'template/qs-lordsquestionsections.php' ?>
 									</select>	
 									<?php else: ?>
 									    <?php if(isset($futuredayorals) && $futuredayorals == "use"): ?>
@@ -235,8 +229,14 @@
 									<div class="form-group">
 										<label for="dept-group-input">Department:</label><br />
 										<select id="dept-group-input" onchange="setgroups()" name="type" class="form-control">
-										<?php include 'template/questiondepts.php' ?>
+										<?php include 'template/qs-deptslist.php' ?>
 										</select>	
+									</div>
+									<div class="form-group">	
+										<label class="col-2 col-form-label">The system suggests the following groups:</label>
+										<div class="col-10">
+											<textarea class="form-control" id="suggested-groups" form="groups"></textarea>
+										</div>
 									</div>
 									<div class="form-group">	
 										<label class="col-2 col-form-label">Enter groups on seperate lines with questions space delimited</label>
@@ -278,8 +278,8 @@
 		</div><!-- Modal Dialog -->
 	</div><!--Group / withdrawn card-->
 
-	<?php include 'template/footer.php'; ?>  
-	<?php include 'template/core.php'; ?>
+	<?php include 'template/core/footer.php'; ?>  
+	<?php include 'template/core/includejs.php'; ?>
    
 </body>
 </html>

@@ -1,22 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  	<meta charset="utf-8">
-  	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-  	<meta name="viewport" content="width=device-width, initial-scale=1">
-  	<meta name="google" value="notranslate">
-	<link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
-	<link rel="manifest" href="favicons/manifest.json">
-	<link rel="mask-icon" href="favicons/safari-pinned-tab.svg" color="#5bbad5">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<?php include 'template/core/header.php'; ?>
+
   	<title>Parliamentary Stacker</title>
   	<script>
 	window.onload = function() {
-		$("#test").load('template/networktests.php',function() {
-		});
-		console.log('Tests Complete');
+		$("#test").load('template/fixed-queries/networktests.php',function() {
+		    console.log('Tests Complete');
+		});		
 	};
   	</script>
   </head>
@@ -34,7 +23,7 @@
 					  <div class="col-xs-6 col-md-3">
 						<a class="bootcards-summary-item" href="search.php">
 						  <img src="favicons/android-chrome-192x192.png" height="64" width="64">
-						  <h4>Member Search <span class="label label-info"><?php $house = "Commons"; include "template/int-numberofmembers.php" ?></span></h4>
+						  <h4>Member Search <span class="label label-info"><?php $house = "Commons"; include "template/fixed-queries/fixed-numberofmembers.php" ?></span></h4>
 						</a>
 					  </div>
 					  <div class="col-xs-6 col-md-3">
@@ -46,13 +35,13 @@
 					  <div class="col-xs-6 col-md-3">
 						<a class="bootcards-summary-item" href="who.php">
 						  <img src="favicons/android-chrome-192x192.png" height="64" width="64">
-						  <h4>Guess Who? <span class="label label-warning"><?php $house = "Lords"; include "template/int-numberofmembers.php" ?></span></h4>
+						  <h4>Guess Who? <span class="label label-warning"><?php $house = "Lords"; include "template/fixed-queries/fixed-numberofmembers.php" ?></span></h4>
 						</a>
 					  </div>
 					   <div class="col-xs-6 col-md-3">
 						<a class="bootcards-summary-item" href="windups.php">
 						  <img src="favicons/android-chrome-192x192.png" height="64" width="64">
-						  <h4>Wind ups <span class="label label-success">650</span></h4>
+						  <h4>Wind ups <span class="label label-success"><?php include "template/fixed-queries/fixed-latestleftlords.php" ?></span></h4>
 						</a>
 					  </div>
 					 </div>
@@ -69,4 +58,4 @@
 	</div>		
 
 
-<?php include 'template/headinc.php'; ?>
+<?php include 'template/core/header.php'; ?>

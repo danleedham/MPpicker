@@ -168,7 +168,7 @@ $xmlDoc=new DOMDocument();
 		$xmlDoc->load($url);
 	}
 	$x=$xmlDoc->getElementsByTagName('Member');
-	require_once('colors.php');
+	require_once('core/colors.php');
 	$hint = "";
 	
 	//Load xml with codes for new Parliament Beta images
@@ -197,28 +197,20 @@ $xmlDoc=new DOMDocument();
 		$MemberId=$x->item($i)->getAttribute('Member_Id');
 		$DodsId=$x->item($i)->getAttribute('Dods_Id');
 		
-		if (!isset($photos) or $photos !== "screenshot") {				
-			if ($House[0]->textContent == "Commons") {
-				if (!isset($photos) or $photos !== "stock") {
-					$imageurl = "http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/".intval($MemberId);
-				} else {
-					for($ii=0; $ii < $imagescount; $ii++) {
-						if (trim($betaimages->member[$ii]->KnownAs) == trim($DisplayAs[0]->textContent)){
-							$BetaId = trim($betaimages->member[$ii]->imageid);
-						}
-					}
-					$imageurl = 'images/stock/thumbs/'.$BetaId.'.jpeg';
-					if (isset($BetaId) && $BetaId == ""){
-						$imageurl = "http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/".intval($MemberId);
-					}
-				}	
-			} else { 
-					$imageurl = 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg';
-			}
-		} else {
-			$imageurl = 'images/screenshot/'.$DodsId.'.jpg';
-		}											
-		// Fix for the Lords not having decent photos... yet!
+		$imageurl = "";
+        for($ii=0; $ii < $imagescount; $ii++) {
+            if (trim($betaimages->member[$ii]->KnownAs) == trim($DisplayAs[0]->textContent)){
+                $BetaId = trim($betaimages->member[$ii]->imageid);
+                $imageurl = 'images/stock/thumbs/'.$BetaId.'.jpeg';
+            }
+        } 
+        if($imageurl == ""){
+            if($house == "Commons"){
+                $imageurl = "http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/".intval($MemberId);
+            } else {
+                $imageurl = 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg';
+            }
+        }
 		$Const=$x->item($i)->getElementsByTagName('MemberFrom');
 		$GovernmentPosts=$x->item($i)->getElementsByTagName('GovernmentPost');
 		$OppositionPosts=$x->item($i)->getElementsByTagName('OppositionPost');

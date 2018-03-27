@@ -1,23 +1,6 @@
 <?php $xmlDoc=new DOMDocument(); ?>
-<!DOCTYPE html>
-
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<meta content="IE=edge" http-equiv="X-UA-Compatible">
-	<meta content="width=device-width, initial-scale=1" name="viewport">
-	<meta name="google" value="notranslate">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
-	</script>
-	<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js">
-	</script>
-	<link href="template/chosen/chosen.css" rel="stylesheet">
-
+    <?php include 'template/core/header.php'; ?>
 	<title>Who's that?</title>
-	<?php
-	    //get the css and js nonesense
-	    include 'template/headinc.php'; 
-	?>
 	
 	<script>
 	window.onload = function() {
@@ -33,7 +16,7 @@
 		<div class="row">
 			<!-- Search panel -->
 			<!--options column-->
-			<div class="col-sm-3 bootcards-list" data-title="Contacts" id="list">
+			<div class="col-sm-3 bootcards-list dontPrint" data-title="Contacts" id="list">
 				<div class="panel panel-default">
 					<div class="panel-heading clearfix">
 						<h3 class="panel-title">
@@ -71,14 +54,14 @@
 							<select class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" form="mpsearch" id="sex-input" name="sex">
 								<option value="">
 									Choose Gender
-								</option><?php $house = "Commons" ?><?php include("template/whosex.php"); ?>
+								</option><?php $house = "Commons" ?><?php include("template/who-listsex.php"); ?>
 							</select>
 						</div>
 						<!-- party -->
 
 						<div class="list-group-item">
 							<select class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" id="party-input">
-								<?php include("template/whoparty.php"); ?>
+								<?php include("template/who-listparty.php"); ?>
 							</select>
 						</div>
 						<!-- positions -->
@@ -88,7 +71,7 @@
 							<select class="form-control custom-select mb-2 mr-sm-2 mb-sm-0" form="mpsearch" id="position-input" name="positions">
 								<option value="">
 									Select Position Type
-								</option><?php  include("template/whopositions.php"); ?>
+								</option><?php  include("template/who-listpositions.php"); ?>
 							</select>
 						</div>
 						<!-- committees -->
@@ -216,7 +199,7 @@
 	<script charset="utf-8" src="template/chosen/docsupport/init.js" type="text/javascript">
 	</script> 
 	
-	<?php include 'template/footer.php'; ?> 
-	<?php include 'template/core.php'; ?>
+	<?php include 'template/core/footer.php'; ?> 
+	<?php include 'template/core/includejs.php'; ?>
 </body>
 </html>

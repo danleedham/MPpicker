@@ -7,7 +7,6 @@
 	// If $house isn't already set in a require, get it from URL if it's passed
 	if(!isset($house) && isset($_GET['house'])){$house=$_GET["house"];}
 	
-	
 	echo '<!-- URL: http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id='.$m.'/FullBiog -->';
 	
 	// Load selected Member ($m) full biography information
@@ -26,24 +25,22 @@
 	if(!isset($house)){ 
 		$house = $xml->Member[0]->House; 
 	}
-	// Get the members Dods_Id as this is used for some image URLs
-	$DodsId=$xml->Member[0]->attributes()->Dods_Id;
-	
+
 	// If the user hasn't explicitly asked for screenshots	
-	if ($house == "Commons") {
-		if (!isset($photos) or $photos  !== "screenshot") {	
-			for($ii=0; $ii < $imagescount; $ii++) {
-				if (intval($betaimages->member[$ii]->memberid) == intval($xml->Member[0]->attributes()->Member_Id)){
-					$BetaId = $betaimages->member[$ii]->imageid;
-				}
-			}
-			$imageurl = 'images/stock/500/'.$BetaId.'.jpeg';
-			// If the member doesn't yet have a nice new photo, use the MNDP image
-			if (isset($BetaId) && $BetaId == ""){
-				$imageurl = 'http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$m;
-			}
-		}
-	}
+    if (!isset($photos) or $photos  !== "screenshot") {	
+        for($ii=0; $ii < $imagescount; $ii++) {
+            if (intval($betaimages->member[$ii]->memberid) == intval($xml->Member[0]->attributes()->Member_Id)){
+                $BetaId = $betaimages->member[$ii]->imageid;
+            }
+        }
+        if(isset($BetaId) && $BetaId !== "") {
+            $imageurl = 'images/stock/500/'.$BetaId.'.jpeg';
+        } else {
+            if($house == "Commons"){
+                $imageurl = 'http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$m;
+            }
+        }
+    }
 	if(!isset($imageurl)) {
 		// If the user has asked for a screenshot then...
 		require("latestscreenshot.php");
@@ -57,7 +54,7 @@
 		}
 	}
 	$PartyID = $xml->Member[0]->Party[0]->attributes()->Id;              	          	     
-    	require_once('colors.php');															
+    	require_once('core/colors.php');															
 ?>
 					
 <div class="panel panel-default">
@@ -71,8 +68,15 @@
 	
 		<img id="questioner-img" src="<?php echo $imageurl; ?>" class="pull-right <?php if(isset($screenshotused) && $screenshotused == true) { echo 'main-member-screenshot';} else { echo 'main-member-image' ;} ?>"">
 	<div class="list-group">
-		<div class="list-group-item">			
-			<h4 class="list-group-item-heading">
+		<div class="list-group-item">
+		    <h4 class="list-group-item-heading">
+		        <?php 
+		        if($xml->Member[0]->House == "Lords"){
+		            echo $xml->Member[0]->BasicDetails->GivenForename.' ';
+		            echo $xml->Member[0]->BasicDetails->GivenMiddleNames.' ';
+		            echo $xml->Member[0]->BasicDetails->GivenSurname.' '; 
+		        }?>
+
 			    <?php echo $xml->Member[0]->MemberFrom ?>
 				<span style="color:                  
 				<?php echo $colors[intval($PartyID)]; ?>">

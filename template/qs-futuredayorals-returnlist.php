@@ -1,9 +1,25 @@
 <?php
-$xmlDoc=new DOMDocument();
-
-	// Get parameters from URL
-	// If question type isn't set above and it's passed in the URL then get it, otherwise set it as Substantive
-	if(!isset($qtype) && isset($_GET["type"])){
+    /* 
+    This file returns a list of questions
+    Input expected as date in format 1483916400
+    Returns list of <option> if URL 'output' = "true"
+    Can also return QuestionsByDepartment
+    */
+    
+	// If the question date isn't set above and it's passed in the URL, get it or set it to today
+	if(!isset($date) && isset($_GET["date"])){
+		$date=$_GET["date"];
+	}
+	if(!isset($date)) {
+		$date=$date = date("d-m-Y");
+	}
+   
+    if(!isset($outputList) && isset($_GET["outputList"])){
+        $outputList = $_GET["outputList"];
+    }
+   
+   	// If question type isn't set above and it's passed in the URL then get it, otherwise set it as Substantive
+	/* if(!isset($qtype) && isset($_GET["type"])){
 		$qtype=$_GET["type"];
 	}
 	if(!isset($qtype)){
@@ -15,27 +31,17 @@ $xmlDoc=new DOMDocument();
 		} else {
 			$qtypeURL = "";
 		}
-	}
+	} */
+	
+	$qtype = "all";
 	
 	// If Department isn't set above and it's passed in the URL then get it
 	if(!isset($qdept) && isset($_GET["dept"])){
 		$qdept=$_GET["dept"];
-		if($qdept == "all") {
-			$qdeptURL = "";
-		} else {
-			$qdeptURL = '&AnsweringBody='.str_replace(' ', '%20', $qdept);
-		}
 	} else {
 		$qdept = "";
 	}
 
-	// If the question date isn't set above and it's passed in the URL, get it or set it to today
-	if(!isset($date) && isset($_GET["date"])){
-		$date=$_GET["date"];
-	}
-	if (!isset($date)) {
-		$date = date("Y-m-d");
-	}
 	
 	// Check if groups are to be grouped together
 	if(!isset($grouptogether) && isset($_GET["together"])){
@@ -54,6 +60,8 @@ $xmlDoc=new DOMDocument();
 	// If groups aren't set above and they're passed in the URL, get them
 	if(!isset($groups) && isset($_GET["groups"])){
 		$groups=$_GET["groups"];
+	} else {
+	    $groups = "";
 	}
 	
 	// Sort groups into a nice little 2D array
@@ -74,6 +82,8 @@ $xmlDoc=new DOMDocument();
 	// If withdrawn questions aren't set above and they're passed in the URL, get them
 	if(!isset($withdrawn) && isset($_GET["withdrawn"])){
 		$withdrawn=strtolower($_GET["withdrawn"]);
+	} else {
+	    $withdrawn = "";
 	}		
 		
 	// Make the input withdrawn questions an array. Nicer for looping
@@ -85,142 +95,44 @@ $xmlDoc=new DOMDocument();
 	// If without notice questions aren't set above and they're passed in the URL, get them
 	if(!isset($withoutnotice) && isset($_GET["withoutnotice"])){
 		$withoutnotice=strtolower($_GET["withoutnotice"]);
-	}		
+	} else {
+	    $withoutnotice = "";
+	}
 		
 	// Make the input withdrawn questions an array. Nicer for looping
 	if(strlen($withoutnotice)>=1){
 		$withoutnoticequestions = explode(' ', $withoutnotice);
 		$howmanywithoutnotice = count($withoutnoticequestions); 
 	}	
-	
-	// For now questions are only searchable for the Commons. In future we'll extend this to the Lords too
-	if(!isset($house)){
-		$house = "Commons";
-	}
-	
+
 	if(isset($_GET["photos"])){
 		$photos=$_GET["photos"];
 	} else {
 		$photos = "";
 	}
-	
-	// Load questions of the chosen date and of the chosen type
-	$xmlDoc->load('http://lda.data.parliament.uk/commonsoralquestions.xml?_view=Commons+Oral+Questions&AnswerDate='.$date.$qtypeURL.$qdeptURL.'&_pageSize=500');
-	// Extract each question element (they're called 'items' in the XML)
-	$x=$xmlDoc->getElementsByTagName('item');
-	
-	// Count how many question items we've loaded
-	$questionscount = $x->length;
-	
-	// Load XML file containing all current MP's data 
-	$qxml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/House=Commons%7CIsEligible=true/") or die("Can't load MPs");
-	
-	// Just in case let's count how many members we've just loaded above
-	$memberscount =  count($qxml);
 
-	// Array with party ID and party color
-	require_once('colors.php');	
-	
-	// If there are no questions, an empty 'item' is presented. 
-	// If there are more than one questions there are 2+ items. 
-	$hint = "";
-	if ($questionscount == 1) {
-			$hint = "";
-	} else {	
+    // This include returns $FOralsContent as a string and $FOralsUpdatedDate as a dateTime
+    // This include retuns $QuestionsByDepartment with an array: department,questions
+    
+	include("qs-futuredayorals-questionlist.php");
 		
-		// If beta images are loaded prior to this then skip
-		if(!isset($feed)){
-			$feed = file_get_contents("betaimages.xml");
-			$betaimages = simplexml_load_string($feed) or die("Can't load Beta Images");
-			$imagescount = count($betaimages);
-		}
-
-		// Now let's go through each question and extract the helpful bits of information
-		for($i=0; $i<($x->length); $i++) {
-			
-			// If an item doesn't have the element questionText it's not actually a question
-			$QText=$x->item($i)->getElementsByTagName('questionText');
-			if (!isset($QText[0]->textContent)) {
-			} else {
-				$QuestionID=$x->item($i)->getElementsByTagName('ID');
-				$uin=$x->item($i)->getElementsByTagName('uin');
-				
-				// Some elements are subnodes and require the textContent to be extracted then trimmed
-				$MemberId=$x->item($i)->getElementsByTagName('tablingMember')->item(0)->getAttribute('href');
-					$CurrentQuestioner = intval(str_replace("http://data.parliament.uk/members/","",$MemberId));
-				$tablingMemberPrinted=$x->item($i)->getElementsByTagName('tablingMemberPrinted');
-				$Const=$x->item($i)->getElementsByTagName('constituency');
-					$Constituency = trim($Const['prefLabel']->textContent);
-				$TabledDate=$x->item($i)->getElementsByTagName('TabledDate');
-				$QuestionType=$x->item($i)->getElementsByTagName('QuestionType');
-				$DateDue=$x->item($i)->getElementsByTagName('AnswerDate');
-				$BallotNo=$x->item($i)->getElementsByTagName('ballotNumber');
-				$Dept=$x->item($i)->getElementsByTagName('AnsweringBody');
-					$Department=trim($Dept->item(0)->textContent);
-				$QuestionStatus=$x->item($i)->getElementsByTagName('QuestionStatus');	
-
-				// Let's now check each MP to find which MP asked the question 
-				for ($y = 0; $y < $memberscount; $y++){
-					$CurrentMP = intval($qxml->Member[$y]->attributes()->Member_Id);
-						if($CurrentQuestioner === $CurrentMP) { 
-							$DodsId=$qxml->Member[$y]->attributes()->Dods_Id;
-							$MemberId=$qxml->Member[$y]->attributes()->Member_Id;
-							$DisplayAs=$qxml->Member[$y]->DisplayAs;
-							$party=$qxml->Member[$y]->Party;
-							$PartyID =$qxml->Member[$y]->Party[0]->attributes()->Id;              	          	          	     
-							$color = $colors[intval($PartyID)];
-						}
-				}
-				
-				if($QuestionType[0]->textContent == "Topical"){
-					$typeletter = 't';
-				} else {
-					$typeletter = 's';
-				}
-				$ballotnumber = $BallotNo[0]->textContent;
-				$qref = $typeletter.$ballotnumber;	
-
-				// Just a check to make sure our query got the questions from the right department
-				if($Department == $qdept or $qdept == "all") {	
-					// Now build an array with all the information we want	
-				   $qarray[] = array( 'number'=>$BallotNo[0]->textContent,
-									  'uin'=>$uin[0]->textContent,
-									  'dept'=>$Department,
-									  'text'=>$QText[0]->textContent,
-									  'type'=>$QuestionType[0]->textContent,
-									  'typeletter'=>$typeletter,
-									  'member'=>$CurrentQuestioner,
-									  'DisplayAs'=>$DisplayAs,
-									  'DodsId'=>$DodsId,
-									  'MemberId'=>intval($MemberId),
-									  'constituency'=>$Constituency,
-									  'party'=>$party,
-									  'partyid'=>$PartyID,
-									  'color'=>$color,
-									  'qref'=>$qref,
-									  'QuestionStatus'=>$QuestionStatus[0]->textContent
-								);
-				}
-			}
-		}
-		
-		// Count how many questions there are now after our checks (each question is an element in the array)
-		if(isset($qarray)){
-			$length = count($qarray);
-		} else {
-			$length = 0;
-		}
-		
-		// Function to sort questions by department type then by number
-		function compqs($a, $b) {
-		if ($a['dept'] == $b['dept']) {
-				if ($a['type'] == $b['type']) {
-					return $a['number'] - $b['number'];
-				}
-				return strcmp($a['type'], $b['type']);
-			}
-			return strcmp($a['dept'], $b['dept']);		
-		}
+    // Count how many questions there are now after our checks (each question is an element in the array)
+    if(isset($qarray)){
+        $length = count($qarray);
+    } else {
+        $length = 0;
+    }
+    
+    // Function to sort questions by department type then by number
+    function compqs($a, $b) {
+    if ($a['dept'] == $b['dept']) {
+            if ($a['type'] == $b['type']) {
+                return $a['number'] - $b['number'];
+            }
+            return strcmp($a['type'], $b['type']);
+        }
+        return strcmp($a['dept'], $b['dept']);		
+    }
 	if(isset($groupsplit)) { 
 		print_r($groupssplit); 
 	}
@@ -401,20 +313,20 @@ $xmlDoc=new DOMDocument();
 					}
 				}
 			}
-			
+			$imageurl = "";
 			for($ii=0; $ii < $imagescount; $ii++) {
 				if (intval($betaimages->member[$ii]->memberid) == $qarray[$i]["MemberId"]){
 					$BetaId = $betaimages->member[$ii]->imageid;
+					$imageurl = 'images/stock/thumbs/'.$BetaId.'.jpeg';
 				}
 			}
-			$imageurl = 'images/stock/thumbs/'.$BetaId.'.jpeg';
-			if (isset($BetaId) && $BetaId == ""){
+			if($imageurl == ""){
 				$imageurl = 'http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$qarray[$i]["MemberId"];
 			}
 			
 			$DeptTitle="";
 			// If we're providing all the departments
-			if($qdept == "all" or $qtype == "all") {
+			if($qdept == "all") {
 				if($qarray[$i]["typenumber"] == 1) {
 					$DeptTitle = '
 					<div class="group-text-details">
@@ -424,7 +336,7 @@ $xmlDoc=new DOMDocument();
 			}
 			
 			$hint=$hint.$DeptTitle.'
-				<a id="q'.$qarray[$i]["uin"].'" class="list-group-item list-section-list '.$iswithdrawn.'" onclick="qsturnoffliveadvance(); qsload('.$qarray[$i]["uin"].','.'\''.$date.'\');return false;"  href="#">
+				<a id="q'.$qarray[$i]["uin"].'" class="list-group-item list-section-list '.$iswithdrawn.'" onclick="futuredayoralsload('.$qarray[$i]["uin"].','.'\''.$date.'\');return false;"  href="#">
 					<img src="'.$imageurl.'" class="mini-member-image pull-left">
 					<h4 class="list-group-item-heading">'.$ingroup.'<span class="partybox" style="background:'.$qarray[$i]["color"].'!important"></span>'.strtoupper($qarray[$i]["typeletter"]).$qarray[$i]["typenumber"].' '. $qarray[$i]["DisplayAs"].'</h4>
 					<input type="hidden" id="next'.$qarray[$i]["uin"].'" value="'.$next.'"><input type="hidden" id="prev'.$qarray[$i]["uin"].'" value="'.$prev.'">
@@ -432,18 +344,17 @@ $xmlDoc=new DOMDocument();
 				</a>';
 			   
 		}
-	}
-}	  
+	}  
 
 // Set output if no questions were found or to the correct values
 if ($hint=="") {
   
-  if(!$_GET["type"]){ 
+  /* if(!$_GET["type"]){ 
   		$iftype = '';
   }
   else {
   		$iftype = ' '.$qtype;
-  }
+  } */
   
   if(!$qdept){$ifdept = '';}
   else {
@@ -451,10 +362,13 @@ if ($hint=="") {
   }
   
   $response='<a class="list-group-item">
-			 <h4 class ="list-group-item-heading">No'.$iftype.' questions on '.$date.$ifdept.'</h4></a>';
+			 <h4 class ="list-group-item-heading">No questions on '.date('l j F',strtotime($date)).$ifdept.'</h4></a>';
 } else {
 	// Otherwise respond with the information required 	
     $response=$hint;
 }	
-	echo $response;
+	if($outputList == "true"){
+	    echo $response;
+	}
+
 ?>	   

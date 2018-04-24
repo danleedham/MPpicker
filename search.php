@@ -1,23 +1,21 @@
-<!DOCTYPE html>
-
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<meta content="IE=edge" http-equiv="X-UA-Compatible">
-	<meta content="width=device-width, initial-scale=1" name="viewport">
-	<meta name="google" value="notranslate">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
-	</script>
-
+	<?php include 'template/core/header.php'; ?>
+	
 	<title>Parliamentary Stacker</title>
-	<?php include 'template/headinc.php';
-	    
+	
+	<?php     
 	        $xml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/id=8/FullBiog");
 	        $feed = file_get_contents("template/betaimages.xml");
 	        $betaimages = simplexml_load_string($feed);
 	        $imagescount =  count($betaimages);
 	        
 	?>
+		<script>
+	window.onload = function() {
+		pickconst();
+		pickpos();
+	};
+
+  	</script>
 </head>
 
 <body>
@@ -34,18 +32,9 @@
 			</div>
 			<!--panel-->
 			<!-- left list column -->
-
-
 			<div class="col-sm-4 bootcards-list" data-title="Contacts" id="list">
 				<div class="panel panel-default">
 					<div class="panel-body">
-						<div class="search-form">
-							<div class="col-sm-12 input-toggle">
-								<div class="form-group">
-									<input class="form-control" form="mpsearch" name="q" onkeyup="searchshowResult(this.value)" placeholder="Start Typing..." size="20" type="text">
-								</div>
-							</div>
-						</div>
 						<div class="search-form">	
 							<div class="col-sm-12 input-toggle">
 								<div class="form-group">
@@ -64,10 +53,22 @@
 									</select>
 								</div>
 							</div>
+							<div class="col-sm-12 input-toggle" id="typeinput">
+								<div class="form-group">
+									<input class="form-control" form="mpsearch" name="q" onkeyup="searchshowResult(this.value)" placeholder="Start Typing..." size="20" type="text">
+								</div>
+							</div>
+							<div class="col-sm-12 input-toggle" id="constpickdiv" style="display: block;">
+								<div id="pick-const" class="form-group">
+									<select class="form-control custom-select mb-2 mr-sm-2 mb-sm-0">
+										<option value="">Loading Constituencies...</option>
+									</select>	
+								</div>
+							</div>	
 							<div class="col-sm-12 input-toggle" id="positiontypediv" style="display: none";>
 								<div class="form-group">
-									<select class="form-control custom-select" form="mpsearch" id="positiontype" name="positiontype">
-										<option value="government">
+									<select class="form-control custom-select" form="mpsearch" id="positiontype" name="positiontype" onchange="searchselectpostyle(this.value)">
+										<option selected="selected" value="government">
 											Government
 										</option>
 
@@ -75,16 +76,23 @@
 											Opposition
 										</option>
 
-										<option selected="selected" value="both">
+										<!-- <option value="both">
 											All Parties
-										</option>
+										</option> -->
 									</select>
 								</div>
 							</div>			
 						</div>
+						<div class="col-sm-12 input-toggle" id="pospickdiv" style="display: block;">
+								<div id="pick-pos" class="form-group">
+									<select class="form-control custom-select mb-2 mr-sm-2 mb-sm-0">
+										<option value="">Loading Positions...</option>
+									</select>	
+								</div>
+							</div>		
 						<div class="search-form" style="padding-top: 6px">	
 							<div class="col-sm-6 membersearch-options input-toggle">
-								<input data-off="Commons" data-offstyle="success" data-on="Lords" data-onstyle="danger" data-toggle="toggle" data-width="100%" id="choosehouse" name="house" type="checkbox" value="Lords" onchange="searchiflordsscreenshot();">
+								<input data-off="Commons" data-offstyle="success" data-on="Lords" data-onstyle="danger" data-toggle="toggle" data-width="100%" id="choosehouse" name="house" type="checkbox" value="Lords">
 							</div>
 
 							<div class="col-sm-6 membersearch-options input-toggle">
@@ -114,7 +122,7 @@
 
 
 				<div class="stacker-contactCard" id="contactCard">
-					<?php require("template/member.php"); ?>
+					<?php require("template/search-member.php"); ?>
 				</div>
 				<!--contact card-->
 			</div>
@@ -123,7 +131,9 @@
 		<!--row-->
 	</div>
 	<!--container-->
-	<?php include 'template/footer.php'; ?><?php include 'template/core.php'; ?>
-	
+	<?php include 'template/core/footer.php'; ?>
+	<?php include 'template/core/includejs.php'; ?>
+	<script src="template/chosen/chosen.jquery.js" type="text/javascript"></script> 
+	<script charset="utf-8" src="template/chosen/docsupport/init.js" type="text/javascript"></script> 
 </body>
 </html>

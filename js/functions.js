@@ -1,5 +1,42 @@
+/*
 
-// Global function to get another photo
+Global Functions 
+
+*/
+
+function togglemenu(){
+	var menu = document.getElementById("menu");
+	menu.style.display = menu.style.display === 'none' ? '' : 'none';
+	var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+	var listsize = h - 196;
+	console.log('Removing Menu and Resizing list to '+listsize);
+}
+
+function qstogglemenu(){
+    var menu = document.getElementById("menu");
+    menu.style.display = menu.style.display === 'none' ? '' : 'none';
+    var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+    var listsize = h - 154;
+    console.log('Removing Menu and Resizing list to '+listsize);
+    document.getElementById("livesearch").setAttribute("style","height:"+listsize+"px");
+    
+}
+function togglemobilelist(){
+	var list = document.getElementById("list");
+	list.style.display = list.style.display === 'none' ? 'block' : 'none';
+}
+
+function twitter(handle){
+	var twitter = document.getElementById("twitter");
+	twitter.style.display = twitter.style.display === 'none' ? '' : 'none';
+   $("#twitter").load('template/fixed-queries/twitter.php?handle='+handle);
+}
+function loadextras(){
+	var yourUl = document.getElementById("extras");
+	yourUl.style.display = yourUl.style.display === 'none' ? '' : 'none';
+}
+
+// Function to get another photo
 function anotherphoto(current,m){
 	var toget = parseInt(current)+1;
 	var url = "template/latestscreenshot.php?imagenumber="+toget+"&m="+m;
@@ -12,6 +49,14 @@ function anotherphoto(current,m){
 	  $("#questioner-img").attr("src",imgarray[0]);
 	});	
 }
+
+
+/*
+
+Functions for Windups
+
+*/
+
 // Load Members from the ID and Section
 function windloadmembers(eventid,section) {
 	document.getElementById('togglemenu').style.display = 'none';
@@ -42,7 +87,11 @@ function windloadevents(date){
 function windloadsections(){
    var date = document.getElementById("date-input").value;
    var event = encodeURI(document.getElementById("event-input").value);
-   $("#sect-input").load('template/wind-chapters.php?date='+date+'&event='+event);
+   $("#sect-input").load('template/wind-chapters.php?date='+date+'&event='+event, function(){
+        var eventid = document.getElementById('event-input').value;
+        var section = document.getElementById('sect-input').value;
+        windloadmembers(eventid,section);
+   });
    console.log('Loading events for: '+date+' to '+event);
 }
 
@@ -70,37 +119,11 @@ function windcheckformembers(){
 	setTimeout(windcheckformembers, 10000);
 }
 
-function togglemenu(){
-	var menu = document.getElementById("menu");
-	menu.style.display = menu.style.display === 'none' ? '' : 'none';
-	var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-	var listsize = h - 196;
-	console.log('Removing Menu and Resizing list to '+listsize);
-}
+/* 
 
-function qstogglemenu(){
-    var menu = document.getElementById("menu");
-    menu.style.display = menu.style.display === 'none' ? '' : 'none';
-    var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    var listsize = h - 154;
-    console.log('Removing Menu and Resizing list to '+listsize);
-    document.getElementById("livesearch").setAttribute("style","height:"+listsize+"px");
-    
-}
-function togglemobilelist(){
-	var list = document.getElementById("list");
-	list.style.display = list.style.display === 'none' ? 'block' : 'none';
-}
-	
-function twitter(handle){
-	var twitter = document.getElementById("twitter");
-	twitter.style.display = twitter.style.display === 'none' ? '' : 'none';
-   $("#twitter").load('template/twitter.php?handle='+handle);
-}
-function loadextras(){
-	var yourUl = document.getElementById("extras");
-	yourUl.style.display = yourUl.style.display === 'none' ? '' : 'none';
-}
+Functions for Who 
+
+*/
 
 function wholoadresults() {
 	document.getElementById('loader').style.display = 'inline';
@@ -165,7 +188,7 @@ function wholoadresults() {
 		var sortbyurl = "";
 	}
 	console.log('Loading List: ' + houseurl + sexurl + partyurl + positionurl + committeeurl + topicurl + departmenturl + photosurl + joinedurl);
-	$("#whoresults").load('template/wholist.php?' + houseurl + sexurl + partyurl + positionurl + committeeurl + topicurl + departmenturl + photosurl + joinedurl + sortbyurl, function() {
+	$("#whoresults").load('template/who-returnresults.php?' + houseurl + sexurl + partyurl + positionurl + committeeurl + topicurl + departmenturl + photosurl + joinedurl + sortbyurl, function() {
 		document.getElementById('loader').style.display = 'none';
 	});
 }
@@ -207,25 +230,25 @@ function wholoadsex() {
 function wholoadparties() {
 	var house = document.getElementById("house-input").value;
 	var sex = document.getElementById("sex-input").value;
-	$("#party-input").load('template/whoparty.php?house=' + house + '&sex=' + sex);
+	$("#party-input").load('template/who-listparty.php?house=' + house + '&sex=' + sex);
 }
 
 function wholoadpartiesjusthouse() {
 	var house = document.getElementById("house-input").value;
-	$("#party-input").load('template/whoparty.php?house=' + house);
+	$("#party-input").load('template/who-listparty.php?house=' + house);
 }	
 
 function wholoadcommitteelists() {
 	var house = document.getElementById("house-input").value;
 	console.log('Loading Committees');
-	$("#whocommittee").load('template/whocommittee.php?house='+house,function() {
+	$("#whocommittee").load('template/who-listcommittees.php?house='+house,function() {
 		 $('#committee-input').chosen();
 		console.log('Loaded list of Committees');
    	});
 }
 function wholoaddepartmentlists() {
 	console.log('Loading Departments');
-	$("#whodepartment").load('template/whodepartment.php',function() {
+	$("#whodepartment").load('template/who-listdepartments.php',function() {
 		$("#department-input").chosen();
 		console.log('Loaded list of Departments');
    	});
@@ -233,26 +256,31 @@ function wholoaddepartmentlists() {
 function whotopics() {
 	var house = document.getElementById("house-input").value;
 	console.log('Loading Interest Topics');
-	$("#whotopics").load('template/whointerests.php?house='+house,function() {
+	$("#whotopics").load('template/who-listinterests.php?house='+house,function() {
 		$("#topic-input").chosen();
 		console.log('Loaded list of Topics');
    	});
 }
-
 function updatelists() {
 	var house = document.getElementById("house-input").value;
 	console.log('Trying to update committees & topics');
-	$("#whocommittee").load('template/whocommittee.php?house='+house,function() {
+	$("#whocommittee").load('template/who-listcommittees.php?house='+house,function() {
 		 $('#committee-input').chosen();
 		console.log('Updated list of Committees');
    	});
-   	$("#whotopics").load('template/whointerests.php?house='+house,function() {
+   	$("#whotopics").load('template/who-listinterests.php?house='+house,function() {
 		$("#topic-input").chosen();
 		console.log('Updated list of Topics');
    	});
 }
 
+/* 
 
+Functions for the Search Page 
+
+*/
+
+// Main Ajax search function where str is the query 
 function searchshowResult(str) {
     // Check which house to search through  
     if (!document.getElementById("choosehouse").checked) {
@@ -264,13 +292,13 @@ function searchshowResult(str) {
     var searchby = document.getElementById("searchby").value;
     if (searchby == "name") {
         reqdchars = 2;
-        var url = "livesearch.php";
+        var url = "search-queryresults.php";
     } else if (searchby == "constituency") {
         reqdchars = 3;
-        var url = "livesearch.php";
+        var url = "search-queryresults.php";
     } else {
         reqdchars = 4;
-        var url = "livesearch.php";
+        var url = "search-queryresults.php";
     }
     // If we want to search by position then 
     if (searchby == "position"){
@@ -301,8 +329,40 @@ function searchshowResult(str) {
     
     var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 	var listsize = h - 200;
-	console.log('Resizing list to '+listsize+' px');
+	//console.log('Resizing list to '+listsize+' px');
 	document.getElementById("livesearchmember").setAttribute("style","height:"+listsize+"px");
+}
+
+function pickconst() {
+	console.log('Loading Constituencies');
+	$("#pick-const").load('template/search-listconst.php',function() {
+		$("#const-pick").chosen();
+		console.log('Loaded list of Constituencies');
+		var constpickdiv = document.getElementById("constpickdiv");
+		constpickdiv.style.display = 'none';
+		$("#const-pick").chosen().change( function() {
+				var chosenconst = document.getElementById("const-pick").value;
+				console.log(chosenconst);
+				searchshowResult(chosenconst);
+			}
+		);
+   	});
+}
+
+function pickpos() {
+	console.log('Loading Positions');
+	$("#pick-pos").load('template/search-listpos.php?house=Commons&side="government"',function() {
+		$("#pos-pick").chosen();	
+		console.log('Loaded list of Positions');
+		var pospickdiv = document.getElementById("pospickdiv");
+		pospickdiv.style.display = 'none';
+		$("#pos-pick").chosen().change( function() {
+				var chosenpos = document.getElementById("pos-pick").value;
+				console.log(chosenpos);
+				searchshowResult(chosenpos);
+			}
+		);
+   	});
 }
 
 function searchload(id) {
@@ -314,7 +374,7 @@ function searchload(id) {
     if (!document.getElementById("searchby").checked) {
         var searchby = 'name';
     }
-    $("#contactCard").load('template/member.php?m=' + id + '&photos=' + photos);
+    $("#contactCard").load('template/search-member.php?m=' + id + '&photos=' + photos);
     $('.active').removeClass('active');
     $('#m' + id).addClass("active");
 }
@@ -323,26 +383,58 @@ function searchtogglemobilelist() {
     var list = document.getElementById("list");
     list.style.display = list.style.display === 'none' ? 'block' : 'none';
 }
+
 function searchchangesearchby() {
     var searchby = document.getElementById("searchby").value;
-    console.log('Searching by '+searchby);
-    var positiontype = document.getElementById("positiontypediv");
+    var pospickdiv = document.getElementById("pospickdiv");
+	var constpickdiv = document.getElementById("constpickdiv");
+	var typeinput = document.getElementById("typeinput");
+	var positiontypediv = document.getElementById("positiontypediv");
     if (searchby == "position") {
-        positiontype.style.display = 'block';
-    } else {
-         positiontype.style.display = 'none';
+        pospickdiv.style.display = 'block';
+		constpickdiv.style.display = 'none';
+		typeinput.style.display = 'none';
+		positiontypediv.style.display = 'block';
+		console.log("Only showing Pos input");
+    } else if (searchby == "constituency"){
+		pospickdiv.style.display = 'none';
+		constpickdiv.style.display = 'block';
+		typeinput.style.display = 'none';
+		positiontypediv.style.display = 'none';
+		console.log("Only showing Const input");
+	} else {
+         pospickdiv.style.display = 'none';
+		 constpickdiv.style.display = 'none';
+		 typeinput.style.display = 'block';
+		 positiontypediv.style.display = 'none';
+		 console.log("Only showing Name input");
     }
 }
 
-function searchiflordsscreenshot() {
-    console.log('Checking to see if Lords...')
-    if (!document.getElementById("choosehouse").checked) {
-        console.log('Nah, you\'re good');
+function searchselectpostyle(postype) {
+	console.log('Updating Positions');
+	if (!document.getElementById("choosehouse").checked) {
+        var house = "Commons";
     } else {
-        console.log('Setting default image to Screenshot');
-        $('#photos').bootstrapToggle('on')
+        var house = "Lords";
     }
+	$("#pick-pos").load('template/search-listpos.php?side='+postype+'&house='+house,function() {
+		$("#pos-pick").chosen();	
+		console.log('Updated list of '+postype+' positions');
+		$("#pos-pick").chosen().change( function() {
+				var chosenpos = document.getElementById("pos-pick").value;
+				console.log(chosenpos);
+				searchshowResult(chosenpos);
+			}
+		);
+   	});
 }
+
+/* 
+
+Functions for Questions
+
+*/
 
 function printQuestions(){
     $("<link/>", {
@@ -353,7 +445,7 @@ function printQuestions(){
 }
 
 function futuredayoralsloaddepts(date){
-   $("#dept-input").load('template/futuredayorals-returndepts.php?output=true&date='+date);
+   $("#dept-input").load('template/qs-futuredayorals-returndepts.php?output=true&date='+date);
    var jsDate = new Date(date*1000);
    var humanDate = jsDate.toLocaleDateString();
    console.log('Loading departments for: '+humanDate);
@@ -387,7 +479,7 @@ function futuredayoralsloadquestions(date,dept){
     groups = encodeURI(groups);
     withdrawn = encodeURI(withdrawn);
     withoutnotice = encodeURI(withoutnotice);
-    $("#livesearch").load('template/futuredayorals-returnlist.php?date='+date+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice+'&together='+together+'&topicalsbyparty='+topicalsbyparty+'&outputList=true',function() {
+    $("#livesearch").load('template/qs-futuredayorals-returnlist.php?date='+date+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice+'&together='+together+'&topicalsbyparty='+topicalsbyparty+'&outputList=true',function() {
         document.getElementById('loader').style.display = 'none';
         document.getElementById('togglemenu').style.display = 'inline';
         var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -407,7 +499,7 @@ function futuredayoralsload(num,date){
     var next = document.getElementById('next'+num).value;
     var prev = document.getElementById('prev'+num).value;
     console.log('Loading question: '+num+' next: '+next+' prev: '+prev);
-    $("#contactCard").load('template/futuredayorals-questioner.php?uin='+num+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
+    $("#contactCard").load('template/qs-futuredayorals-questioner.php?uin='+num+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
         document.getElementById('loader').style.display = 'none';
         document.getElementById('togglemenu').style.display = 'inline';
     });
@@ -426,7 +518,7 @@ function qsload(num,date){
     var next = document.getElementById('next'+num).value;
     var prev = document.getElementById('prev'+num).value;
     console.log('Loading question: '+num+' next: '+next+' prev: '+prev);
-    $("#contactCard").load('template/questioner.php?uin='+num+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
+    $("#contactCard").load('template/qs-questioner.php?uin='+num+'&date='+date+'&photos='+photos+'&next='+next+'&prev='+prev,function() {
         document.getElementById('loader').style.display = 'none';
         document.getElementById('togglemenu').style.display = 'inline';
     });
@@ -437,7 +529,7 @@ function qsloadlords(id){
     document.getElementById('togglemenu').style.display = 'none';
     document.getElementById('loader').style.display = 'inline';
     console.log('Loading Lords Member: '+id);
-    $("#contactCard").load('template/member.php?m='+id,function() {
+    $("#contactCard").load('template/search-member.php?m='+id,function() {
         document.getElementById('loader').style.display = 'none';
         document.getElementById('togglemenu').style.display = 'inline';
     });
@@ -465,7 +557,7 @@ function qsloadquestions(date,dept,type){
     groups = encodeURI(groups);
     withdrawn = encodeURI(withdrawn);
     withoutnotice = encodeURI(withoutnotice);
-    $("#livesearch").load('template/listquestions.php?date='+date+'&type='+type+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice+'&together='+together+'&topicalsbyparty='+topicalsbyparty,function() {
+    $("#livesearch").load('template/qs-commonslistquestions.php?date='+date+'&type='+type+'&dept='+dept+'&groups='+groups+'&withdrawn='+withdrawn+'&withoutnotice='+withoutnotice+'&together='+together+'&topicalsbyparty='+topicalsbyparty,function() {
         document.getElementById('loader').style.display = 'none';
         document.getElementById('togglemenu').style.display = 'inline';
     });
@@ -475,9 +567,9 @@ function qsloadlordsquestions(){
 	document.getElementById('loader').style.display = 'inline';
 	var chosenBusiness = document.getElementById("sect-input").value;
 	if(chosenBusiness == "questions") {
-		var urlend = "listlordsquestions.php";
+		var urlend = "qs-lordslistquestions.php";
 	} else {
-		var urlend = 'lordsspeakers.php?chosenBusiness='+chosenBusiness;
+		var urlend = 'qs-lordsspeakers.php?chosenBusiness='+chosenBusiness;
 	}
 	$("#livesearch").load('template/'+urlend,function() {
 		document.getElementById('loader').style.display = 'none';
@@ -485,15 +577,20 @@ function qsloadlordsquestions(){
 	});		
 }
 function qsloaddepts(date){
-   $("#dept-input").load('template/questiondepts.php?date='+date);
-   $("#type-input").load('template/questiontypes.php?date='+date);
+   $("#dept-input").load('template/qs-deptslist.php?date='+date);
+   $("#type-input").load('template/qs-typelist.php?date='+date);
    console.log('Loading departments for: '+date);
 }
 function qsloadtypes(){
    var date = document.getElementById("date-input").value;
    var dept = encodeURI(document.getElementById("dept-input").value);
-   $("#type-input").load('template/questiontypes.php?date='+date+'&dept='+dept);
+   $("#type-input").load('template/qs-typelist.php?date='+date+'&dept='+dept);
    console.log('Loading Question Types for: '+date+' to '+dept);
+}
+
+function qsloadsuggestedgroups(date,dept){
+   $("#suggested-groups").load('template/qs-commonsgroupsauto.php?output=true&date='+date+'&dept='+dept);
+   console.log('Loading suggested groups for: '+date+' to '+dept);
 }	
 
 function qsloadinitialquestions(){

@@ -18,7 +18,7 @@
 	// Load the right XML file for whatever we're searching for
 	if ($searchby == "constituency") {
 		//Load all the members who are eligible to sit, then we will compare their constituencies later, as the query doesn't allow like constituency *
-		$filename = "http://data.parliament.uk/membersdataplatform/services/mnis/members/query/house=".$house."|IsEligible=true/";
+		$filename = "http://data.parliament.uk/membersdataplatform/services/mnis/members/query/house=".$house."|IsEligible=true|constituency=".$q;
 		$xmlDoc->load($filename);
 		
 	} elseif ($searchby == "position") {
@@ -31,17 +31,17 @@
 				
 		if(isset($side) && $side !== "both") {
 			if($side == "opposition") {
-				$sideURL = "OppositionPosts";	
+				$sideURL = "oppositionpost";	
 			} else {
-				$sideURL = "GovernmentPosts";
+				$sideURL = "governmentpost";
 			}	
 
 		} else {
 			$side = "both";
-			$sideURL = "GovernmentPosts%7COppositionPosts";
+			$sideURL = "oppositionpost";
 		}
 		//Load all the members who are eligible to sit, then we will compare their constituencies later, as the query doesn't allow like constituency *
-		$filename = "http://data.parliament.uk/membersdataplatform/services/mnis/members/query/house=".$house."%7CIsEligible=true/".$sideURL."/";
+		$filename = "http://data.parliament.uk/membersdataplatform/services/mnis/members/query/house=".$house."|IsEligible=true|".$sideURL."=".$q;
 		$xmlDoc->load($filename);
 
 	} else { 
@@ -53,7 +53,7 @@
 	$x=$xmlDoc->getElementsByTagName('Member');
 	
 	// Array with party ID and party color
-	require_once('colors.php');	
+	require_once('core/colors.php');	
 	
     // If beta images are loaded prior to this then skip
     if(!isset($feed)){
@@ -79,16 +79,17 @@
 				if (isset($mselected) && $mselected == $MemberId) { 
 					$ifactive = " active";
 				}
-				if($house !== "Commons") {
-				    $imageurl = 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg';
-				} else { 
-                    for($ii=0; $ii < $imagescount; $ii++) {
-                        if (intval($betaimages->member[$ii]->memberid) == $MemberId){
-                            $BetaId = $betaimages->member[$ii]->imageid;
-                            $imageurl = 'images/stock/thumbs/'.$BetaId.'.jpeg';
-                        }
+				$imageurl = "";
+                for($ii=0; $ii < $imagescount; $ii++) {
+                    if (intval($betaimages->member[$ii]->memberid) == $MemberId){
+                        $BetaId = $betaimages->member[$ii]->imageid;
+                        $imageurl = 'images/stock/thumbs/'.$BetaId.'.jpeg';
                     }
-                    if (!isset($BetaId) or $BetaId == ""){
+                }
+                if ($imageurl == "" or !isset($BetaId)){
+                    if($house !== "Commons") {
+				        $imageurl = 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg';
+				    } else {
                         $imageurl = 'http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$MemberId;
                     }
                 }
@@ -121,20 +122,20 @@
 				} else {
 					$Const=$x->item($i)->getElementsByTagName('MemberFrom');
 				}
-				if($house !== "Commons") {
-				    $imageurl = 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg';
-				} else { 
-                    for($ii=0; $ii < $imagescount; $ii++) {
-                        if (intval($betaimages->member[$ii]->memberid) == $MemberId){
-                            $BetaId = $betaimages->member[$ii]->imageid;
-                            $imageurl = 'images/stock/thumbs/'.$BetaId.'.jpeg';
-                        }
+				$imageurl = "";
+                for($ii=0; $ii < $imagescount; $ii++) {
+                    if (intval($betaimages->member[$ii]->memberid) == $MemberId){
+                        $BetaId = $betaimages->member[$ii]->imageid;
+                        $imageurl = 'images/stock/thumbs/'.$BetaId.'.jpeg';
                     }
-                    if (!isset($BetaId) or $BetaId == ""){
+                }
+                if ($imageurl == "" or !isset($BetaId)){
+                    if($house !== "Commons") {
+				        $imageurl = 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg';
+				    } else {
                         $imageurl = 'http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$MemberId;
                     }
                 }
-				
 				$ifactive = "";
 				if (isset($mselected) && $mselected == $MemberId){ 
 					$ifactive = " active";
@@ -163,42 +164,29 @@
 				$MemberId=$x->item($i)->getAttribute('Member_Id');
 				$DodsId=$x->item($i)->getAttribute('Dods_Id');
 				$Const=$x->item($i)->getElementsByTagName('MemberFrom');
-				$Pos=$x->item($i)->getElementsByTagName('HansardName');	
-				$Jobsarray = array();			
-				for($j=0; $j<($Pos->length); $j++) {
-					$Jobsarray[]=$Pos->item($j)->nodeValue;
-				}
-				$Jobsarray=array_filter(array_unique($Jobsarray, SORT_STRING));
-				
-				$JobsarrayForDisplay = "";
-				foreach ($Jobsarray as $value) {
-					$JobsarrayForDisplay = $JobsarrayForDisplay.$value."<br />";
-				}
-				if($house !== "Commons") {
-				    $imageurl = 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg';
-				} else { 
-                    for($ii=0; $ii < $imagescount; $ii++) {
-                        if (intval($betaimages->member[$ii]->memberid) == $MemberId){
-                            $BetaId = $betaimages->member[$ii]->imageid;
-                            $imageurl = 'images/stock/thumbs/'.$BetaId.'.jpeg';
-                        }
+				$imageurl = "";
+                for($ii=0; $ii < $imagescount; $ii++) {
+                    if (intval($betaimages->member[$ii]->memberid) == $MemberId){
+                        $BetaId = $betaimages->member[$ii]->imageid;
+                        $imageurl = 'images/stock/thumbs/'.$BetaId.'.jpeg';
                     }
-                    if (!isset($BetaId) or $BetaId == ""){
+                }
+                if ($imageurl == "" or !isset($BetaId)){
+                    if($house !== "Commons") {
+				        $imageurl = 'https://assets3.parliament.uk/ext/mnis-bio-person/www.dodspeople.com/photos/'.$DodsId.'.jpg.jpg';
+				    } else {
                         $imageurl = 'http://data.parliament.uk/membersdataplatform/services/images/MemberPhoto/'.$MemberId;
                     }
-                }				
+                }
 				$ifactive = "";
 				if (isset($mselected) && $mselected == $MemberId){ 
 					$ifactive = " active";
 				}
 				if ($FullTitle->item(0)->nodeType==1) {
-					//find a link matching the search text
-					if (strpos(strtolower(implode($Jobsarray)),strtolower($q))) {
-						$hint=$hint .'<a id="m'.$MemberId.'" class="list-group-item list-section-list'.$ifactive.'" onclick="searchload('.$MemberId.');return false;" href="#">
-						<img src="'.$imageurl.'" class="mini-member-image pull-left">
-						<h4 class="list-group-item-heading list-group-position"> <span class="partybox" style="background:'.$color.'!important"></span>'.$JobsarrayForDisplay.'</h4>'.
-						$KnownAs->item(0)->childNodes->item(0)->nodeValue ." - ".$Party->item(0)->childNodes->item(0)->nodeValue."</a>";
-					}
+					$hint=$hint .'<a id="m'.$MemberId.'" class="list-group-item list-section-list'.$ifactive.'" onclick="searchload('.$MemberId.');return false;" href="#">
+					<img src="'.$imageurl.'" class="mini-member-image pull-left">
+					<h4 class="list-group-item-heading"> <span class="partybox" style="background:'.$color.'!important"></span>'.$KnownAs->item(0)->childNodes->item(0)->nodeValue.'</h4>'.
+					$q.' ('.$Party->item(0)->childNodes->item(0)->nodeValue.")</a>";
 				}
 			}
 		}

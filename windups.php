@@ -1,4 +1,4 @@
-<?php include 'template/headinc.php';
+<?php include 'template/core/header.php';
 	//get parameters from URL
 	if(isset($_GET["date"])){
 		$date=$_GET["date"];
@@ -85,10 +85,10 @@
 		</div><!--row-->
 	</div><!--container-->
 
-	<?php include 'template/footer.php'; ?>
+	<?php include 'template/core/footer.php'; ?>
 
   
-   <?php include 'template/core.php'; ?>
+   <?php include 'template/core/includejs.php'; ?>
    
   </body>
 </html>

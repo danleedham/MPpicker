@@ -2,7 +2,7 @@
 
     // This include retuns $QuestionsByDepartment with an array: department,questions
     
-	include("futuredayorals-returndepts.php");
+	include("qs-futuredayorals-returndepts.php");
 	
 	//$date = date('Y-m-d',$date);
 	// print_r($QuestionsByDepartment);
@@ -101,7 +101,7 @@
 	$memberscount =  count($qxml);
 
 	// Array with party ID and party color
-	require_once('colors.php');	
+	require_once('core/colors.php');	
 	
 	// If there are no questions, an empty 'item' is presented. 
 	// If there are more than one questions there are 2+ items. 

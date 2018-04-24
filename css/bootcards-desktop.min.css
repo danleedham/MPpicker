@@ -963,3 +963,12 @@ label {
     overflow: hidden;
     text-overflow:ellipsis;
 }
+
+@media print {
+	a[href]:after {
+		content: "" !important;
+	}
+	.dontPrint {
+		display: none !important;
+	}
+}

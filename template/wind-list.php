@@ -58,7 +58,7 @@ if(isset($NoEventsSet) && $NoEventsSet == true) {
 	$qxml=simplexml_load_file("http://data.parliament.uk/membersdataplatform/services/mnis/members/query/IsEligible=true/") or die("Can't load members");
 	$memberscount = count($qxml);
 	// Array with party ID and party color
-	require_once('colors.php');	
+	require_once('core/colors.php');	
 
 	$hint = "";
 	// If beta images are loaded prior to this then skip
@@ -131,7 +131,7 @@ if(isset($NoEventsSet) && $NoEventsSet == true) {
 		}
 	}
 	if (isset($sort) && $sort == "alpha") {
-		if(isset($house) && $house == "Lords"){
+	if(isset($GetLocation) && $GetLocation == "Lords"){
 			usort($wraparray, function($a, $b) {
 				return strcmp($a["DisplayAs"], $b["DisplayAs"]);
 			});
@@ -166,7 +166,7 @@ if(isset($NoEventsSet) && $NoEventsSet == true) {
 				$header = $wraparray[$i]["constituency"];
 				$footer = $wraparray[$i]["DisplayAs"];
 			}
-			$hint=$hint.'<a class="list-group-item windup-item" onclick="load('.$wraparray[$i]["MemberId"].') ;return false;"  href="#">
+			$hint=$hint.'<a class="list-group-item windup-item" onclick=""  href="#">
 			   <img src="'.$imageurl.'" class="img-rounded mini-member-image pull-left">
 			   <h4 class="list-group-item-heading"><span class="partybox" style="background:'.$wraparray[$i]["color"].'"></span>'. $header.'</h4>
 			   <p class="list-group-item-text">'.$footer.' ('.$wraparray[$i]["party"].')</p></a>';

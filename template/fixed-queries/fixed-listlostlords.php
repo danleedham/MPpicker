@@ -90,7 +90,7 @@ for($i=0; $i<count($lordsInfo); $i++){
         $reasonEcho = "Died on ".$lordsInfo[$i]['DateOfDeath']." aged ".$age->format("%y").' serving '.$service->format("%y%").' years';
     }
     $echo = $echo .'<a class="list-group-item list-section-list lords-lost-list" href="search.php?m='.$lordsInfo[$i]['Member_Id'].'">
-    <img src="'.$imageurl.'" class="mini-member-image pull-left">
+    <img src="'.$imageurl.'" class="mini-member-image pull-left" alt="">
     <h4 class="list-group-item-heading"> <span class="partybox" style="background:'.$color.'!important"></span>'.$lordsInfo[$i]['DisplayAs'].'</h4>'.
     $lordsInfo[$i]['MemberFrom'].' ('.$lordsInfo[$i]['Party'].") ".$reasonEcho."</a>";
 }

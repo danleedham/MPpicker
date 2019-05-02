@@ -1,8 +1,13 @@
 <?php
 	// If $m isn't already set in a require, get it from URL if it's passed
 	if(!isset($m) && isset($_GET['m'])) {$m=$_GET["m"];}
-	// If $m is not passed, set it as the Prime Minister (Hard-coded value)
-	if(!isset($m)){$m="8";}	
+	// If $m is not passed, set it as the Prime Minister 
+	
+	
+	if(!isset($m)){
+		include('template/fixed-queries/fixed-primeminister.php');
+		$m = $pmId;
+	}	
 	
 	// If $house isn't already set in a require, get it from URL if it's passed
 	if(!isset($house) && isset($_GET['house'])){$house=$_GET["house"];}
